@@ -11,6 +11,7 @@ defmodule AppIdentity.MixProject do
       deps: deps(),
       name: "AppIdentity for Elixir",
       source_url: "https://github.com/KineticCafe/app_identity",
+      homepage_url: "https://kineticcafe.github.io/app_identity",
       docs: [
         main: "readme",
         formatters: ["html"],

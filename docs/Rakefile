@@ -1,0 +1,47 @@
+#!/usr/bin/env rake
+
+desc "Build full AppIdentity documentation"
+task build: "build:docs" # %i[build:docs build:ts build:ruby build:elixir]
+
+file "../ts/docs/index.html" do
+  sh "pnpm -C ../ts build:docs"
+end
+
+file "output/ts/index.html" => "../ts/docs/index.html" do
+  cp_r "../ts/docs", "output/ts"
+end
+
+file "../ruby/doc/index.html" do
+  sh "rake -C ../ruby docs"
+end
+
+file "output/ruby/index.html" => "../ruby/doc/index.html" do
+  cp_r "../ruby/doc", "output/ruby"
+end
+
+file "../elixir/doc/index.html" do
+  Dir.chdir("../elixir") do
+    sh "mix docs"
+  end
+end
+
+file "output/elixir/index.html" => "../elixir/doc/index.html" do
+  cp_r "../elixir/doc", "output/elixir"
+end
+
+namespace :build do
+  task :docs do
+    sh "nanoc compile"
+  end
+
+  desc "Build AppIdentity TypeScript documentation"
+  task ts: "output/ts/index.html"
+
+  desc "Build AppIdentity Ruby documentation"
+  task ruby: "output/ruby/index.html"
+
+  desc "Build AppIdentity Elixir documentation"
+  task elixir: "output/elixir/index.html"
+end
+
+task default: :build

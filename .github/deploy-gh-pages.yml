@@ -1,0 +1,36 @@
+# name: Deploy Documentation to Github Pages (TS only for now)
+#
+# on:
+#   push:
+#     branches:
+#       - main
+#
+# jobs:
+#   deploy_pages:
+#     concurrency: ci-${{ github.ref }}
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: pnpm/action-setup@v2
+#         with:
+#           version: 7
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 16
+#           cache: pnpm
+#           cache-dependency-path: ts/pnpm-lock.yaml
+#
+#       - run: pnpm install --frozen-lockfile
+#         working-directory: ./ts
+#
+#       - run: pnpm build:docs
+#         working-directory: ./ts
+#
+#       - run: touch docs/.nojekyll
+#         working-directory: ./ts
+#
+#       - uses: JamesIves/github-pages-deploy-action@v4
+#         with:
+#           branch: gh-pages # The branch the action should deploy to.
+#           folder: ts/docs # The folder the action should deploy.
