@@ -1,0 +1,80 @@
+{
+  "name": "@kineticcafe/app-identity",
+  "version": "1.0.0",
+  "description": "Lightweight secure application authentication",
+  "author": "Kinetic Commerce & contributors",
+  "homepage": "https://github.com/KineticCafe/app_identity#readme",
+  "bugs": {
+    "url": "https://github.com/KineticCafe/app_identity/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KineticCafe/app_identity.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "bin": {
+    "app-identity-suite-ts": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "pnpm exec tsup",
+    "build:all": "pnpm run build && pnpm run build:docs",
+    "build:docs": "pnpm exec typedoc",
+    "build:simple": "pnpm exec tsup --no-dts-resolve --no-dts",
+    "build:watch": "concurrently 'pnpm exec tsup --watch' 'pnpm exec typedoc --watch --preserveWatchOutput'",
+    "cli": "pnpm exec ts-eager support/cli.ts",
+    "cli:generate": "pnpm exec ts-eager support/cli.ts generate",
+    "cli:run": "pnpm exec ts-eager support/cli.ts run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint src/ test/ support/ --ext .js,.ts",
+    "prepublishOnly": "pnpm build",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "files": [
+    "dist",
+    "src",
+    "support"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "packageManager": "pnpm@7.9.0",
+  "devDependencies": {
+    "@tsconfig/node12": "latest",
+    "@types/base64-url": "^2.2.0",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "concurrently": "latest",
+    "eslint": "latest",
+    "eslint-plugin-prettier": "latest",
+    "prettier": "latest",
+    "ts-eager": "latest",
+    "tsup": "latest",
+    "typedoc": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  },
+  "dependencies": {
+    "base64-url": "^2.3.3",
+    "commander": "^9.4.0",
+    "date-fns": "^2.29.2",
+    "fast-glob": "^3.2.11"
+  }
+}

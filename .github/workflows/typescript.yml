@@ -1,0 +1,50 @@
+name: TypeScript CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  typescript-ci:
+    name: Typescript ${{ matrix.node }} (PNPM ${{ matrix.pnpm }}) - ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+        node:
+          - 14
+          - 16
+          - 18
+        pnpm:
+          - 6
+          - 7 # latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+          cache-dependency-path: ts/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./ts
+      - run: pnpm test
+        working-directory: ./ts
+      - run: pnpm lint
+        working-directory: ./ts
+      - run: pnpm format:check
+        working-directory: ./ts
+      - run: pnpm build:all
+        working-directory: ./ts
+      - run: pnpm cli:generate self.json && pnpm cli:run self.json --strict
+        working-directory: ./ts

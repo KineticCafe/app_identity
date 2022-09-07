@@ -1,0 +1,4 @@
+dist/
+coverage/
+docs/
+pnpm-lock.yaml
