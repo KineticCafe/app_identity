@@ -1,0 +1,5 @@
+---
+parallel: true
+ruby_version: '2.6'
+ignore:
+  - 'app_identity.gemspec'

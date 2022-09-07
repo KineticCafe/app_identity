@@ -1,0 +1,6 @@
+.bundle/
+.byebug_history
+.rake_tasks~
+Gemfile.lock
+gemfiles/*.lock
+pkg/

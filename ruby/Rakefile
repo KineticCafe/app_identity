@@ -1,0 +1,50 @@
+# frozen_string_literal: true
+
+require "rubygems"
+require "hoe"
+require "rake/clean"
+
+Hoe.plugin :doofus
+Hoe.plugin :gemspec2
+Hoe.plugin :git2
+Hoe.plugin :minitest
+
+Hoe.spec "app_identity" do
+  developer("Austin Ziegler", "aziegler@kineticcommerce.com")
+  developer("Kinetic Commerce", "dev@kineticcommerce.com")
+
+  self.history_file = "Changelog.md"
+  self.readme_file = "README.md"
+
+  license "MIT"
+
+  spec_extras[:metadata] = ->(val) { val["rubygems_mfa_required"] = "true" }
+
+  extra_deps << ["optimist", "~> 3.0"]
+  extra_dev_deps << ["hoe-doofus", "~> 1.0"]
+  extra_dev_deps << ["hoe-gemspec2", "~> 1.1"]
+  extra_dev_deps << ["hoe-git2", "~> 1.7"]
+  extra_dev_deps << ["minitest", "~> 5.4"]
+  extra_dev_deps << ["minitest-autotest", "~> 1.0"]
+  extra_dev_deps << ["minitest-bisect", "~> 1.2"]
+  extra_dev_deps << ["minitest-focus", "~> 1.1"]
+  extra_dev_deps << ["minitest-pretty_diff", "~> 0.1"]
+  extra_dev_deps << ["rack-test", "~> 0.6"]
+  extra_dev_deps << ["rake", ">= 10.0", "< 14.0"]
+  extra_dev_deps << ["rdoc", "~> 6.4"]
+  extra_dev_deps << ["simplecov", "~> 0.7"]
+  extra_dev_deps << ["standard", "~> 1.0"]
+end
+
+namespace :console do
+  task :pry do
+    exec "pry -Ilib -rapp_identity"
+  end
+
+  task :irb do
+    exec "irb -Ilib -rapp_identity"
+  end
+end
+
+desc "Open a console with AppIdentity loaded"
+task console: "console:irb"

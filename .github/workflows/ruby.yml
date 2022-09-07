@@ -1,0 +1,61 @@
+name: Ruby CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ruby-ci:
+    name: Ruby ${{ matrix.ruby }} - ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-20.04
+        ruby:
+          - '2.7'
+          - '3.0'
+          - '3.1'
+          - head
+          - jruby
+          - jruby-head
+          - truffleruby
+          - truffleruby-head
+          - truffleruby+graalvm
+          - truffleruby+graalvm-head
+        include:
+          - ruby: head
+            continue-on-error: true
+          - ruby: jruby-head
+            continue-on-error: true
+          - os: ubuntu-22.04
+            ruby: head
+          - os: ubuntu-22.04
+            ruby: '3.1'
+
+    runs-on: ${{ matrix.os }}
+
+    continue-on-error: ${{ matrix.continue-on-error || false }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ./ruby
+
+      - run: bundle exec ruby -S rake test --trace
+        working-directory: ./ruby
+
+      - run: bundle exec standardrb
+        working-directory: ./ruby
+
+      - run: >
+          bundle exec bin/app-identity-suite-ruby generate --stdout |
+          bundle exec bin/app-identity-suite-ruby run --stdin --strict
+        working-directory: ./ruby
