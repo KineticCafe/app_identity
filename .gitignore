@@ -1,0 +1,14 @@
+*.log
+*.swp
+*~
+.DS_Store
+.envrc
+.idea/
+coverage/
+doc/
+ruby/docs/
+elixir/docs/
+ts/docs/
+tmp/
+work/
+app-identity-suite-*.json

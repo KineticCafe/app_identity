@@ -1,0 +1,13 @@
+name: Specification Change
+description: Propose a change to the specification
+title: '[Spec]: '
+labels: ['spec', 'triage']
+body:
+  - id: request
+    type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Proposal
+      description: |
+        Describe the change to the specification that you are proposing.

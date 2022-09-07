@@ -1,0 +1,40 @@
+name: Bug Report
+description: File a bug report about one or more implementations
+title: '[Bug]: '
+labels: ['bug', 'triage']
+body:
+  - id: implementation
+    type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: Implementations
+      description: 'Where are you observing the bug?'
+      multiple: true
+      options:
+        - Elixir
+        - Ruby
+        - Typescript
+  - id: implementation-section
+    type: dropdown
+    attributes:
+      label: Code Area
+      description: Where are you seeing the issue?
+      multiple: true
+      description:
+        - Core Library
+        - Integration Suite Generator
+        - Integration Suite Runner
+        - Unit Tests
+  - id: versions
+    type: input
+    attributes:
+      label: Plugin version(s)
+      description: Put a list of the version(s) where the bug has been observed
+      placeholder: 'elixir 1.0, ruby 1.0, typescript 1.0'
+  - id: description
+    type: textarea
+    attributes:
+      label: Describe the issue, including reproduction steps
+    validations:
+      required: true

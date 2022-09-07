@@ -1,0 +1,31 @@
+name: Feature Request
+description: Suggest an implementation feature
+title: '[Feature]: '
+labels: ['enhancement', 'triage']
+body:
+  - type: textarea
+    id: what-expected
+    attributes:
+      label: What would you want ?
+      placeholder: 'Example: When doing X, I would like that Y happens.'
+    validations:
+      required: true
+  - id: implementation
+    type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: Implementations
+      description: 'Where are you observing the bug?'
+      multiple: true
+      options:
+        - Elixir
+        - Ruby
+        - Typescript
+  - id: description
+    type: textarea
+    attributes:
+      label: |
+        Describe the feature you would like added to the implementation(s).
+    validations:
+      required: true

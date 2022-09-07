@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "App Identity",
+      "path": "./"
+    },
+    {
+      "name": "Elixir - App Identity",
+      "path": "./elixir/"
+    }
+    {
+      "name": "Ruby - App Identity",
+      "path": "./ruby/"
+    },
+    {
+      "name": "Typescript - App Identity",
+      "path": "./ts/"
+    },
+  ]
+}
