@@ -1,0 +1,316 @@
+- description: 'App V1, Proof V2 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 2
+  nonce:
+    offset_minutes: -12
+- description: 'App V1, Proof V3 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -12
+- description: 'App V1, Proof V4 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -12
+- description: 'App V2, Proof V2 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 2
+  nonce:
+    offset_minutes: -12
+- description: 'App V2, Proof V3 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -12
+- description: 'App V2, Proof V4 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -12
+- description: 'App V3, Proof V3 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -12
+- description: 'App V3, Proof V4 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -12
+- description: 'App V4, Proof V4 offset timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 4
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -12
+- description: 'App V1, Proof V2 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+  nonce:
+    offset_minutes: -7
+- description: 'App V1, Proof V3 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -7
+- description: 'App V1, Proof V4 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -7
+- description: 'App V2, Proof V2 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+  nonce:
+    offset_minutes: -7
+- description: 'App V2, Proof V3 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -7
+- description: 'App V2, Proof V4 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -7
+- description: 'App V3, Proof V3 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    offset_minutes: -7
+- description: 'App V3, Proof V4 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -7
+- description: 'App V4, Proof V4 offset timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 4
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    offset_minutes: -7
+- description: 'App V1, Proof V1, Empty Nonce'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 1
+  nonce:
+    empty: true
+- description: 'App V1, Proof V1, bad padlock'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 1
+  nonce:
+    value: 'n:once'
+- description: 'Proof V2, bad padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 2
+  nonce:
+    value: '2006-01-02T15:04:05.333Z'
+- description: 'Proof V3, bad padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 3
+  nonce:
+    value: '2006-01-02T15:04:05.333Z'
+- description: 'Proof V4, bad padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 4
+  nonce:
+    value: '2006-01-02T15:04:05.333Z'
+- description: 'Proof V2, Non-Timestamp Nonce'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 2
+  nonce:
+    value: 'nonce'
+- description: 'Proof V3, Non-Timestamp Nonce'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 3
+  nonce:
+    value: 'nonce'
+- description: 'Proof V4, Non-Timestamp Nonce'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 4
+  nonce:
+    value: 'nonce'
+- description: 'Proof V1, Incorrect Proof ID'
+  spec_version: 4
+  expect: fail
+  proof:
+    id: '00000000-0000-0000-0000-000000000000'
+    version: 1
+- description: 'Proof V2, Incorrect Proof ID'
+  spec_version: 4
+  expect: fail
+  proof:
+    id: '00000000-0000-0000-0000-000000000000'
+    version: 2
+- description: 'Proof V3, Incorrect Proof ID'
+  spec_version: 4
+  expect: fail
+  proof:
+    id: '00000000-0000-0000-0000-000000000000'
+    version: 3
+- description: 'Proof V4, Incorrect Proof ID'
+  spec_version: 4
+  expect: fail
+  proof:
+    id: '00000000-0000-0000-0000-000000000000'
+    version: 4
+- description: 'Proof V1, Incorrect Proof Secret'
+  spec_version: 4
+  expect: fail
+  proof:
+    secret: 'myvoiceismypassword'
+    version: 1
+- description: 'Proof V2, Incorrect Proof Secret'
+  spec_version: 4
+  expect: fail
+  proof:
+    secret: 'myvoiceismypassword'
+    version: 2
+- description: 'Proof V3, Incorrect Proof Secret'
+  spec_version: 4
+  expect: fail
+  proof:
+    secret: 'myvoiceismypassword'
+    version: 3
+- description: 'Proof V4, Incorrect Proof Secret'
+  spec_version: 4
+  expect: fail
+  proof:
+    secret: 'myvoiceismypassword'
+    version: 4
+- description: 'Proof V1, Mismatched Padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 1
+  padlock:
+    nonce: 'bad padlock'
+- description: 'Proof V2, Mismatched Padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 2
+  padlock:
+    nonce: 'bad padlock'
+- description: 'Proof V3, Mismatched Padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 3
+  padlock:
+    nonce: 'bad padlock'
+- description: 'Proof V4, Mismatched Padlock'
+  spec_version: 4
+  expect: fail
+  proof:
+    version: 4
+  padlock:
+    nonce: 'bad padlock'

@@ -1,0 +1,329 @@
+- description: 'App V1, Proof V1'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+  proof:
+    version: 1
+- description: 'App V1, Proof V2'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+  proof:
+    version: 2
+- description: 'App V1, Proof V3'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+  proof:
+    version: 3
+- description: 'App V1, Proof V4'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+  proof:
+    version: 4
+- description: 'App V2, Proof V2'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+  proof:
+    version: 2
+- description: 'App V2, Proof V3'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+  proof:
+    version: 3
+- description: 'App V2, Proof V4'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+  proof:
+    version: 4
+- description: 'App V3, Proof V3'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 3
+  proof:
+    version: 3
+- description: 'App V3, Proof V4'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 3
+  proof:
+    version: 4
+- description: 'App V4, Proof V4'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 4
+  proof:
+    version: 4
+- description: 'App V1, Proof V2 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+- description: 'App V1, Proof V3 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+- description: 'App V1, Proof V4 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+- description: 'App V2, Proof V2 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+- description: 'App V2, Proof V3 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+- description: 'App V2, Proof V4 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+- description: 'App V3, Proof V3 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+- description: 'App V3, Proof V4 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+- description: 'App V4, Proof V4 (custom fuzz)'
+  spec_version: 4
+  expect: pass
+  app:
+    version: 4
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+- description: 'App V1, Proof V2 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V1, Proof V3 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V1, Proof V4 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V2 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 2
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V3 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V4 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V3, Proof V3 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V3, Proof V4 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V4, Proof V4 old timestamp'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 4
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V1, Proof V2 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+  proof:
+    version: 2
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V1, Proof V3 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V1, Proof V4 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 1
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V2 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 2
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V3 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V2, Proof V4 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 2
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V3, Proof V3 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 3
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V3, Proof V4 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 3
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'
+- description: 'App V4, Proof V4 old timestamp (custom fuzz)'
+  spec_version: 4
+  expect: fail
+  app:
+    version: 4
+    config:
+      fuzz: 300
+  proof:
+    version: 4
+  nonce:
+    value: '20060102T150405.333Z'

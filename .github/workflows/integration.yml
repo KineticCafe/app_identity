@@ -1,0 +1,91 @@
+name: Integration CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  integration-ci:
+    name: Integration Testing
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+        node:
+          - 16
+        pnpm:
+          - 7
+        ruby:
+          - '3.1'
+        elixir:
+          - '1.13'
+        otp:
+          - '24'
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Check out codde
+      - uses: actions/checkout@v3
+
+      # Typescript Setup
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+          cache-dependency-path: ts/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./ts
+
+      # Ruby Setup
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ./ruby
+
+      # Elixir Setup
+      - uses: erlef/setup-elixir@v1
+        id: install
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+
+      - run: mix 'do' deps.get, deps.compile, compile
+        working-directory: ./elixir
+
+      - run: mkdir -p suite
+
+      # Generate
+      - name: Generate Typescript Integration Suite
+        run: pnpm cli:generate ../suite
+        working-directory: ./ts
+
+      - name: Generate Ruby Integration Suite
+        run: bundle exec ruby -S bin/app-identity-suite-ruby generate ../suite
+        working-directory: ./ruby
+
+      - name: Generate Elixir Integration Suite
+        run: mix app_identity generate ../suite
+        working-directory: ./elixir
+
+      # Run
+      - name: Run Typescript Verification
+        run: pnpm cli:run ../suite | ../integration/tapview
+        working-directory: ./ts
+
+      - name: Run Ruby Verification
+        run: bundle exec ruby -S bin/app-identity-suite-ruby run ../suite | ../integration/tapview
+        working-directory: ./ruby
+
+      - name: Run Elixir Integration Suite
+        run: mix app_identity run ../suite | ../integration/tapview
+        working-directory: ./elixir

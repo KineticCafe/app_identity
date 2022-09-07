@@ -1,0 +1,491 @@
+[
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V2 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V3 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V4 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V2 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V3 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V4 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V3 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V4 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 4
+    },
+    "description": "App V4, Proof V4 offset timestamp",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -12
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V2 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V3 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V4 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V2 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V3 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V4 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V3 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V4 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 4
+    },
+    "description": "App V4, Proof V4 offset timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "offset_minutes": -7
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1, Empty Nonce",
+    "expect": "fail",
+    "nonce": {
+      "empty": true
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1, bad padlock",
+    "expect": "fail",
+    "nonce": {
+      "value": "n:once"
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V2, bad padlock",
+    "expect": "fail",
+    "nonce": {
+      "value": "2006-01-02T15:04:05.333Z"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V3, bad padlock",
+    "expect": "fail",
+    "nonce": {
+      "value": "2006-01-02T15:04:05.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V4, bad padlock",
+    "expect": "fail",
+    "nonce": {
+      "value": "2006-01-02T15:04:05.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V2, Non-Timestamp Nonce",
+    "expect": "fail",
+    "nonce": {
+      "value": "nonce"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V3, Non-Timestamp Nonce",
+    "expect": "fail",
+    "nonce": {
+      "value": "nonce"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V4, Non-Timestamp Nonce",
+    "expect": "fail",
+    "nonce": {
+      "value": "nonce"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V1, Incorrect Proof ID",
+    "expect": "fail",
+    "proof": {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V2, Incorrect Proof ID",
+    "expect": "fail",
+    "proof": {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V3, Incorrect Proof ID",
+    "expect": "fail",
+    "proof": {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V4, Incorrect Proof ID",
+    "expect": "fail",
+    "proof": {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V1, Incorrect Proof Secret",
+    "expect": "fail",
+    "proof": {
+      "secret": "myvoiceismypassword",
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V2, Incorrect Proof Secret",
+    "expect": "fail",
+    "proof": {
+      "secret": "myvoiceismypassword",
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V3, Incorrect Proof Secret",
+    "expect": "fail",
+    "proof": {
+      "secret": "myvoiceismypassword",
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V4, Incorrect Proof Secret",
+    "expect": "fail",
+    "proof": {
+      "secret": "myvoiceismypassword",
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V1, Mismatched Padlock",
+    "expect": "fail",
+    "padlock": {
+      "nonce": "bad padlock"
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V2, Mismatched Padlock",
+    "expect": "fail",
+    "padlock": {
+      "nonce": "bad padlock"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V3, Mismatched Padlock",
+    "expect": "fail",
+    "padlock": {
+      "nonce": "bad padlock"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "description": "Proof V4, Mismatched Padlock",
+    "expect": "fail",
+    "padlock": {
+      "nonce": "bad padlock"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  }
+]

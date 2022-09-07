@@ -1,0 +1,514 @@
+[
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1",
+    "expect": "pass",
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V2",
+    "expect": "pass",
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V3",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V4",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V2",
+    "expect": "pass",
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V3",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V4",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V3",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V4",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 4
+    },
+    "description": "App V4, Proof V4",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V2 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V3 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V4 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V2 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V3 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V4 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V3 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V4 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 4
+    },
+    "description": "App V4, Proof V4 (custom fuzz)",
+    "expect": "pass",
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V2 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V3 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V4 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V2 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V3 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V4 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V3 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 3
+    },
+    "description": "App V3, Proof V4 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 4
+    },
+    "description": "App V4, Proof V4 old timestamp",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V2 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V3 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 1
+    },
+    "description": "App V1, Proof V4 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V2 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 2
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 2
+    },
+    "description": "App V2, Proof V3 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 2
+    },
+    "description": "App V2, Proof V4 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V3 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 3
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 3
+    },
+    "description": "App V3, Proof V4 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "config": {
+        "fuzz": 300
+      },
+      "version": 4
+    },
+    "description": "App V4, Proof V4 old timestamp (custom fuzz)",
+    "expect": "fail",
+    "nonce": {
+      "value": "20060102T150405.333Z"
+    },
+    "proof": {
+      "version": 4
+    },
+    "spec_version": 4
+  }
+]

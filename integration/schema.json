@@ -1,0 +1,123 @@
+{
+  "$ref": "#/definitions/Suite",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "App": {
+      "additionalProperties": false,
+      "description": "An App Identity app.",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/Config",
+          "description": "The optional configuration."
+        },
+        "id": {
+          "description": "A number or string identifier.",
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "secret": {
+          "description": "A binary string secret.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version of the algorithm.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "secret",
+        "version"
+      ],
+      "type": "object"
+    },
+    "Config": {
+      "additionalProperties": false,
+      "description": "App configuration.",
+      "properties": {
+        "fuzz": {
+          "description": "An optional fuzz configuration. The value must be a positive integer and is measured in seconds.",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "Suite": {
+      "additionalProperties": false,
+      "description": "An integration test suite.",
+      "properties": {
+        "name": {
+          "description": "The name of the implementation.",
+          "type": "string"
+        },
+        "spec_version": {
+          "description": "The supported major specification version.",
+          "type": "number"
+        },
+        "tests": {
+          "description": "The set of tests to run.",
+          "items": {
+            "$ref": "#/definitions/Test"
+          },
+          "type": "array"
+        },
+        "version": {
+          "description": "The version of the implementation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "spec_version",
+        "tests"
+      ],
+      "type": "object"
+    },
+    "Test": {
+      "additionalProperties": false,
+      "description": "An integration test to be run.",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/App",
+          "description": "The app used for the test."
+        },
+        "description": {
+          "description": "A description of the test. Shown as part of the output.",
+          "type": "string"
+        },
+        "expect": {
+          "description": "Whether the proof comparison should pass or fail.",
+          "enum": [
+            "pass",
+            "fail"
+          ],
+          "type": "string"
+        },
+        "proof": {
+          "description": "The generated proof to test.",
+          "type": "string"
+        },
+        "required": {
+          "description": "Indicates whether this is a required test for conformance.",
+          "type": "boolean"
+        },
+        "spec_version": {
+          "description": "The major specification version for this test. Integration suite runners should mark unsupported specification versions as skipped.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "app",
+        "proof",
+        "expect",
+        "required",
+        "spec_version"
+      ],
+      "type": "object"
+    }
+  }
+}
