@@ -22,34 +22,37 @@ defmodule AppIdentity.App do
   """
   @type config ::
           nil
-          | %{optional(:fuzz) => pos_integer(), optional(atom()) => term}
-          | %{optional(String.t()) => term}
+          | %{optional(:fuzz) => pos_integer(), optional(atom()) => term()}
+          | %{optional(String.t()) => term()}
 
   @typedoc """
-  A map struct that can be converted into an App struct. If the map uses string
-  keys, they are required to match the same definitions.
+  A map or struct that can be converted into an App struct. If the map uses
+  string keys, they are required to match the same definitions.
   """
   @type input ::
           %{
-            required(:id) => term,
-            required(:secret) => term,
-            required(:version) => term,
-            optional(:config) => term,
-            optional(atom) => term
+            required(:id) => term(),
+            required(:secret) => term(),
+            required(:version) => term(),
+            optional(:config) => term(),
+            optional(atom) => term()
           }
-          | %{required(binary()) => term}
+          | %{required(binary()) => term()}
+
+  @type invalid_input :: term()
 
   @typedoc """
   A 0-arity loader function that returns a map or struct that can be converted
   into an App struct.
   """
-  @type loader :: (() -> input | t)
+  @type loader :: (() -> input | t | {:ok, input | t} | invalid_input)
 
   @typedoc """
   A finder function accepting a Proof struct parameter that returns a map or
   struct that can be converted into an App struct.
   """
-  @type finder :: (AppIdentity.Proof.t() -> input | t)
+  @type finder ::
+          (AppIdentity.Proof.t() -> input | t | {:ok, input | t} | invalid_input)
 
   @typedoc """
   A representation of an AppIdentity app used for proof generation and
@@ -101,8 +104,16 @@ defmodule AppIdentity.App do
       iex> app == app_copy
       true
   """
-  @spec new(input :: input | loader | t) ::
+  @spec new(input :: input | loader | t | invalid_input) ::
           {:ok, app :: t} | {:error, reason :: String.t()}
+  def new({:ok, %__MODULE__{}} = result) do
+    result
+  end
+
+  def new({:ok, input}) when is_map(input) or is_function(input, 0) do
+    new(input)
+  end
+
   def new(%__MODULE__{} = app) do
     {:ok, app}
   end

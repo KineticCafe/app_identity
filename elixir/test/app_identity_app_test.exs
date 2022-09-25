@@ -34,4 +34,16 @@ defmodule AppIdentityAppTest do
     assert {:error, "config must be nil or a map"} =
              App.new(%{id: 1, secret: "a", version: 1, config: 3})
   end
+
+  test "construction from a wrapped value" do
+    assert {:ok, %App{}} = App.new({:ok, %{id: 1, secret: "a", version: 1}})
+  end
+
+  test "construction from a loader function, successful" do
+    assert {:ok, %App{}} = App.new(fn -> {:ok, %{id: 1, secret: "a", version: 1}} end)
+  end
+
+  test "construction from a loader function, unsuccessful" do
+    assert {:error, "app can only be created from a map or struct"} = App.new(fn -> nil end)
+  end
 end
