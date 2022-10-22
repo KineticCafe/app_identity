@@ -12,3 +12,6 @@ ts/docs/
 tmp/
 work/
 app-identity-suite-*.json
+.elixir-version
+.ruby-version
+.erlang-version

@@ -155,6 +155,7 @@ defmodule AppIdentityPlugTest do
         |> call(headers: [@default_header], apps: [v1])
 
       assert_failed_request(conn)
+      assert_private_app_identity(conn, %{@default_header => nil})
     end
 
     for version <- AppIdentity.Versions.supported() do
@@ -279,6 +280,23 @@ defmodule AppIdentityPlugTest do
           "function returns :continue" => quote(do: fn _ -> :continue end),
           "{module, function} returns :continue" => {OnFailure, :continue}
         } do
+      test "continues on app finder failure when on_failure #{desc}", context do
+        {:ok, alt} = AppIdentity.App.new(v1())
+
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, AppIdentity.generate_proof!(alt))
+          |> call(
+            headers: [@default_header],
+            on_failure: unquote(value),
+            finder: make_finder(context)
+          )
+
+        assert_successful_request(conn)
+        assert_private_app_identity(conn, %{@default_header => [nil]})
+      end
+
       test "continues on proof validation failure when on_failure #{desc}", %{v1: v1} do
         conn =
           "get"
