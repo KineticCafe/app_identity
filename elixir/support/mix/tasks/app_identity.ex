@@ -24,7 +24,9 @@ defmodule Mix.Tasks.AppIdentity do
 
   alias AppIdentity.Suite
 
-  @requirements ["app.start"]
+  if Version.compare(System.version(), "1.11.0") != :lt do
+    @requirements ["app.start"]
+  end
 
   @switches [
     aliases: [h: :help, V: :version],
@@ -37,6 +39,14 @@ defmodule Mix.Tasks.AppIdentity do
     case errors do
       [{bad_option, _} | _] -> Mix.raise("Unknown option #{bad_option}.\n\n")
       _ -> nil
+    end
+
+    # Telemetry is always enabled for dev and test, but we need to start it
+    # manually because it's an *optional* dependency.
+    {:ok, _} = Application.ensure_all_started(:telemetry)
+
+    if Version.compare(System.version(), "1.11.0") == :lt do
+      Mix.Task.run("app.start")
     end
 
     cond do

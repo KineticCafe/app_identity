@@ -4,7 +4,7 @@ defmodule AppIdentity.MixProject do
   def project do
     [
       app: :app_identity,
-      version: "1.0.0",
+      version: "1.1.0",
       description: "Fast, lightweight, cryptographically secure app authentication",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
@@ -37,7 +37,7 @@ defmodule AppIdentity.MixProject do
       ],
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
-        plt_add_apps: [:jason, :mix, :plug, :poison, :tesla]
+        plt_add_apps: [:jason, :mix, :plug, :poison, :telemetry, :tesla]
       ]
     ]
   end
@@ -48,17 +48,34 @@ defmodule AppIdentity.MixProject do
     ]
   end
 
+  if Version.compare(System.version(), "1.11.0") == :lt do
+    @versions %{
+      poison: ">= 3.0.0 and < 5.0.0",
+      ex_doc: "~> 0.27.0"
+    }
+
+    @extra [{:earmark_parser, "1.4.19"}]
+  else
+    @versions %{
+      poison: ">= 3.0.0",
+      ex_doc: "~> 0.29"
+    }
+
+    @extra []
+  end
+
   defp deps do
     [
-      {:plug, "~> 1.0", optional: true},
-      {:tesla, "~> 1.0", optional: true},
       {:jason, "~> 1.0", optional: true},
-      {:poison, ">= 3.0.0", optional: true},
-      {:secure_random, "~> 0.5", only: [:dev, :test]},
-      {:ex_doc, "~> 0.19", only: [:dev], runtime: false},
+      {:plug, "~> 1.0", optional: true},
+      {:poison, @versions.poison, optional: true},
+      {:telemetry, "~> 0.4 or ~> 1.0", optional: true},
+      {:tesla, "~> 1.0", optional: true},
       {:credo, "~> 1.0", only: [:dev], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
-    ]
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:ex_doc, @versions.ex_doc, only: [:dev], runtime: false},
+      {:secure_random, "~> 0.5", only: [:dev, :test]}
+    ] ++ @extra
   end
 
   defp elixirc_paths(:test) do
