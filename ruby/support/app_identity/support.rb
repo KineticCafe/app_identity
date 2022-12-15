@@ -89,7 +89,7 @@ module AppIdentity::Support # :nodoc:
     nonce = opts.delete(:nonce) { "nonce" }
     version = opts.delete(:version) { 1 }
 
-    proof = version == 1 ? "#{app_id}:#{nonce}:#{padlock}" : "#{version}:#{app_id}:#{nonce}:#{padlock}"
+    proof = (version == 1) ? "#{app_id}:#{nonce}:#{padlock}" : "#{version}:#{app_id}:#{nonce}:#{padlock}"
 
     Base64.urlsafe_encode64(proof)
   end
