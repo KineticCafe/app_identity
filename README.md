@@ -36,7 +36,7 @@ _never_ validate a version 1 proof.
 | `1`         | ✅  | ✅  | ✅  | ✅  |
 | `2`         | ⛔️ | ✅  | ✅  | ✅  |
 | `3`         | ⛔️ | ⛔️ | ✅  | ✅  |
-| `3`         | ⛔️ | ⛔️ | ⛔️ | ✅  |
+| `4`         | ⛔️ | ⛔️ | ⛔️ | ✅  |
 
 ### Indications and Contraindications
 
