@@ -31,7 +31,7 @@ There is a Faraday Middleware for providing proof generation for clients.
 
 ```ruby
 Faraday.new(url: url) do |conn|
-  conn.request :app_identity,dentity_app: app,
+  conn.request :app_identity, app: app,
     header: 'app-proof-identity'
 end
 ```
@@ -41,7 +41,7 @@ end
 Add `app_identity` to your Gemfile:
 
 ```ruby
-gem 'app_identity', '~> 1.0'
+gem 'app_identity', '~> 1.1'
 ```
 
 ## Semantic Versioning

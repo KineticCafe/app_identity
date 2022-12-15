@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: app_identity 1.0 ruby lib
+# stub: app_identity 1.1.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "app_identity".freeze
-  s.version = "1.0"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "rubygems_mfa_required" => "true" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze, "Kinetic Commerce".freeze]
-  s.date = "2022-08-31"
+  s.date = "2022-12-27"
   s.description = "AppIdentity is a Ruby implementation of the Kinetic Commerce application\nidentity proof algorithm as described in its [spec][].".freeze
   s.email = ["aziegler@kineticcommerce.com".freeze, "dev@kineticcommerce.com".freeze]
   s.executables = ["app-identity-suite-ruby".freeze]
@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/KineticCafe/app-identity/tree/main/ruby/".freeze
   s.licenses = ["MIT".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
-  s.rubygems_version = "3.3.7".freeze
+  s.required_ruby_version = Gem::Requirement.new([">= 2.7".freeze, "< 4".freeze])
+  s.rubygems_version = "3.3.26".freeze
   s.summary = "AppIdentity is a Ruby implementation of the Kinetic Commerce application identity proof algorithm as described in its [spec][].".freeze
 
   if s.respond_to? :specification_version then
@@ -28,34 +29,38 @@ Gem::Specification.new do |s|
   if s.respond_to? :add_runtime_dependency then
     s.add_runtime_dependency(%q<optimist>.freeze, ["~> 3.0"])
     s.add_development_dependency(%q<minitest>.freeze, ["~> 5.16"])
+    s.add_development_dependency(%q<appraisal>.freeze, ["~> 2.4"])
+    s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0"])
     s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
     s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
     s.add_development_dependency(%q<hoe-git2>.freeze, ["~> 1.7"])
+    s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
     s.add_development_dependency(%q<minitest-autotest>.freeze, ["~> 1.0"])
     s.add_development_dependency(%q<minitest-bisect>.freeze, ["~> 1.2"])
     s.add_development_dependency(%q<minitest-focus>.freeze, ["~> 1.1"])
     s.add_development_dependency(%q<minitest-pretty_diff>.freeze, ["~> 0.1"])
-    s.add_development_dependency(%q<rack-test>.freeze, ["~> 0.6"])
-    s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14.0"])
+    s.add_development_dependency(%q<rack-test>.freeze, ["~> 2.0"])
+    s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
     s.add_development_dependency(%q<rdoc>.freeze, ["~> 6.4"])
-    s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.7"])
     s.add_development_dependency(%q<standard>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<hoe>.freeze, ["~> 3.24"])
+    s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.21"])
   else
     s.add_dependency(%q<optimist>.freeze, ["~> 3.0"])
     s.add_dependency(%q<minitest>.freeze, ["~> 5.16"])
+    s.add_dependency(%q<appraisal>.freeze, ["~> 2.4"])
+    s.add_dependency(%q<hoe>.freeze, ["~> 4.0"])
     s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
     s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
     s.add_dependency(%q<hoe-git2>.freeze, ["~> 1.7"])
+    s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
     s.add_dependency(%q<minitest-autotest>.freeze, ["~> 1.0"])
     s.add_dependency(%q<minitest-bisect>.freeze, ["~> 1.2"])
     s.add_dependency(%q<minitest-focus>.freeze, ["~> 1.1"])
     s.add_dependency(%q<minitest-pretty_diff>.freeze, ["~> 0.1"])
-    s.add_dependency(%q<rack-test>.freeze, ["~> 0.6"])
-    s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14.0"])
+    s.add_dependency(%q<rack-test>.freeze, ["~> 2.0"])
+    s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
     s.add_dependency(%q<rdoc>.freeze, ["~> 6.4"])
-    s.add_dependency(%q<simplecov>.freeze, ["~> 0.7"])
     s.add_dependency(%q<standard>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<hoe>.freeze, ["~> 3.24"])
+    s.add_dependency(%q<simplecov>.freeze, ["~> 0.21"])
   end
 end
