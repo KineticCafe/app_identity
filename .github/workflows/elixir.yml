@@ -19,22 +19,28 @@ jobs:
         include:
           - elixir: '1.10'
             otp: '21'
+            os: ubuntu-20.04
           - elixir: '1.11'
             otp: '21'
+            os: ubuntu-20.04
           - elixir: '1.11'
             otp: '23'
+            os: ubuntu-20.04
           - elixir: '1.12'
             otp: '24'
+            os: ubuntu-22.04
           - elixir: '1.13'
             otp: '24'
+            os: ubuntu-22.04
+          - elixir: '1.14'
+            otp: '25'
+            os: ubuntu-22.04
             check_formatted: true
             warnings_as_errors: true
             dialyzer: true
             credo: true
-          - elixir: '1.14' # latest version
-            otp: '25'
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
