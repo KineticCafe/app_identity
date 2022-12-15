@@ -5,10 +5,4 @@
 
 source "https://rubygems.org/"
 
-# As of 2022-12-15, Psych 5.0 does not install on macOS Ventura. Lock to the
-# latest known working version.
-install_if -> { RUBY_PLATFORM =~ /darwin/ } do
-  gem "psych", "~> 4.0"
-end
-
 gemspec

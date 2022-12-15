@@ -21,7 +21,7 @@ require "base64"
 # This would only allow AppIdentity version 2.
 class AppIdentity
   # The version of the AppIdentity library.
-  VERSION = "1.0.0"
+  VERSION = "1.1.0"
   # The name of this implementation for App Identity.
   NAME = "AppIdentity for Ruby"
   # The spec version supported in this library.

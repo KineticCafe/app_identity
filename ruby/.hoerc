@@ -15,6 +15,8 @@ exclude: !ruby/regexp '/
       vagrant
     )\/
   |
+  [Aa]ppraisals
+  |
   [gG]emfile(?:\.lock)?
   |
   \.(?:
