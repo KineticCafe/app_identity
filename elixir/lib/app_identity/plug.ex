@@ -15,10 +15,18 @@ if Code.ensure_loaded?(Plug.Conn) do
     The results of completed proof validations can be found at
     `%Plug.Conn{private: %{app_identity: %{}}}`, regardless of the success or
     failure state.
+
+    ## Telemetry
+
+    When telemetry is enabled, this plug will emit `[:app_identity, :plug,
+    :start]` and `[:app_identity, :plug, :stop]` events.
     """
 
-    alias AppIdentity.{App, AppIdentityError}
-    alias Plug.Conn
+    alias AppIdentity.App
+    alias AppIdentity.AppIdentityError
+
+    import Plug.Conn
+    import AppIdentity.Telemetry
 
     @behaviour Plug
 
@@ -76,10 +84,10 @@ if Code.ensure_loaded?(Plug.Conn) do
     @type on_failure ::
             :forbidden
             | :continue
-            | {:halt, Conn.status()}
-            | {:halt, Conn.status(), Conn.body()}
+            | {:halt, Plug.Conn.status()}
+            | {:halt, Plug.Conn.status(), Plug.Conn.body()}
 
-    @type on_failure_fn :: (Conn.t() -> on_failure) | {module(), function :: atom()}
+    @type on_failure_fn :: (Plug.Conn.t() -> on_failure) | {module(), function :: atom()}
 
     @enforce_keys [:headers]
     defstruct apps: %{}, disallowed: [], finder: nil, headers: [], on_failure: :forbidden
@@ -123,18 +131,27 @@ if Code.ensure_loaded?(Plug.Conn) do
     end
 
     @impl Plug
-    @spec call(conn :: Conn.t(), options :: [option()] | t) :: Conn.t()
+    @spec call(conn :: Plug.Conn.t(), options :: [option()] | t) :: Plug.Conn.t()
     def call(conn, options) when is_list(options) do
       call(conn, init(options))
     end
 
     def call(conn, %__MODULE__{} = options) do
+      {metadata, span_context} =
+        start_span(:plug, %{conn: conn, options: telemetry_options(options)})
+
+      conn =
+        register_before_send(conn, fn conn ->
+          stop_span(span_context, Map.put(metadata, :conn, conn))
+          conn
+        end)
+
       headers =
         conn
         |> get_request_headers(options)
         |> verify_headers(options)
 
-      conn = Conn.put_private(conn, :app_identity, headers)
+      conn = put_private(conn, :app_identity, headers)
 
       if has_errors?(headers) do
         dispatch_on_failure(options.on_failure, conn)
@@ -163,15 +180,15 @@ if Code.ensure_loaded?(Plug.Conn) do
     end
 
     defp dispatch_on_failure(:forbidden, conn) do
-      halt(conn)
+      dispatch_halt(conn)
     end
 
     defp dispatch_on_failure({:halt, status}, conn) do
-      halt(conn, status)
+      dispatch_halt(conn, status)
     end
 
     defp dispatch_on_failure({:halt, status, body}, conn) do
-      halt(conn, status, body)
+      dispatch_halt(conn, status, body)
     end
 
     defp dispatch_on_failure(:continue, conn) do
@@ -186,7 +203,7 @@ if Code.ensure_loaded?(Plug.Conn) do
     end
 
     defp parse_request_header(conn, header) do
-      {header, Conn.get_req_header(conn, header)}
+      {header, get_req_header(conn, header)}
     end
 
     defp verify_headers(headers, options) do
@@ -233,11 +250,11 @@ if Code.ensure_loaded?(Plug.Conn) do
       {:cont, [value | result]}
     end
 
-    defp halt(conn, status \\ :forbidden, body \\ []) do
+    defp dispatch_halt(conn, status \\ :forbidden, body \\ []) do
       conn
-      |> Conn.put_resp_header("content-type", "text/plain")
-      |> Conn.send_resp(status, body)
-      |> Conn.halt()
+      |> put_resp_header("content-type", "text/plain")
+      |> send_resp(status, body)
+      |> halt()
     end
 
     defp get_verification_app(proof, %{apps: apps, finder: nil}) do
@@ -327,6 +344,30 @@ if Code.ensure_loaded?(Plug.Conn) do
 
     defp parse_option_header(header) do
       String.downcase(header)
+    end
+
+    defp telemetry_options(%__MODULE__{} = options) do
+      apps =
+        options.apps
+        |> Map.values()
+        |> telemetry_apps()
+
+      on_failure =
+        if is_function(options.on_failure, 1) do
+          "function"
+        else
+          options.on_failure
+        end
+
+      [
+        {:apps, apps},
+        {:disallowed, options.disallowed},
+        {:finder, telemetry_app(options.finder)},
+        {:headers, options.headers},
+        {:on_failure, on_failure}
+      ]
+      |> Enum.reject(&match?({_, nil}, &1))
+      |> Map.new()
     end
   end
 end

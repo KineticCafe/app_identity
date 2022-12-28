@@ -112,7 +112,7 @@ defmodule AppIdentity.Suite.Runner do
   end
 
   if Version.compare(System.version(), "1.13.0") == :lt do
-    defp read_stdin(acc \\ []) do
+    defp read_stdin(_acc \\ []) do
       IO.read(:stdio, :all)
     end
   else

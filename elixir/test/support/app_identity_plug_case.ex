@@ -5,40 +5,38 @@ defmodule AppIdentity.PlugCase do
 
   use ExUnit.CaseTemplate
 
-  import AppIdentity.Support
-
   using do
     quote do
       import AppIdentity.Case
+      import AppIdentity.PlugCase
       import AppIdentity.Support
     end
   end
 
-  setup do
-    Application.ensure_all_started(:plug)
-
-    v1 = v1()
-    v2 = v2()
-    v3 = v3()
-    v4 = v4()
-
-    %{
-      1 => v1,
-      2 => v2,
-      3 => v3,
-      4 => v4,
-      :v1 => v1,
-      :v1_app => elem(AppIdentity.App.new(v1), 1),
-      :v2 => v2,
-      :v2_app => elem(AppIdentity.App.new(v2), 1),
-      :v3 => v3,
-      :v3_app => elem(AppIdentity.App.new(v3), 1),
-      :v4 => v4,
-      :v4_app => elem(AppIdentity.App.new(v4), 1)
-    }
+  setup context do
+    {:ok, _} = Application.ensure_all_started(:plug)
+    AppIdentity.Case.setup_context(context)
   end
 
-  def assert_error_reason(reason, fun) do
-    assert_raise AppIdentity.AppIdentityError, reason, fun
+  def assert_plug_telemetry_span(status, options \\ []) do
+    clients =
+      options
+      |> Keyword.get(:clients, [])
+      |> List.wrap()
+
+    for app <- clients, do: AppIdentity.Case.assert_generate_proof_telemetry_span(app)
+
+    assert_received {:event, [:app_identity, :plug, :start], %{system_time: _},
+                     %{conn: _, options: _}}
+
+    if apps = Keyword.get(options, :apps) do
+      assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
+                       %{conn: %{status: ^status, private: %{app_identity: ^apps}}, options: _}}
+    else
+      assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
+                       %{conn: %{status: ^status}, options: _}}
+    end
+
+    assert_received {_ref, {^status, _headers, _body}}
   end
 end

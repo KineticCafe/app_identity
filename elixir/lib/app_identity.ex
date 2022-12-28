@@ -6,6 +6,23 @@ defmodule AppIdentity do
   It implements identity proof generation and validation functions. These
   functions expect to work with an application structure
   (`t:AppIdentity.App.t/0`).
+
+  ## Telemetry Support
+
+  If [telemetry](https://hexdocs.pm/telemetry) is a dependency in your
+  application, and the telemetry is not explicitly disabled, telemetry events
+  will be emitted for `AppIdentity.generate_proof/2`,
+  `AppIdentity.verify_proof/3`, and `AppIdentity.Plug`. See
+  `AppIdentity.Telemetry` for more information.
+
+  ### Disabling Telemetry
+
+  Telemetry may be disabled by setting this for your configuration:
+
+      config :app_identity, AppIdentity.Telemetry, enabled: false
+
+  Remember to run `mix deps.compile --force tesla` after changing this setting
+  to ensure the change is picked up.
   """
 
   alias AppIdentity.{App, AppIdentityError, Proof}
@@ -142,6 +159,12 @@ defmodule AppIdentity do
 
       iex> AppIdentity.generate_proof(v2(), disallowed: [1, 2])
       :error
+
+  ### Telemetry
+
+  When telemetry is enabled, `generate_proof/2` will emit `[:app_identity,
+  :generate_proof, :start]` and `[:app_identity, :generate_proof, :stop]`
+  events.
   """
   @spec generate_proof(App.t() | App.loader() | App.t(), [option()]) ::
           {:ok, String.t()} | :error
@@ -185,6 +208,12 @@ defmodule AppIdentity do
 
       iex> AppIdentity.generate_proof!(v2(), disallowed: [1, 2])
       ** (AppIdentity.AppIdentityError) Error generating proof
+
+  ### Telemetry
+
+  When telemetry is enabled, `generate_proof/2` will emit `[:app_identity,
+  :generate_proof, :start]` and `[:app_identity, :generate_proof, :stop]`
+  events. Telemetry events are emitted *before* any error exceptions are thrown.
   """
   @spec generate_proof!(App.t() | App.loader() | App.t(), [option()]) :: String.t()
   def generate_proof!(app, options \\ []) do
@@ -242,6 +271,11 @@ defmodule AppIdentity do
   ```elixir
   AppIdentity.verify_proof(proof, &IdentityApplications.get!(&1.id))
   ```
+
+  ### Telemetry
+
+  When telemetry is enabled, `verified_proof/3` will emit `[:app_identity,
+  :verify_proof, :start]` and `[:app_identity, :verify_proof, :stop]` events.
   """
   @spec verify_proof(Proof.t() | String.t(), App.finder() | App.input() | App.t(), [
           option()
@@ -279,6 +313,12 @@ defmodule AppIdentity do
   ```elixir
   AppIdentity.verify_proof(proof, &IdentityApplications.get!(&1.id))
   ```
+
+  ### Telemetry
+
+  When telemetry is enabled, `verified_proof/3` will emit `[:app_identity,
+  :verify_proof, :start]` and `[:app_identity, :verify_proof, :stop]` events.
+  Telemetry events are emitted *before* any error exceptions are thrown.
   """
   @spec verify_proof!(Proof.t() | String.t(), App.finder() | App.t(), [option()]) ::
           App.t() | nil

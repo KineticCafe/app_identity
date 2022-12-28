@@ -113,7 +113,10 @@ defmodule AppIdentityPlugTest do
   end
 
   describe "call/2" do
-    def assert_failed_request(conn, status \\ 403, body \\ "") do
+    def assert_failed_request(conn, options \\ []) do
+      status = Keyword.get(options, :status, 403)
+      body = Keyword.get(options, :body, "")
+
       assert conn.halted
       assert status == conn.status
       assert body == conn.resp_body
@@ -135,6 +138,7 @@ defmodule AppIdentityPlugTest do
         |> call(headers: [@default_header], apps: [v1])
 
       assert_failed_request(conn)
+      assert_plug_telemetry_span(403)
     end
 
     test "fails with an invalid proof", %{v1: v1} do
@@ -145,6 +149,7 @@ defmodule AppIdentityPlugTest do
         |> call(headers: [@default_header], apps: [v1])
 
       assert_failed_request(conn)
+      assert_plug_telemetry_span(403)
     end
 
     test "fails with an invalid app proof", %{v1: v1, v2: v2} do
@@ -154,8 +159,10 @@ defmodule AppIdentityPlugTest do
         |> put_req_header(@default_header, AppIdentity.generate_proof!(v2))
         |> call(headers: [@default_header], apps: [v1])
 
-      assert_failed_request(conn)
-      assert_private_app_identity(conn, %{@default_header => nil})
+      apps = %{@default_header => nil}
+
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(403, apps: apps, clients: v2)
     end
 
     for version <- AppIdentity.Versions.supported() do
@@ -168,8 +175,12 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, AppIdentity.generate_proof!(app))
           |> call(headers: [@default_header], apps: [app])
 
+        apps = %{@default_header => [verified(app)]}
+
         assert_successful_request(conn)
-        assert_private_app_identity(conn, %{@default_header => [verified(app)]})
+        assert_private_app_identity(conn, apps)
+
+        assert_plug_telemetry_span(200, apps: apps, clients: app)
       end
     end
 
@@ -180,8 +191,12 @@ defmodule AppIdentityPlugTest do
         |> put_req_header(@default_header, AppIdentity.generate_proof!(v2))
         |> call(headers: [@default_header], apps: [v1, v2])
 
+      apps = %{@default_header => [verified(v2)]}
+
       assert_successful_request(conn)
-      assert_private_app_identity(conn, %{@default_header => [verified(v2)]})
+      assert_private_app_identity(conn, apps)
+
+      assert_plug_telemetry_span(200, apps: apps, clients: v2)
     end
 
     test "succeeds with multiple apps and multiple headers", %{v1: v1, v2: v2} do
@@ -194,12 +209,14 @@ defmodule AppIdentityPlugTest do
         |> put_req_header(extra_header, AppIdentity.generate_proof!(v2))
         |> call(headers: [@default_header, extra_header], apps: [v1, v2])
 
-      assert_successful_request(conn)
-
-      assert_private_app_identity(conn, %{
+      apps = %{
         @default_header => [verified(v1)],
         extra_header => [verified(v2)]
-      })
+      }
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
     end
 
     test "succeeds with multiple apps in multiple instances of the same header", %{v1: v1, v2: v2} do
@@ -210,8 +227,11 @@ defmodule AppIdentityPlugTest do
         |> add_req_header(@default_header, AppIdentity.generate_proof!(v1))
         |> call(headers: [@default_header], apps: [v1, v2])
 
+      apps = %{@default_header => [verified(v2), verified(v1)]}
+
       assert_successful_request(conn)
-      assert_private_app_identity(conn, %{@default_header => [verified(v2), verified(v1)]})
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v2, v1])
     end
 
     test "succeeds with one apps in multiple instances of the same header", %{v1: v1} do
@@ -222,8 +242,11 @@ defmodule AppIdentityPlugTest do
         |> add_req_header(@default_header, AppIdentity.generate_proof!(v1))
         |> call(headers: [@default_header], apps: [v1])
 
+      apps = %{@default_header => [verified(v1), verified(v1)]}
+
       assert_successful_request(conn)
-      assert_private_app_identity(conn, %{@default_header => [verified(v1), verified(v1)]})
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v1])
     end
 
     for {desc, value} <- %{
@@ -239,6 +262,7 @@ defmodule AppIdentityPlugTest do
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
         assert_failed_request(conn)
+        assert_plug_telemetry_span(403)
       end
     end
 
@@ -254,7 +278,8 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, "invalid proof")
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
-        assert_failed_request(conn, 401)
+        assert_failed_request(conn, status: 401)
+        assert_plug_telemetry_span(401)
       end
     end
 
@@ -271,7 +296,8 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, "invalid proof")
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
-        assert_failed_request(conn, 418, "Teapot")
+        assert_failed_request(conn, status: 418, body: "Teapot")
+        assert_plug_telemetry_span(418)
       end
     end
 
@@ -293,8 +319,11 @@ defmodule AppIdentityPlugTest do
             finder: make_finder(context)
           )
 
+        apps = %{@default_header => [nil]}
+
         assert_successful_request(conn)
-        assert_private_app_identity(conn, %{@default_header => [nil]})
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: alt)
       end
 
       test "continues on proof validation failure when on_failure #{desc}", %{v1: v1} do
@@ -304,8 +333,11 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, "invalid proof")
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
+        apps = %{@default_header => [nil]}
+
         assert_successful_request(conn)
-        assert_private_app_identity(conn, %{@default_header => [nil]})
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps)
       end
 
       test "continues on proof app location failure when on_failure #{desc}", %{v1: v1, v2: v2} do
@@ -315,8 +347,11 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, AppIdentity.generate_proof!(v2))
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
+        apps = %{@default_header => [nil]}
+
         assert_successful_request(conn)
-        assert_private_app_identity(conn, %{@default_header => [nil]})
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: v2)
       end
 
       test "continues on proof app validation failure when on_failure #{desc}", %{v1: v1} do
@@ -328,8 +363,11 @@ defmodule AppIdentityPlugTest do
           |> put_req_header(@default_header, AppIdentity.generate_proof!(alt))
           |> call(headers: [@default_header], apps: [v1], on_failure: unquote(value))
 
+        apps = %{@default_header => [AppIdentity.App.new!(v1)]}
+
         assert_successful_request(conn)
-        assert_private_app_identity(conn, %{@default_header => [AppIdentity.App.new!(v1)]})
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: alt)
       end
     end
   end
