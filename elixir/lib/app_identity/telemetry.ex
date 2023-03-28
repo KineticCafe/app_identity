@@ -9,7 +9,8 @@ defmodule AppIdentity.Telemetry do
   ## Telemetry Events
 
   All of `AppIdentity`'s telemetry events are spans, consisting of `:start` and
-  `:stop` events. These are always in the form `[:app_identity, <method>, <event>]`.
+  `:stop` events. These are always in the form `[:app_identity,
+  <telemetry_type>, <event>]`.
 
   The events are:
 
@@ -109,7 +110,7 @@ defmodule AppIdentity.Telemetry do
 
       config :app_identity, AppIdentity.Telemetry, enabled: false
 
-  Remember to run `mix deps.compile --force tesla` after changing this setting
+  Remember to run `mix deps.compile --force app_identity` after changing this setting
   to ensure the change is picked up.
   """
 
@@ -123,7 +124,7 @@ defmodule AppIdentity.Telemetry do
 
   alias AppIdentity.App
 
-  @typep telemetry_method :: :generate_proof | :verify_proof | :plug
+  @typep telemetry_type :: :generate_proof | :verify_proof | :plug
   @typep input :: nil | App.input() | App.loader() | App.finder() | App.t()
   @typedoc """
   A telemetry-safe version of an input or verified app.
@@ -148,29 +149,29 @@ defmodule AppIdentity.Telemetry do
 
   # Span context returned from `start_span/2` and should be passed to
   # `stop_span/2`.
-  @typep span_context :: {telemetry_method, start_time :: term()}
+  @typep span_context :: {telemetry_type, start_time :: term()}
 
   # Start a telemetry span.
   @doc false
-  @spec start_span(telemetry_method, metadata :: term) ::
+  @spec start_span(telemetry_type, metadata :: term) ::
           {metadata :: term, span_context}
   if @enabled do
-    def start_span(method, metadata) do
+    def start_span(telemetry_type, metadata) do
       metadata = span_metadata(metadata)
       start_time = :erlang.monotonic_time()
 
       :ok =
         :telemetry.execute(
-          [:app_identity, method, :start],
+          [:app_identity, telemetry_type, :start],
           %{monotonic_time: start_time, system_time: :erlang.system_time()},
           metadata
         )
 
-      {metadata, {method, start_time}}
+      {metadata, {telemetry_type, start_time}}
     end
   else
-    def start_span(method, _) do
-      {%{}, {method, nil}}
+    def start_span(telemetry_type, _) do
+      {%{}, {telemetry_type, nil}}
     end
   end
 
@@ -178,11 +179,11 @@ defmodule AppIdentity.Telemetry do
   @doc false
   @spec stop_span(span_context, metadata :: term) :: :ok
   if @enabled do
-    def stop_span({method, start_time}, metadata) do
+    def stop_span({telemetry_type, start_time}, metadata) do
       stop_time = :erlang.monotonic_time()
 
       :telemetry.execute(
-        [:app_identity, method, :stop],
+        [:app_identity, telemetry_type, :stop],
         %{duration: stop_time - start_time, monotonic_time: stop_time},
         span_metadata(metadata)
       )

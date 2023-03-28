@@ -162,9 +162,10 @@ defmodule AppIdentity do
 
   ### Telemetry
 
-  When telemetry is enabled, `generate_proof/2` will emit `[:app_identity,
-  :generate_proof, :start]` and `[:app_identity, :generate_proof, :stop]`
-  events.
+  When telemetry is enabled, `generate_proof/2` will emit:
+
+  - `[:app_identity, :generate_proof, :start]`
+  - `[:app_identity, :generate_proof, :stop]`
   """
   @spec generate_proof(App.t() | App.loader() | App.t(), [option()]) ::
           {:ok, String.t()} | :error
@@ -211,9 +212,12 @@ defmodule AppIdentity do
 
   ### Telemetry
 
-  When telemetry is enabled, `generate_proof/2` will emit `[:app_identity,
-  :generate_proof, :start]` and `[:app_identity, :generate_proof, :stop]`
-  events. Telemetry events are emitted *before* any error exceptions are thrown.
+  When telemetry is enabled, `generate_proof!/2` will emit:
+
+  - `[:app_identity, :generate_proof, :start]
+  - `[:app_identity, :generate_proof, :stop]`
+
+  Telemetry events are emitted *before* any error exceptions are thrown.
   """
   @spec generate_proof!(App.t() | App.loader() | App.t(), [option()]) :: String.t()
   def generate_proof!(app, options \\ []) do
@@ -274,8 +278,10 @@ defmodule AppIdentity do
 
   ### Telemetry
 
-  When telemetry is enabled, `verified_proof/3` will emit `[:app_identity,
-  :verify_proof, :start]` and `[:app_identity, :verify_proof, :stop]` events.
+  When telemetry is enabled, `verif_proof/3` will emit:
+
+  - `[:app_identity, :verify_proof, :start]`
+  - `[:app_identity, :verify_proof, :stop]`
   """
   @spec verify_proof(Proof.t() | String.t(), App.finder() | App.input() | App.t(), [
           option()
@@ -316,8 +322,11 @@ defmodule AppIdentity do
 
   ### Telemetry
 
-  When telemetry is enabled, `verified_proof/3` will emit `[:app_identity,
-  :verify_proof, :start]` and `[:app_identity, :verify_proof, :stop]` events.
+  When telemetry is enabled, `verify_proof!/3` will emit:
+
+  - `[:app_identity, :verify_proof, :start]`
+  - `[:app_identity, :verify_proof, :stop]`
+
   Telemetry events are emitted *before* any error exceptions are thrown.
   """
   @spec verify_proof!(Proof.t() | String.t(), App.finder() | App.t(), [option()]) ::
