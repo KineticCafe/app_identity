@@ -21,7 +21,7 @@ body:
       label: Code Area
       description: Where are you seeing the issue?
       multiple: true
-      description:
+      options:
         - Core Library
         - Integration Suite Generator
         - Integration Suite Runner

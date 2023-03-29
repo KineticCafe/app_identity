@@ -31,8 +31,21 @@ defmodule AppIdentity.Suite do
     opts = Application.get_env(:mix, :colors)
     opts = [width: width(), enabled: ansi_docs?(opts)] ++ opts
 
-    IO.ANSI.Docs.print_headings(["mix app_identity #{module.command()}"], opts)
-    IO.ANSI.Docs.print(module.help(), "text/markdown", opts)
+    print_headings(["mix app_identity #{module.command()}"], opts)
+    print(module.help(), "text/markdown", opts)
+  end
+
+  if Version.compare(System.version(), "1.11.0") == :lt do
+    def print(doc, _format, options) do
+      IO.ANSI.Docs.print(doc, options)
+    end
+
+    def print_headings(headings, options) do
+      IO.ANSI.Docs.print_heading(Enum.join(headings, "\n"), options)
+    end
+  else
+    defdelegate print(doc, format, options), to: IO.ANSI.Docs
+    defdelegate print_headings(headings, options), to: IO.ANSI.Docs
   end
 
   defp width do
