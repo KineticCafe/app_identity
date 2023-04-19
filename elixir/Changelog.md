@@ -1,5 +1,35 @@
 # App Identity for Elixir Changelog
 
+## 1.2.0 / 2023-04-20
+
+- Add support for header groups in `AppIdentity.Plug` to better handle fallback
+  headers. Kinetic’s original Elixir implementation always verified only the
+  _first_ value from a _list_ of headers, like so:
+
+  ```elixir
+  with [] <- Conn.get_req_header(conn, "header-1"),
+       [] <- Conn.get_req_header(conn, "header-2"),
+       [] <- Conn.get_req_header(conn, "header-3") do
+    :error
+  else
+    [value | _] -> {:ok, value}
+  end
+  ```
+
+  AppIdentity.Plug always processes all values of a header and puts the result
+  in a map with the header name as the key, it meant that we would have had to
+  check these results in turn. Instead, the `header_groups` option allows you to
+  collect all _related_ headers into one result key:
+
+  ```elixir
+  plug AppIdentity.Plug, header_groups: %{
+    "app" => ["header-1", "header-2", "header-3"]
+  }, ...
+  ```
+
+- Add support for alternate names so that `AppIdentity.Plug` can be
+  specified multiple times in a pipeline and will store its data separately.
+
 ## 1.1.0 / 2023-03-28
 
 - Add optional Telemetry support. If `:telemetry` is in your application's
