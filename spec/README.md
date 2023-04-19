@@ -22,8 +22,8 @@ This specification is versioned with a modified [Semantic Versioning][] scheme.
 The major version of the specification will always be the highest algorithms
 version defined. Minor versions may adjust the text of the specification.
 
-As the current specification defines four algorithm versions, the current
-specification is `4.0`.
+The current specification is `4.1`, as four algorithm versions have been
+defined.
 
 ## Application
 
@@ -32,7 +32,7 @@ attributes:
 
 - `id`: The unique identifier of the application. It is recommended that this
   value is a `UUID`. When using an integer identifier, it is recommended that
-  this value be extended, such as that provided by Rails [global ID][global id].
+  this value be extended, such as that provided by Rails [Global ID][global id].
   Such representations are _also_ recommended if the ID is a compound value.
   Non-string identifiers must be converted to string values.
 
@@ -40,14 +40,28 @@ attributes:
   as presented (if presented as a base-64 value, the secret _is_ the base-64
   value, not a decoded version of it).
 
-- `version`: The minimum algorithm version supported by the application, an
-  integer value. The reference implementations of App Identity do not currently
-  restrict the `version` for compatibility purposes, but new applications
-  **should not** use version 1 applications.
+  Application secrets should be prefixed with a fixed value, such as `appid_`.
+  This improves the ability of security tools (such as [gitleaks][],
+  [GitGuardian][], or [GitHub secret scanning][]) to detect that an application
+  secret key has been leaked
 
-- `config`: A configuration object. As of this writing, only one key for this
-  object is defined when `version` 2 or higher. The `config` only affects proof
-  verification.
+  Where possible, implementations **should** use memory-safe storage for the
+  `secret` value and **must** prevent accidental exposure of the secret in logs
+  through normal object introspection.
+
+  > All reference implementations use no-argument closures to store the secret
+  > in memory, which prevents accidental logging of the secret. In addition,
+  > custom inspect functions have been implemented which hides the secret value
+  > by default.
+
+- `version`: The minimum algorithm version supported by the application, an
+  integer value. The reference implementations of App Identity do not restrict
+  the `version` for backwards compatibility purposes, but new services
+  **should** consider version 1 applications deprecated.
+
+- `config`: A configuration object which affects proof verification. Only one
+  key for this object is defined when `version` 2 or higher. The `config` only
+  affects proof verification.
 
   - `fuzz`: The fuzziness of time stamp comparison, in seconds, for version `2`
     or higher algorithms. If not present, defaults to `600` seconds, or ±600
@@ -174,12 +188,12 @@ secure_random_base64_bytes(32)
 
 #### Timestamp Nonces
 
-Version 2, 3, and 4 nonces **must** be a UTC timestamp formatted using ISO
-8601 basic formatting. The timestamp _should_ be generated on a clock synced with
-NTP and _should_ be verified using a clock synced with NTP.
+Version 2, 3, and 4 nonces **must** be a UTC timestamp formatted using ISO 8601
+basic formatting. The timestamp _should_ be generated on a clock synced with NTP
+and _should_ be verified using a clock synced with NTP.
 
-For the purposes of this document, ISO 8601 basic formatting uses the
-following [ABNF][] format, adapted from [RFC3339][]:
+For the purposes of this document, ISO 8601 basic formatting is this [ABNF][]
+definition adapted from [RFC3339][]:
 
 ```abnf
 date-fullyear = 4DIGIT
@@ -215,8 +229,8 @@ following ways:
 Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` must be presented
 as `20200225T192003.321423Z`.
 
-C-style `strftime` formatting for this format would be `'%Y%m%dT%H%M%S.%6NZ'`,
-and a PostgreSQL format for `TO_CHAR()` would `'YYYYMMDD"T"HH24MISS.FF6Z'`.
+The C-style `strftime` pattern for this format is `'%Y%m%dT%H%M%S.%6NZ'`, and
+the PostgreSQL `TO_CHAR` pattern is `'YYYYMMDD"T"HH24MISS.FF6Z'`.
 
 **Ruby**:
 
@@ -241,24 +255,6 @@ end
 
 ```typescript
 new Date().toISOString().replace(/[-:]/g, '')
-```
-
-**Swift**:
-
-```swift
-func secure_random_base64_bytes(count: Int32 = 16) -> String? {
-  var data = Data(count: count)
-  let result = data.withUnsafeMutableBytes {
-    SecRandomCopyBytes(kSecRandomDefaults, data.count, $0)
-  }
-  if result == errSecSuccess {
-    return data.base64EncodedString()
-  } else {
-    return nil
-  }
-}
-
-secure_random_base64_bytes(32)
 ```
 
 ### Padlock Calculation
@@ -407,3 +403,6 @@ String proof = new String(encodedHash, "UTF-8");
 [§5.6]: https://tools.ietf.org/html/rfc3339#section-5.6
 [semantic versioning]: http://semver.org/
 [abnf]: https://www.rfc-editor.org/rfc/rfc2234.txt
+[gitguardian]: https://www.gitguardian.com
+[gitleaks]: https://gitleaks.io
+[github secret scanning]: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
