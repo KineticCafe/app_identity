@@ -65,10 +65,13 @@ supports.
 
 ### Other Implementations
 
-We encourage implementations in other languages, and will link to them here.
+We encourage implementations in other languages, and will link to them here. We
+are planning implementations in the following languages:
 
-- Swift: Kinetic Commerce (_coming soon_)
-- Kotlin: Kinetic Commerce (_coming soon_)
+- Swift
+- Kotlin
+- Go
+- Rust
 
 If you have created an implementation, please submit a [pull request][pr] to
 update the list above.
