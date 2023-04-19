@@ -29,7 +29,7 @@ defmodule AppIdentityPlugTest do
   def call(conn, opts) do
     conn = Subject.call(conn, opts)
 
-    if conn.halted do
+    if conn.halted || Keyword.get(opts, :skip_send) do
       conn
     else
       conn
@@ -52,11 +52,20 @@ defmodule AppIdentityPlugTest do
   end
 
   describe "init/1" do
-    test "fails without headers", %{v1: v1} do
+    test "fails without headers or header groups", %{v1: v1} do
       assert_error_reason(
-        "AppIdentity.Plug configuration error: `headers` option is required",
+        "AppIdentity.Plug configuration error: `headers` or `header_groups` option is required",
         fn ->
           Subject.init(apps: [v1])
+        end
+      )
+    end
+
+    test "fails with headers and header groups", %{v1: v1} do
+      assert_error_reason(
+        "AppIdentity.Plug configuration error: only `headers` or `header_groups` option may be specified",
+        fn ->
+          Subject.init(apps: [v1], headers: ["v1"], header_groups: %{"a" => ["b"]})
         end
       )
     end
@@ -72,7 +81,7 @@ defmodule AppIdentityPlugTest do
 
     test "fails with empty list of headers", %{v1: v1} do
       assert_error_reason(
-        "AppIdentity.Plug configuration error: `headers` option is required",
+        "AppIdentity.Plug configuration error: `headers` value is invalid",
         fn ->
           Subject.init(apps: [v1], headers: [])
         end
@@ -110,6 +119,16 @@ defmodule AppIdentityPlugTest do
 
       assert is_function(finder, 1)
     end
+
+    test "provides only headers list for headers", %{v1: v1} do
+      assert %{headers: [@default_header], header_groups: nil} =
+               Subject.init(apps: [v1], headers: [@default_header])
+    end
+
+    test "provides only headers_group for a header_groups map", %{v1: v1} do
+      assert %{headers: nil, header_groups: %{"a" => ~w[b c], "c" => ["a"]}} =
+               Subject.init(apps: [v1], header_groups: %{"a" => ~w[b c], "c" => ["a"]})
+    end
   end
 
   describe "call/2" do
@@ -127,8 +146,8 @@ defmodule AppIdentityPlugTest do
       assert "OK" == conn.resp_body
     end
 
-    def assert_private_app_identity(conn, apps) do
-      assert apps == conn.private[:app_identity]
+    def assert_private_app_identity(conn, apps, name \\ :app_identity) do
+      assert apps == conn.private[name]
     end
 
     test "fails with no headers provided", %{v1: v1} do
@@ -163,6 +182,19 @@ defmodule AppIdentityPlugTest do
 
       assert_private_app_identity(conn, apps)
       assert_plug_telemetry_span(403, apps: apps, clients: v2)
+    end
+
+    test "fails with an invalid app proof with a custom name", %{v1: v1, v2: v2} do
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(@default_header, AppIdentity.generate_proof!(v2))
+        |> call(headers: [@default_header], apps: [v1], name: :name)
+
+      apps = %{@default_header => nil}
+
+      assert_private_app_identity(conn, apps, :name)
+      assert_plug_telemetry_span(403, apps: apps, clients: v2, name: :name)
     end
 
     for version <- AppIdentity.Versions.supported() do
@@ -216,6 +248,149 @@ defmodule AppIdentityPlugTest do
 
       assert_successful_request(conn)
       assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
+    end
+
+    test "succeeds with multiple apps and multiple headers in a single header group", %{
+      v1: v1,
+      v2: v2
+    } do
+      extra_header = "x-app-identity"
+
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+        |> put_req_header(extra_header, AppIdentity.generate_proof!(v2))
+        |> call(header_groups: %{"group" => [@default_header, extra_header]}, apps: [v1, v2])
+
+      apps = %{"group" => [verified(v1), verified(v2)]}
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
+    end
+
+    test "succeeds with multiple apps and multiple headers in multiple header groups", %{
+      v1: v1,
+      v2: v2
+    } do
+      extra_header = "x-app-identity"
+
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+        |> put_req_header(extra_header, AppIdentity.generate_proof!(v2))
+        |> call(
+          header_groups: %{"default" => [@default_header], "extra" => [extra_header]},
+          apps: [v1, v2]
+        )
+
+      apps = %{
+        "default" => [verified(v1)],
+        "extra" => [verified(v2)]
+      }
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
+    end
+
+    @tag :focus
+    test "only includes header groups with results present", %{v1: v1} do
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+        |> call(
+          header_groups: %{"default" => [@default_header], "extra" => ["excluded"]},
+          apps: [v1]
+        )
+
+      apps = %{"default" => [verified(v1)]}
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1])
+    end
+
+    @plugged EEx.compile_string("""
+             defmodule <%= mod %> do
+               use Plug.Builder
+
+               alias AppIdentity.{
+                 App,
+                 Support
+               }
+
+               @v1 App.__to_map(App.new!(Support.v1()))
+               def v1, do: @v1
+               def v1(_), do: @v1
+
+               @v2 App.__to_map(App.new!(Support.v2()))
+               def v2, do: @v2
+               def v2(_), do: @v2
+
+               @default_header "application-identity"
+               def default_header, do: @default_header
+               @extra_header "x-application-identity"
+               def extra_header, do: @extra_header
+
+               plug(AppIdentity.Plug, headers: [@default_header], finder: &<%= mod %>.v1/1)
+               plug(AppIdentity.Plug, headers: [@extra_header], name: :extra, finder: &<%= mod %>.v2/1)
+
+               def call(conn, opts) do
+                 conn
+                 |> super(opts)
+                 |> put_resp_header("content-type", "text/plain")
+                 |> send_resp(200, "OK")
+               end
+             end
+             """)
+
+    test "succeeds with plug builder plugs" do
+      {code, _bindings} = Code.eval_quoted(@plugged, mod: MultipleAppIdentityPlugs)
+      [{mod, _bytecode}] = Code.compile_string(code)
+
+      v1 = mod.v1()
+      v2 = mod.v2()
+      default_header = mod.default_header()
+      extra_header = mod.extra_header()
+
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(default_header, AppIdentity.generate_proof!(v1))
+        |> put_req_header(extra_header, AppIdentity.generate_proof!(v2))
+        |> mod.call([])
+
+      apps = %{default_header => [verified(v1)]}
+      extra = %{extra_header => [verified(v2)]}
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_private_app_identity(conn, extra, :extra)
+      assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
+    end
+
+    test "succeeds with multiple plugs", %{v1: v1, v2: v2} do
+      extra_header = "x-app-identity"
+
+      conn =
+        "get"
+        |> conn("/")
+        |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+        |> put_req_header(extra_header, AppIdentity.generate_proof!(v2))
+        |> call(headers: [@default_header], apps: [v1], skip_send: true)
+        |> call(headers: [extra_header], apps: [v2], name: :extra)
+
+      apps = %{@default_header => [verified(v1)]}
+      extra = %{extra_header => [verified(v2)]}
+
+      assert_successful_request(conn)
+      assert_private_app_identity(conn, apps)
+      assert_private_app_identity(conn, extra, :extra)
       assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
     end
 

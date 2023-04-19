@@ -214,7 +214,7 @@ defmodule AppIdentity do
 
   When telemetry is enabled, `generate_proof!/2` will emit:
 
-  - `[:app_identity, :generate_proof, :start]
+  - `[:app_identity, :generate_proof, :start]`
   - `[:app_identity, :generate_proof, :stop]`
 
   Telemetry events are emitted *before* any error exceptions are thrown.

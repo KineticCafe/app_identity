@@ -6,15 +6,69 @@ if Code.ensure_loaded?(Plug.Conn) do
 
     When multiple proof values are provided in the request, all must be
     successfully verified. If any of the proof values cannot be verified,
-    request processing halts with `403 Forbidden`. Should no proof headers are
+    request processing halts with `403 Forbidden`. Should no proof headers be
     included, the request is considered invalid.
 
     All of the above behaviours can be modified through
     [configuration](`t:option/0`).
 
-    The results of completed proof validations can be found at
-    `%Plug.Conn{private: %{app_identity: %{}}}`, regardless of the success or
-    failure state.
+    ## Checking AppIdentity.Plug Results
+
+    The results of AppIdentity.Plug are stored in Plug.Conn private storage as
+    a map under the `:app_identity` key (this can be changed through the `name`
+    option), keyed by the header group name. When using the `headers` option,
+    each header is its own group. The `header_groups` option explicitly defines
+    headers that will be treated as belonging to the same group.
+
+    Header results only appear in the result map if they are present in the
+    request. If AppIdentity.Plug is configured for `app1` and `app2` headers,
+    but there are only values in `app1`, the resulting output will not include
+    `app2`.
+
+    ### Results Partitioning: `name` or Header Groups?
+
+    AppIdentity.Plug provides two main ways to partition processed results:
+    `name` or header groups (either automatic grouping via `headers` or explicit
+    grouping via `header_groups`).
+
+    Most applications that require result partitioning will use header groups,
+    because there's only one pool of applications defined. In this case,
+    use the following configuration as a guide.
+
+    ```elixir
+    plug AppIdentity.Plug, finder: &MyApp.Application.get/1,
+                           on_failure: :continue,
+                           header_groups: %{
+                              "application" => ["application-identity"],
+                              "service" => ["service-identity"]
+                           }
+    ```
+
+    Later in the processing pipeline, a later function (a controller or in
+    a route-specific Phoenix pipeline) would call a `require_application` or
+    `require_service` function which pulls from `conn.private.app_identity` with
+    the appropriate header group name for verification.
+
+    If there are _separate_ pools of applications defined, or there is a need to
+    have different `on_failure` conditions, then configure two AppIdentity.Plugs
+    with different `name`s . The following example configuration would allow
+    `application-identity` headers to fail without halting (even if _omitted_),
+    but a missing or incorrect `service-identity` header would cause failures
+    immediately.
+
+    ```elixir
+    plug AppIdentity.Plug, finder: &MyApp.Application.get/1,
+                           on_failure: :continue,
+                           headers: ["application-identity"]
+
+    plug AppIdentity.Plug, name: :service_app_identity,
+                           finder: &MyApp.ServiceApplication.get/1,
+                           header: ["service-identity"]
+    ```
+
+    If multiple AppIdentity.Plug configurations _are_ used, different `name`
+    values must be specified or the later plug will overwrite the results from
+    the earlier plug.
 
     ## Telemetry
 
@@ -36,13 +90,70 @@ if Code.ensure_loaded?(Plug.Conn) do
     - `apps`: A list of `AppIdentity.App` or `t:AppIdentity.App.input/0` values
       to be used for proof validation. Duplicate values will be ignored.
 
+      ```elixir
+      plug AppIdentity.Plug, apps: [app1, app2], ...
+      ```
+
     - `disallowed`: A list of algorithm versions that are not allowed when
       processing received identity proofs. See `t:AppIdentity.disallowed/0`.
+
+      ```elixir
+      plug AppIdentity.Plug, disallowed: [1], ...
+      ```
 
     - `finder`: An `t:AppIdentity.App.finder/0` function to load an
       `t:AppIdentity.App.input/0` from an external source given a parsed proof.
 
-    - `headers`: A list of HTTP header names.
+      ```elixir
+      plug AppIdentity.Plug, finder: &ApplicationModel.get/1
+      ```
+
+    - `headers`: A list of HTTP header names, which will be normalized on
+      initialization.
+
+      ```elixir
+      plug AppIdentity.Plug, headers: ["application-identity"], ...
+      ```
+
+      The result output uses each header name as the key for the related proof
+      results. A configuration of `headers: ["app1", "app2"]` can produce
+      a result map like `%{"app1" => [...], "app2" => [...]}`.
+
+      Duplicate header names will result in an error. This option must be
+      omitted if `header_groups` is used.
+
+    - `header_groups`: A map of header group names to HTTP header names.
+      Both header group names and HTTP header names must be binary strings.
+
+      When using `header_groups`, there is no guaranteed order for processing
+      groups, but the each headers within a group will be processed *in the
+      order provided*.
+
+      ```elixir
+      plug AppIdentity.Plug,
+        header_groups: %{
+                          "application" => ["application", "my-application"],
+                          "service" => ["service", "my-service"],
+                          },
+        ...
+      ```
+
+      The result output uses each header group name as the key for the related
+      proof results from any header in that group. A configuration of
+      `header_groups: %{"app" => ["app1", "app2"], "svc" => ["svc1"]}` can
+      produce a result map like `%{"app" => [...], "svc" => [...]}`.
+
+      Duplicate header names across any header groups will result in an error.
+      This option must be omitted if `headers` is used.
+
+    - `name`: An atom which will be used to store the `AppIdentity.Plug` results
+      in Plug.Conn private storage. If not provided, defaults to
+      `:app_identity`. Required if `AppIdentity.Plug` will be specified more
+      than once as results are not merged.
+
+      ```elixir
+      plug AppIdentity.Plug, name: :service_app, ...
+      ```
 
     - `on_failure`: The behaviour of the AppIdentity.Plug when proof validation
       fails. Must be one of the following values:
@@ -51,34 +162,55 @@ if Code.ensure_loaded?(Plug.Conn) do
         (forbidden) status. This is the same as `{:halt, :forbidden}`. This is
         the default `on_failure` behaviour.
 
+        ```elixir
+        plug AppIdentity.Plug, on_failure: :forbidden
+        ```
+
       - `{:halt, Plug.Conn.status()}`: Halt request processing and return the
         specified status code. An empty body is emitted.
+
+        ```elixir
+        plug AppIdentity.Plug, on_failure: {:halt, :forbidden}
+        ```
 
       - `{:halt, Plug.Conn.status(), Plug.Conn.body()}`: Halt request processing
         and return the specified status code. The body value is included in the
         response.
+
+        ```elixir
+        plug AppIdentity.Plug, on_failure: {:halt, :forbidden, ["Evicted"]}
+        ```
 
       - `:continue`: Continue processing, ensuring that failure states are
         recorded for the application to act on at a later point. This could be
         used to implement a distinction between *validating* a proof and
         *requiring* that the proof is valid.
 
+        ```elixir
+        plug AppIdentity.Plug, on_failure: :continue
+        ```
+
       - A 1-arity anonymous function or a {module, function} tuple accepting
         `Plug.Conn` that returns one of the above values.
+
+        ```elixir
+        plug AppIdentity.Plug, on_failure: {ApplicationModel, :resolve_proof_failure}
+        plug AppIdentity.Plug, on_failure: &ApplicationModel.resolve_proof_failure/1
+        ```
 
     At least one of `apps` or `finder` **must** be supplied. If both are
     present, apps are looked up in the `apps` list first.
 
-    ```elixir
-    plug AppIdentity.Plug, header: "application-identity",
-      finder: fn proof -> ApplicationModel.get!(proof.id) end
-    ```
+    Only one of `headers` or `header_groups` may be supplied. If both are
+    present, an exception will be raised.
     """
     @type option ::
             AppIdentity.disallowed()
             | {:headers, list(binary())}
+            | {:header_groups, %{required(binary()) => list(binary())}}
             | {:apps, list(App.input() | App.t())}
             | {:finder, App.finder()}
+            | {:name, atom}
             | {:on_failure, on_failure | on_failure_fn}
 
     @type on_failure ::
@@ -89,8 +221,13 @@ if Code.ensure_loaded?(Plug.Conn) do
 
     @type on_failure_fn :: (Plug.Conn.t() -> on_failure) | {module(), function :: atom()}
 
-    @enforce_keys [:headers]
-    defstruct apps: %{}, disallowed: [], finder: nil, headers: [], on_failure: :forbidden
+    defstruct apps: %{},
+              disallowed: [],
+              finder: nil,
+              headers: nil,
+              header_groups: nil,
+              name: :app_identity,
+              on_failure: :forbidden
 
     @typedoc """
     Normalized options for AppIdentity.Plug.
@@ -99,7 +236,9 @@ if Code.ensure_loaded?(Plug.Conn) do
             apps: %{optional(AppIdentity.id()) => App.t()},
             disallowed: list(AppIdentity.version()),
             finder: nil | App.finder(),
-            headers: list(binary()),
+            headers: nil | list(binary()),
+            header_groups: nil | %{required(binary()) => binary()},
+            name: atom(),
             on_failure: on_failure | {:fn, on_failure}
           }
 
@@ -121,17 +260,31 @@ if Code.ensure_loaded?(Plug.Conn) do
         raise AppIdentityError, :plug_missing_apps_or_finder
       end
 
+      if !Keyword.has_key?(options, :headers) && !Keyword.has_key?(options, :header_groups) do
+        raise AppIdentityError, :plug_headers_required
+      end
+
+      if Keyword.has_key?(options, :headers) && Keyword.has_key?(options, :header_groups) do
+        raise AppIdentityError, :plug_excess_headers
+      end
+
       %__MODULE__{
         apps: apps,
         finder: finder,
         disallowed: get_disallowed(options),
         headers: get_headers(options),
+        header_groups: get_header_groups(options),
+        name: get_name(options),
         on_failure: get_on_failure(options)
       }
     end
 
     @impl Plug
     @spec call(conn :: Plug.Conn.t(), options :: [option()] | t) :: Plug.Conn.t()
+    def call(%{halted: true} = conn, _options) do
+      conn
+    end
+
     def call(conn, options) when is_list(options) do
       call(conn, init(options))
     end
@@ -146,23 +299,23 @@ if Code.ensure_loaded?(Plug.Conn) do
           conn
         end)
 
-      headers =
+      results =
         conn
-        |> get_request_headers(options)
-        |> verify_headers(options)
+        |> verify_request_headers(options)
+        |> Map.new()
 
-      conn = put_private(conn, :app_identity, headers)
+      conn = put_private(conn, options.name, results)
 
-      if has_errors?(headers) do
+      if has_errors?(results) do
         dispatch_on_failure(options.on_failure, conn)
       else
         conn
       end
     end
 
-    defp has_errors?(headers) when is_map(headers) do
-      Enum.empty?(headers) ||
-        Enum.any?(headers, fn
+    defp has_errors?(results) when is_map(results) do
+      Enum.empty?(results) ||
+        Enum.any?(results, fn
           {_, nil} -> true
           {_, []} -> true
           {_, values} -> Enum.any?(values, &(match?(nil, &1) || match?(%{verified: false}, &1)))
@@ -195,11 +348,29 @@ if Code.ensure_loaded?(Plug.Conn) do
       conn
     end
 
-    defp get_request_headers(conn, options) do
-      options.headers
+    defp verify_request_headers(conn, %{headers: headers, header_groups: nil} = options) do
+      parse_and_verify_headers(conn, headers, options)
+    end
+
+    defp verify_request_headers(conn, %{headers: nil, header_groups: groups} = options) do
+      groups
+      |> Enum.map(fn {group, headers} ->
+        {
+          group,
+          conn
+          |> parse_and_verify_headers(headers, options)
+          |> Enum.map(fn {_, v} -> v end)
+          |> List.flatten()
+        }
+      end)
+      |> Enum.reject(&(match?({_, []}, &1) || match?({_, nil}, &1)))
+    end
+
+    defp parse_and_verify_headers(conn, headers, options) do
+      headers
       |> Enum.map(&parse_request_header(conn, &1))
       |> Enum.reject(&(match?({_, nil}, &1) || match?({_, []}, &1)))
-      |> Map.new()
+      |> verify_headers(options)
     end
 
     defp parse_request_header(conn, header) do
@@ -207,7 +378,7 @@ if Code.ensure_loaded?(Plug.Conn) do
     end
 
     defp verify_headers(headers, options) do
-      Map.new(headers, &verify_header(&1, options))
+      Enum.map(headers, &verify_header(&1, options))
     end
 
     defp verify_header({header, values}, options) do
@@ -285,14 +456,68 @@ if Code.ensure_loaded?(Plug.Conn) do
       end
     end
 
-    defp get_headers(options) do
-      headers = Keyword.get(options, :headers)
-
-      if !is_list(headers) || Enum.empty?(headers) do
-        raise AppIdentityError, :plug_headers_required
+    defp get_name(options) do
+      case Keyword.get(options, :name, :app_identity) do
+        value when is_atom(value) -> value
+        _ -> raise AppIdentityError, :plug_name_invalid
       end
+    end
 
-      Enum.map(headers, &parse_option_header/1)
+    defp get_headers(options) do
+      case Keyword.get(options, :headers) do
+        nil ->
+          nil
+
+        [] ->
+          raise AppIdentityError, :plug_header_invalid
+
+        headers when not is_list(headers) ->
+          raise AppIdentityError, :plug_header_invalid
+
+        headers ->
+          if duplicate_headers?(headers) do
+            raise AppIdentityError, :plug_header_invalid
+          end
+
+          Enum.map(headers, &parse_option_header/1)
+      end
+    end
+
+    defp get_header_groups(options) do
+      case Keyword.get(options, :header_groups) do
+        nil ->
+          nil
+
+        groups when not is_map(groups) ->
+          raise AppIdentityError, :plug_header_groups_invalid
+
+        groups ->
+          if Enum.empty?(groups) do
+            raise AppIdentityError, :plug_header_groups_invalid
+          end
+
+          invalid_names? =
+            groups
+            |> Map.keys()
+            |> Enum.any?(fn v -> !is_binary(v) end)
+
+          empty_groups? = Enum.any?(groups, &match?({_, []}, &1))
+
+          if invalid_names? || empty_groups? || duplicate_headers?(Map.values(groups)) do
+            raise AppIdentityError, :plug_header_groups_invalid
+          end
+
+          Map.new(groups, fn {name, headers} ->
+            {name, Enum.map(headers, &parse_option_header/1)}
+          end)
+      end
+    end
+
+    defp duplicate_headers?(headers) do
+      headers
+      |> List.flatten()
+      |> Enum.frequencies()
+      |> Enum.any?(fn {_header, count} -> count > 1 end)
     end
 
     defp get_on_failure(options) do

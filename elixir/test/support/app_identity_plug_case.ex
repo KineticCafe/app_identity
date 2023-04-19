@@ -30,8 +30,10 @@ defmodule AppIdentity.PlugCase do
                      %{conn: _, options: _}}
 
     if apps = Keyword.get(options, :apps) do
+      name = Keyword.get(options, :name, :app_identity)
+
       assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
-                       %{conn: %{status: ^status, private: %{app_identity: ^apps}}, options: _}}
+                       %{conn: %{status: ^status, private: %{^name => ^apps}}, options: _}}
     else
       assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
                        %{conn: %{status: ^status}, options: _}}
