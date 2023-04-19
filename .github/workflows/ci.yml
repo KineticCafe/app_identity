@@ -1,1 +1,322 @@
-No files specified
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-dco:
+    name: Check DCO
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tisonkun/actions-dco@v1.1
+
+  dependabot:
+    name: Dependabot auto-merge
+    if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  elixir-ci:
+    name: Elixir ${{ matrix.elixir }} (OTP ${{ matrix.otp }})
+
+    env:
+      LANG: en_US.UTF-8
+      LC_CTYPE: en_US.UTF-8
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - elixir: '1.10'
+            otp: '21'
+            os: ubuntu-20.04
+          - elixir: '1.11'
+            otp: '21'
+            os: ubuntu-20.04
+          - elixir: '1.11'
+            otp: '23'
+            os: ubuntu-20.04
+          - elixir: '1.12'
+            otp: '24'
+            os: ubuntu-22.04
+          - elixir: '1.13'
+            otp: '24'
+            os: ubuntu-22.04
+          - elixir: '1.14'
+            otp: '25'
+            os: ubuntu-22.04
+            check_formatted: true
+            warnings_as_errors: true
+            dialyzer: true
+            credo: true
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-elixir@v1
+        id: install
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+
+      - uses: actions/cache@v3
+        with:
+          key: builds@elixir-${{ steps.install.outputs.elixir-version }}-otp-${{ steps.install.outputs.otp-version }}-mix-${{ hashFiles('mix.lock') }}
+          path: |
+            elixir/deps
+            elxir/_build
+
+      - run: mix 'do' deps.get, deps.compile
+        working-directory: ./elixir
+
+      - run: mix format --check-formatted
+        working-directory: ./elixir
+        if: matrix.check_formatted
+
+      - run: mix compile --warnings-as-errors
+        working-directory: ./elixir
+        if: matrix.warnings_as_errors
+
+      - run: mix compile
+        working-directory: ./elixir
+        if: ${{ !matrix.warnings_as_errors }}
+
+      - run: mix test
+        working-directory: ./elixir
+
+      - run: >
+          mix app_identity generate --stdout |
+          mix app_identity run --stdin --strict
+        working-directory: ./elixir
+
+      - run: mix credo --strict
+        working-directory: ./elixir
+        if: matrix.credo
+
+      - uses: actions/cache@v3
+        with:
+          key: plts@elixir-${{ steps.install.outputs.elixir-version }}-otp-${{ steps.install.outputs.otp-version }}-mix-${{ hashFiles('mix.lock') }}
+          path: |
+            elixir/priv/plts
+          restore-keys: |
+            plts@elixir-${{ steps.install.outputs.elixir-version }}-otp-${{ steps.install.outputs.otp-version }}-mix-
+
+      - run: mix dialyzer
+        working-directory: ./elixir
+        if: matrix.dialyzer
+
+  ruby-ci:
+    name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }} - ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        gemfile:
+          - rack_1
+          - rack_2
+          - rack_3
+        os:
+          - ubuntu-20.04
+        ruby:
+          - '2.7'
+          - '3.0'
+          - '3.1'
+          - '3.2'
+          - head
+          - jruby
+          - jruby-head
+          - truffleruby
+          - truffleruby-head
+          - truffleruby+graalvm
+          - truffleruby+graalvm-head
+        include:
+          - ruby: head
+            continue-on-error: true
+          - ruby: jruby-head
+            continue-on-error: true
+          - ruby: truffleruby-head
+            continue-on-error: true
+          - ruby: truffleruby+graalvm-head
+            continue-on-error: true
+          - os: ubuntu-22.04
+            ruby: head
+            gemfile: rack_2
+          - os: ubuntu-22.04
+            ruby: head
+            continue-on-error: true
+            gemfile: rack_3
+          - os: ubuntu-22.04
+            ruby: '3.1'
+            gemfile: rack_2
+          - os: ubuntu-22.04
+            ruby: '3.1'
+            gemfile: rack_3
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/ruby/gemfiles/${{ matrix.gemfile }}.gemfile
+
+    continue-on-error: ${{ matrix.continue-on-error || false }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ./ruby
+
+      - run: bundle exec ruby -S rake test --trace
+        working-directory: ./ruby
+
+      - run: bundle exec standardrb
+        working-directory: ./ruby
+
+      - run: >
+          bundle exec bin/app-identity-suite-ruby generate --stdout |
+          bundle exec bin/app-identity-suite-ruby run --stdin --strict
+        working-directory: ./ruby
+
+  typescript-ci:
+    name: Typescript ${{ matrix.node }} (PNPM ${{ matrix.pnpm }}) - ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+        node:
+          - 14
+          - 16
+          - 18
+        pnpm:
+          - 6
+          - 7 # latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+          cache-dependency-path: ts/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./ts
+      - run: pnpm test
+        working-directory: ./ts
+      - run: pnpm lint
+        working-directory: ./ts
+      - run: pnpm format:check
+        working-directory: ./ts
+      - run: pnpm build:all
+        working-directory: ./ts
+      - run: pnpm cli:generate self.json && pnpm cli:run self.json --strict
+        working-directory: ./ts
+
+  integration-ci:
+    name: Integration Testing
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-22.04
+        node:
+          - 16
+        pnpm:
+          - 7
+        ruby:
+          - '3.1'
+        elixir:
+          - '1.14'
+        otp:
+          - '25'
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Check out codde
+      - uses: actions/checkout@v3
+
+      # Typescript Setup
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+          cache-dependency-path: ts/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./ts
+
+      # Ruby Setup
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: ./ruby
+
+      # Elixir Setup
+      - uses: erlef/setup-elixir@v1
+        id: install
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+
+      - run: mix 'do' deps.get, deps.compile, compile
+        working-directory: ./elixir
+
+      - run: mkdir -p suite
+
+      # Generate
+      - name: Generate Typescript Integration Suite
+        run: pnpm cli:generate ../suite
+        working-directory: ./ts
+
+      - name: Generate Ruby Integration Suite
+        run: bundle exec ruby -S bin/app-identity-suite-ruby generate ../suite
+        working-directory: ./ruby
+
+      - name: Generate Elixir Integration Suite
+        run: mix app_identity generate ../suite
+        working-directory: ./elixir
+
+      # Run
+      - name: Run Typescript Verification
+        run: pnpm cli:run ../suite | ../integration/tapview
+        working-directory: ./ts
+
+      - name: Run Ruby Verification
+        run: bundle exec ruby -S bin/app-identity-suite-ruby run ../suite | ../integration/tapview
+        working-directory: ./ruby
+
+      - name: Run Elixir Integration Suite
+        run: mix app_identity run ../suite | ../integration/tapview
+        working-directory: ./elixir
