@@ -42,9 +42,14 @@ jobs:
             continue-on-error: true
           - ruby: jruby-head
             continue-on-error: true
+          - ruby: truffleruby-head
+            continue-on-error: true
+          - ruby: truffleruby+graalvm-head
+            continue-on-error: true
           - os: ubuntu-22.04
             ruby: head
             gemfile: rack_2
+            continue-on-error: true
           - os: ubuntu-22.04
             ruby: head
             continue-on-error: true
@@ -54,6 +59,12 @@ jobs:
             gemfile: rack_2
           - os: ubuntu-22.04
             ruby: '3.1'
+            gemfile: rack_3
+          - os: ubuntu-22.04
+            ruby: '3.2'
+            gemfile: rack_2
+          - os: ubuntu-22.04
+            ruby: '3.2'
             gemfile: rack_3
 
     runs-on: ${{ matrix.os }}
