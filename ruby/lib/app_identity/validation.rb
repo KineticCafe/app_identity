@@ -20,6 +20,13 @@ class AppIdentity
         raise AppIdentity::Error, "secret must be a binary string value" unless secret.is_a?(String)
         validate_not_empty(:secret, secret)
       }
+
+      if secret.respond_to?(:call)
+        secret
+      else
+        value = secret.dup
+        -> { value }
+      end
     end
 
     def validate_version(version) # :nodoc:

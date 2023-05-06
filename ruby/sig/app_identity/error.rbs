@@ -1,0 +1,7 @@
+class AppIdentity::Error < StandardError
+  attr_reader message: String?
+  def initialize: (untyped `type`) -> void
+
+  private
+  def resolve: (untyped `type`) -> String?
+end

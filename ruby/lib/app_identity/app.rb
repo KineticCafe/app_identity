@@ -150,14 +150,13 @@ class AppIdentity::App
   def initialize(input)
     input = input.call if input.respond_to?(:call)
 
-    @id = get(input, :id)
-    @secret = fwrap(get(input, :secret).dup)
-    @version = get(input, :version)
-    @config = get(input, :config)
+    @id = validate_id(get(input, :id))
+    @secret = validate_secret(get(input, :secret))
+    @version = validate_version(get(input, :version))
+    @config = validate_config(get(input, :config))
     @source = input
     @verified = false
 
-    validate!
     freeze
   end
 
@@ -200,7 +199,7 @@ class AppIdentity::App
   end
 
   def hash # :nodoc:
-    [AppIdentityApp::App, id, version, config, secret]
+    [AppIdentityApp::App, id, version, config, secret].hash
   end
 
   def inspect # :nodoc:
@@ -231,16 +230,5 @@ class AppIdentity::App
         raise AppIdentity::Error, "app cannot be created from input (missing value #{key.inspect})"
       end
     end
-  end
-
-  def fwrap(value)
-    value.respond_to?(:call) ? value : -> { value }
-  end
-
-  def validate!
-    @id = validate_id(@id)
-    @secret = fwrap(validate_secret(@secret))
-    @version = validate_version(@version)
-    @config = validate_config(@config)
   end
 end

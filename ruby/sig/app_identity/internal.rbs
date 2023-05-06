@@ -1,0 +1,20 @@
+class AppIdentity::Internal
+  include AppIdentity::Validation
+  self.@instance: AppIdentity::Internal
+
+  def self.instance: -> AppIdentity::Internal
+  def self.generate_proof!: (untyped app, **untyped) -> untyped
+  def self.parse_proof!: (untyped proof) -> {version: Integer, id: String?, nonce: String?, padlock: String?}
+  def self.verify_proof!: (untyped proof, untyped app, **untyped) -> untyped
+  def generate_proof!: (untyped app, ?nonce: nil, ?version: nil, ?disallowed: nil) -> bot
+  def parse_proof!: (untyped proof) -> {version: Integer, id: String?, nonce: String?, padlock: String?}
+  def verify_proof!: (untyped proof, untyped app, ?disallowed: nil) -> bot
+
+  private
+  def __generate_proof: (AppIdentity::App app, untyped nonce, Integer version, ?disallowed: nil) -> bot
+  def __generate_padlock: (AppIdentity::App app, untyped nonce, Integer version) -> bot
+  def versions_compatible!: (Integer app_version, Integer version) -> nil
+  def valid_nonce!: (String? nonce, Integer version, untyped config) -> bot
+  def compare_padlocks: (untyped generated, untyped provided) -> false
+  def generate_version_nonce: (untyped version) -> untyped
+end

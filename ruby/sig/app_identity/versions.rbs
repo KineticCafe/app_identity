@@ -1,0 +1,60 @@
+module AppIdentity::Versions
+  self.@disalllowed: Set[bot]
+
+  def self.[]: (Integer version) -> bot
+  def self.valid?: (Integer version) -> bool
+  def self.valid!: (Integer version) -> true
+  def self.allowed?: (Integer version, ?nil provided) -> bool
+  def self.allowed!: (Integer version, ?nil provided) -> true
+  def self.disallow: (*untyped versions) -> Set[bot]
+  def self.allow: (*untyped versions) -> Set[bot]
+  def self.coerce_versions: (Array[untyped] versions) -> Array[untyped]
+  def self.disallowed: -> Set[bot]
+
+  class Base
+    self.@defined: Hash[untyped, untyped]
+
+    def self.defined: -> Hash[untyped, untyped]
+    def self.instance: -> (RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)
+    def self.inherited: (singleton(RandomNonce) | singleton(TimestampNonce) | singleton(V1) | singleton(V2) | singleton(V3) | singleton(V4) subclass) -> ((RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)?)
+    def make_digest: (untyped raw) -> untyped
+    def inspect: -> String
+    def check_nonce!: (untyped nonce, untyped _config) -> nil
+    def self.version: -> Integer
+  end
+
+  class RandomNonce < Base
+    self.@_instance: RandomNonce | TimestampNonce | V1 | V2 | V3 | V4
+
+    def nonce_type: -> :random
+    def generate_nonce: -> String
+  end
+
+  class TimestampNonce < Base
+    self.@_instance: RandomNonce | TimestampNonce | V1 | V2 | V3 | V4
+
+    def nonce_type: -> :timestamp
+    def generate_nonce: -> String
+    def check_nonce!: (untyped nonce, untyped config) -> nil
+
+    private
+    def default_config: -> {fuzz: Integer}
+    def parse_timestamp!: (untyped nonce) -> Time
+  end
+
+  class V1 < RandomNonce
+    def digest_algorithm: -> singleton(Digest::SHA256)
+  end
+
+  class V2 < TimestampNonce
+    def digest_algorithm: -> singleton(Digest::SHA256)
+  end
+
+  class V3 < TimestampNonce
+    def digest_algorithm: -> singleton(Digest::SHA384)
+  end
+
+  class V4 < TimestampNonce
+    def digest_algorithm: -> singleton(Digest::SHA512)
+  end
+end

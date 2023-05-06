@@ -1,0 +1,26 @@
+class AppIdentity::App
+  include AppIdentity::Validation
+
+  def self.new: (untyped input) -> AppIdentity::App
+  attr_reader id: String
+  attr_reader secret: ^-> String
+  attr_reader version: Integer
+  attr_reader config: {}?
+  attr_reader source: untyped
+  attr_reader verified: bool
+  def initialize: (untyped input) -> void
+  def verify: -> AppIdentity::App
+  def unverify: -> AppIdentity::App
+  def generate_nonce: (?Integer? version) -> String
+  def to_h: -> {config: {}?, id: String, secret: String, version: Integer}
+  def to_s: -> String
+  def to_json: (*untyped args, **untyped kwargs) -> String
+  def hash: -> Integer
+  def inspect: -> String
+  def ==: (untyped other) -> bool
+
+  private
+  def get: (untyped input, :config | :id | :secret | :version key) -> untyped
+  def fwrap: (^-> untyped value) -> ^-> String
+  def validate!: -> void
+end
