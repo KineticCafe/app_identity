@@ -1,22 +1,23 @@
 module AppIdentity::Versions
-  self.@disalllowed: Set[bot]
+  self.@disalllowed: Set[Integer]
 
-  def self.[]: (Integer version) -> bot
+  def self.[]: (Integer version) -> Integer
   def self.valid?: (Integer version) -> bool
   def self.valid!: (Integer version) -> true
-  def self.allowed?: (Integer version, ?nil provided) -> bool
-  def self.allowed!: (Integer version, ?nil provided) -> true
-  def self.disallow: (*untyped versions) -> Set[bot]
-  def self.allow: (*untyped versions) -> Set[bot]
-  def self.coerce_versions: (Array[untyped] versions) -> Array[untyped]
-  def self.disallowed: -> Set[bot]
+  def self.allowed?: (Integer version, ?(Set[Integer] | Array[Integer])? provided) -> bool
+  def self.allowed!: (Integer version, ?(Set[Integer] | Array[Integer])? provided) -> true
+  def self.disallow: (*untyped versions) -> Set[Integer]
+  def self.allow: (*untyped versions) -> Set[Integer]
+  def self.coerce_versions: (Array[Integer] versions) -> Array[Integer]
+  def self.disallowed: -> Set[Integer]
 
   class Base
-    self.@defined: Hash[untyped, untyped]
+    self.@defined: Hash[untyped, (Base | RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)]
+    self.@_instance: (Base | RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)
 
     def self.defined: -> Hash[untyped, untyped]
-    def self.instance: -> (RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)
-    def self.inherited: (singleton(RandomNonce) | singleton(TimestampNonce) | singleton(V1) | singleton(V2) | singleton(V3) | singleton(V4) subclass) -> ((RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)?)
+    def self.instance: -> (Base | RandomNonce | TimestampNonce | V1 | V2 | V3 | V4)
+    def self.inherited: (singleton(RandomNonce) | singleton(TimestampNonce) | singleton(V1) | singleton(V2) | singleton(V3) | singleton(V4) subclass) -> void
     def make_digest: (untyped raw) -> untyped
     def inspect: -> String
     def check_nonce!: (untyped nonce, untyped _config) -> nil
@@ -24,22 +25,18 @@ module AppIdentity::Versions
   end
 
   class RandomNonce < Base
-    self.@_instance: RandomNonce | TimestampNonce | V1 | V2 | V3 | V4
-
     def nonce_type: -> :random
     def generate_nonce: -> String
   end
 
   class TimestampNonce < Base
-    self.@_instance: RandomNonce | TimestampNonce | V1 | V2 | V3 | V4
-
     def nonce_type: -> :timestamp
     def generate_nonce: -> String
     def check_nonce!: (untyped nonce, untyped config) -> nil
 
     private
-    def default_config: -> {fuzz: Integer}
-    def parse_timestamp!: (untyped nonce) -> Time
+    def config_fuzz: (AppIdentity::config) -> Integer
+    def parse_timestamp!: (String nonce) -> Time
   end
 
   class V1 < RandomNonce

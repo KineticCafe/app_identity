@@ -12,7 +12,7 @@ require_relative "validation"
 # AppIdentity::App objects are created frozen, and certain operations may
 # provide a modified duplicate.
 class AppIdentity::App
-  def self.new(input) # :nodoc:
+  def self.new(input)
     if input.is_a?(AppIdentity::App) && !input.verified
       input
     else
@@ -184,29 +184,27 @@ class AppIdentity::App
     AppIdentity::Versions[version].generate_nonce
   end
 
-  def to_h # :nodoc:
+  def to_h
     {config: config, id: id, secret: secret.call, version: version}
   end
 
-  alias_method :as_json, :to_h
-
-  def to_s # :nodoc:
+  def to_s
     inspect
   end
 
-  def to_json(*args, **kwargs) # :nodoc:
-    as_json.to_json(*args, **kwargs)
+  def to_json(*args)
+    to_h.to_json(*args)
   end
 
-  def hash # :nodoc:
+  def hash
     [AppIdentityApp::App, id, version, config, secret].hash
   end
 
-  def inspect # :nodoc:
+  def inspect
     "#<#{self.class} id: #{id} version: #{version} config: #{config} verified: #{verified}>"
   end
 
-  def ==(other) # :nodoc:
+  def ==(other)
     other.is_a?(self.class) &&
       id == other.id &&
       version == other.version &&

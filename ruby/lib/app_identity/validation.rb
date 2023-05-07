@@ -3,8 +3,8 @@
 require_relative "error"
 
 class AppIdentity
-  module Validation # :nodoc:
-    def validate_id(id) # :nodoc:
+  module Validation
+    def validate_id(id)
       id.tap {
         validate_not_nil(:id, id)
         validate_not_empty(:id, id.to_s)
@@ -12,24 +12,18 @@ class AppIdentity
       }.to_s
     end
 
-    def validate_secret(secret) # :nodoc:
-      secret.tap {
-        secret = secret.call if secret.respond_to?(:call)
+    def validate_secret(secret)
+      secret = secret.call if secret.respond_to?(:call)
 
-        validate_not_nil(:secret, secret)
-        raise AppIdentity::Error, "secret must be a binary string value" unless secret.is_a?(String)
-        validate_not_empty(:secret, secret)
-      }
+      validate_not_nil(:secret, secret)
+      raise AppIdentity::Error, "secret must be a binary string value" unless secret.is_a?(String)
+      validate_not_empty(:secret, secret)
 
-      if secret.respond_to?(:call)
-        secret
-      else
-        value = secret.dup
-        -> { value }
-      end
+      value = secret.dup
+      -> { value }
     end
 
-    def validate_version(version) # :nodoc:
+    def validate_version(version)
       version.tap {
         validate_not_nil(:version, version)
 
@@ -45,26 +39,26 @@ class AppIdentity
       }.to_i
     end
 
-    def validate_config(config) # :nodoc:
-      config.tap {
-        raise AppIdentity::Error, "config must be nil or a map" unless config.nil? || config.is_a?(Hash)
+    def validate_config(config)
+      raise AppIdentity::Error, "config must be nil or a map" unless config.nil? || config.is_a?(Hash)
 
-        if config.is_a?(Hash)
-          fuzz = config[:fuzz] || config["fuzz"]
+      if config.is_a?(Hash)
+        fuzz = config[:fuzz] || config["fuzz"]
 
-          case fuzz
-          when nil
-            nil
-          when Integer
-            raise AppIdentity::Error, "config.fuzz must be a positive integer or nil" unless fuzz > 0
-          else
-            raise AppIdentity::Error, "config.fuzz must be a positive integer or nil"
-          end
+        case fuzz
+        when nil
+          nil
+        when Integer
+          raise AppIdentity::Error, "config.fuzz must be a positive integer or nil" unless fuzz > 0
+        else
+          raise AppIdentity::Error, "config.fuzz must be a positive integer or nil"
         end
-      }
+
+        {fuzz: fuzz}
+      end
     end
 
-    def validate_padlock(padlock) # :nodoc:
+    def validate_padlock(padlock)
       padlock.tap {
         validate_not_nil(:padlock, padlock)
         raise AppIdentity::Error, "padlock must be a string" unless padlock.is_a?(String)

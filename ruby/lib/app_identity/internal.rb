@@ -4,7 +4,7 @@ require_relative "error"
 require_relative "validation"
 require_relative "versions"
 
-class AppIdentity::Internal # :nodoc:
+class AppIdentity::Internal
   include AppIdentity::Validation
 
   class << self
@@ -14,16 +14,16 @@ class AppIdentity::Internal # :nodoc:
       @instance ||= new
     end
 
-    def generate_proof!(app, **kwargs)
-      instance.generate_proof!(app, **kwargs)
+    def generate_proof!(app, nonce: nil, version: nil, disallowed: nil)
+      instance.generate_proof!(app, nonce: nonce, version: version, disallowed: disallowed)
     end
 
     def parse_proof!(proof)
       instance.parse_proof!(proof)
     end
 
-    def verify_proof!(proof, app, **kwargs)
-      instance.verify_proof!(proof, app, **kwargs)
+    def verify_proof!(proof, app, disallowed: nil)
+      instance.verify_proof!(proof, app, disallowed: disallowed)
     end
   end
 

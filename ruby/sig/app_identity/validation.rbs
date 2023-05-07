@@ -2,11 +2,11 @@ module AppIdentity::Validation
   def validate_id: (untyped id) -> String
   def validate_secret: ((String | ^-> String) secret) -> ^-> String
   def validate_version: ((Integer | String)? version) -> Integer
-  def validate_config: (untyped config) -> {}?
+  def validate_config: (untyped config) -> AppIdentity::config?
   def validate_padlock: (untyped padlock) -> untyped
 
   private
   def validate_not_nil: (:id | :padlock | :secret | :version `type`, untyped? value) -> void
-  def validate_not_empty: (:id | :padlock | :secret `type`, ^-> untyped value) -> void
+  def validate_not_empty: (:id | :padlock | :secret `type`, String value) -> void
   def validate_no_colons: (:id | :padlock `type`, untyped value) -> void
 end

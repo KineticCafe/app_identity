@@ -9,18 +9,18 @@ require_relative "validation"
 require_relative "error"
 
 class AppIdentity
-  module Versions # :nodoc:
-    class Base # :nodoc:
+  module Versions
+    class Base
       class << self
-        def defined # :nodoc:
+        def defined
           @defined ||= {}
         end
 
-        def instance # :nodoc:
+        def instance
           @_instance = new
         end
 
-        def inherited(subclass) # :nodoc:
+        def inherited(subclass)
           match = /V(?<version>\d+)\z/.match(subclass.name)
           return unless match
           version = match[:version].to_i
@@ -35,19 +35,19 @@ class AppIdentity
         private :new
       end
 
-      def make_digest(raw) # :nodoc:
+      def make_digest(raw)
         digest_algorithm.hexdigest(raw).upcase
       end
 
-      def inspect # :nodoc:
-        parts = [self.class]
-        parts << "version=#{version}" if respond_to?(:version)
-        parts << "nonce=#{nonce_type}" if respond_to?(:nonce_type)
-        parts << "digest=#{digest_algorithm}" if respond_to?(:digest_algorithm)
-        "#<#{parts.join(" ")}>"
+      def inspect
+        v = "version=#{version}" if respond_to?(:version)
+        n = "nonce=#{nonce_type}" if respond_to?(:nonce_type)
+        d = "digest=#{digest_algorithm}" if respond_to?(:digest_algorithm)
+
+        "#<#{[self.class, v, n, d].compact.join(" ")}>"
       end
 
-      def check_nonce!(nonce, _config) # :nodoc:
+      def check_nonce!(nonce, _config)
         raise AppIdentity::Error, "nonce must not be nil" if nonce.nil?
         raise AppIdentity::Error, "nonce must be a string" unless nonce.is_a?(String)
         raise AppIdentity::Error, "nonce must not be blank" if nonce.empty?
@@ -55,32 +55,33 @@ class AppIdentity
       end
     end
 
-    class RandomNonce < Base # :nodoc:
-      def nonce_type # :nodoc:
+    class RandomNonce < Base
+      def nonce_type
         :random
       end
 
-      def generate_nonce # :nodoc:
+      def generate_nonce
         SecureRandom.urlsafe_base64(32)
       end
     end
 
-    class TimestampNonce < Base # :nodoc:
-      def nonce_type # :nodoc:
+    class TimestampNonce < Base
+      include AppIdentity::Validation
+
+      def nonce_type
         :timestamp
       end
 
-      def generate_nonce # :nodoc:
+      def generate_nonce
         Time.now.utc.strftime("%Y%m%dT%H%M%S.%6NZ")
       end
 
-      def check_nonce!(nonce, config) # :nodoc:
+      def check_nonce!(nonce, config)
         super(nonce, config)
 
         timestamp = parse_timestamp!(nonce)
-        config ||= default_config
-        fuzz = config[:fuzz] || config["fuzz"] || 600
 
+        fuzz = config_fuzz(config)
         diff = (Time.now.utc - timestamp).abs.to_i
 
         raise AppIdentity::Error, "nonce is invalid" unless diff <= fuzz
@@ -88,8 +89,8 @@ class AppIdentity
 
       private
 
-      def default_config
-        {fuzz: 600}
+      def config_fuzz(config)
+        config&.dig(:fuzz) || 600
       end
 
       def parse_timestamp!(nonce)
@@ -101,8 +102,8 @@ class AppIdentity
 
     # V1 is the original algorithm, using a permanent nonce value and SHA256
     # digests. The use of this version is strongly discouraged for new clients.
-    class V1 < RandomNonce # :nodoc:
-      def digest_algorithm # :nodoc:
+    class V1 < RandomNonce
+      def digest_algorithm
         Digest::SHA256
       end
     end
@@ -111,8 +112,8 @@ class AppIdentity
     #
     # The nonce values will be verified to be within plus or minus a configured
     # number of seconds.
-    class V2 < TimestampNonce # :nodoc:
-      def digest_algorithm # :nodoc:
+    class V2 < TimestampNonce
+      def digest_algorithm
         Digest::SHA256
       end
     end
@@ -121,8 +122,8 @@ class AppIdentity
     #
     # The nonce values will be verified to be within plus or minus a configured
     # number of seconds.
-    class V3 < TimestampNonce # :nodoc:
-      def digest_algorithm # :nodoc:
+    class V3 < TimestampNonce
+      def digest_algorithm
         Digest::SHA384
       end
     end
@@ -131,8 +132,8 @@ class AppIdentity
     #
     # The nonce values will be verified to be within plus or minus a configured
     # number of seconds.
-    class V4 < TimestampNonce # :nodoc:
-      def digest_algorithm # :nodoc:
+    class V4 < TimestampNonce
+      def digest_algorithm
         Digest::SHA512
       end
     end
@@ -141,17 +142,17 @@ class AppIdentity
       include AppIdentity::Validation
 
       # Looks up the version instance by version.
-      def [](version) # :nodoc:
+      def [](version)
         AppIdentity::Versions::Base.defined.fetch(version)
       end
 
       # Checks to see if the version has been defined.
-      def valid?(version) # :nodoc:
+      def valid?(version)
         AppIdentity::Versions::Base.defined.has_key?(version)
       end
 
       # Tests that the version is valid or raises an exception.
-      def valid!(version) # :nodoc:
+      def valid!(version)
         return true if valid?(version)
         raise AppIdentity::Error, "version must be one of #{AppIdentity::Versions::Base.defined.keys}"
       end
@@ -160,7 +161,7 @@ class AppIdentity
       # either in the provided list or in global list.
       def allowed?(version, provided = nil)
         valid?(version) && !disallowed.member?(version) &&
-          !Set.new(provided).member?(version)
+          (provided ? !Set.new(provided).member?(version) : true)
       end
 
       # Tests that the version is valid and not explicitly disallowed or raises

@@ -4,13 +4,35 @@ class AppIdentity
   SPEC_VERSION: Integer
   INFO: {name: String, version: String, spec_version: Integer}
 
-  def self.generate_proof: (untyped app, ?nonce: nil, ?version: nil, ?disallowed: nil) -> nil
-  def self.generate_proof!: (untyped app, ?nonce: nil, ?version: nil, ?disallowed: nil) -> untyped
-  def self.parse_proof: (untyped proof) -> {version: Integer, id: String?, nonce: String?, padlock: String?}?
-  def self.parse_proof!: (untyped proof) -> {version: Integer, id: String?, nonce: String?, padlock: String?}
-  def self.verify_proof: (untyped proof, untyped app, ?disallowed: nil) -> nil
-  def self.verify_proof!: (untyped proof, untyped app, ?disallowed: nil) -> untyped
-  def self.disallow_version: (*untyped versions) -> Set[bot]
-  def self.allow_version: (*untyped versions) -> Set[bot]
+  type config = {fuzz: Integer}
+  type proof = {version: Integer, id: String, nonce: String, padlock: String}
+
+
+  def self.generate_proof: (
+      (AppIdentity::App | untyped) app,
+      ?nonce: String?,
+      ?version: Integer?,
+      ?disallowed: (Set[Integer] | Array[Integer])?
+  ) -> AppIdentity::proof?
+  def self.generate_proof!: (
+      (AppIdentity::App | untyped) app,
+      ?nonce: String?,
+      ?version: Integer?,
+      ?disallowed: (Set[Integer] | Array[Integer])?
+  ) -> AppIdentity::proof?
+  def self.parse_proof: (String | proof proof) -> AppIdentity::proof?
+  def self.parse_proof!: (String | proof proof) -> AppIdentity::proof
+  def self.verify_proof: (
+      String | proof proof,
+      (AppIdentity::App | untyped) app,
+      ?disallowed: (Set[Integer] | Array[Integer])?
+  ) -> AppIdentity::App?
+  def self.verify_proof!: (
+      String | proof proof,
+      (AppIdentity::App | untyped) app,
+      ?disallowed: (Set[Integer] | Array[Integer])?
+  ) -> AppIdentity::App?
+  def self.disallow_version: (*Integer versions) -> void
+  def self.allow_version: (*Integer versions) -> void
   def self.internal: -> AppIdentity::Internal
 end

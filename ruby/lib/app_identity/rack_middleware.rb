@@ -63,7 +63,7 @@ require "set"
 #   finder: ->(proof) { ApplicationModel.find(proof[:id]) }
 # ```
 class AppIdentity::RackMiddleware
-  def initialize(app, options = {}) # :nodoc:
+  def initialize(app, options = {})
     @app = app
 
     if !options.has_key?(:apps) && !options.has_key?(:finder)
@@ -82,7 +82,7 @@ class AppIdentity::RackMiddleware
     @on_failure = get_on_failure(options)
   end
 
-  def call(env) # :nodoc:
+  def call(env)
     headers = verify_headers(Hash[*@headers.flat_map { |h| [h, env[h]] }])
 
     env["app_identity"] = headers

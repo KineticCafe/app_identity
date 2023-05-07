@@ -38,7 +38,7 @@ if defined?(Faraday::Middleware)
   # The callable may return either the `env`, `:fail`, `:skip`, or `:pass`. Any
   # other value will be treated as `:fail`.
   class AppIdentity::FaradayMiddleware < Faraday::Middleware
-    def initialize(app, options = {}) # :nodoc:
+    def initialize(app, options = {})
       super(app)
 
       @identity_app = AppIdentity::App.new(options.fetch(:app))
@@ -47,7 +47,7 @@ if defined?(Faraday::Middleware)
       @disallowed = options.fetch(:disallowed, nil)
     end
 
-    def call(env) # :nodoc:
+    def call(env)
       proof = AppIdentity.generate_proof(@identity_app, disallowed: @disallowed)
 
       if proof.nil?

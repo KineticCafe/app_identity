@@ -7,9 +7,9 @@
 # This can also be raised by AppIdentity::RackMiddleware on configuration
 # failure.
 class AppIdentity::Error < ::StandardError
-  attr_reader :message # :nodoc:
+  attr_reader :message
 
-  def initialize(type) # :nodoc:
+  def initialize(type)
     @message = resolve(type)
   end
 
