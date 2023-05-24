@@ -4,9 +4,12 @@ target :lib do
   signature "sig"
 
   check "lib"                       # Directory name
-  ignore "lib/app_identity/rack_middleware.rb", "lib/app_identity/faraday_middleware.rb"
+  ignore "lib/app_identity/rack_middleware.rb"
+  # ignore "lib/app_identity/rack_middleware.rb", "lib/app_identity/faraday_middleware.rb"
 
   library "digest"
+  library "rack"
+  library "faraday"
   # library "pathname", "set"       # Standard libraries
   # library "strong_json"           # Gems
 

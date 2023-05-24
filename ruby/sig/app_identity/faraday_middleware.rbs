@@ -1,0 +1,51 @@
+# A Faraday middleware that generates an app identity proof header for
+# a request.
+#
+# The `options` provided has the following parameters:
+#
+# - `app`: (required) An AppIdentity::App or object that can be coerced into
+#   an AppIdentity::app with AppIdentity#new.
+#
+# - `disallowed`: A list of algorithm versions that are not allowed when
+#   processing received identity proofs. See AppIdentity::Versions.allowed?.
+#
+# - `header`: (required) The header to use for sending the app identity proof.
+#
+# - `on_failure`: (optional) The action to take when an app identity proof
+#   cannot be generated for any reason. May be one of the following values:
+#
+#     - `:fail`: Throws an exception. This is the default if `on_failure` is
+#       not specified.
+#
+#     - `:pass`: Sets the header to the empty value returned. The request will
+#       probably fail on the receiving server side.
+#
+#     - `:skip`: Does not add the header, as if the request were not made
+#       using an application.
+#
+# `on_failure` may also be provided a callable object that expects three
+# parameters:
+#
+# - `env`: The Faraday middleware `env` value;
+# - `app`: The identity app value provided to the middleware; and
+# - `header`: The header name provided to the middleware.
+#
+# The callable may return either the `env`, `:fail`, `:skip`, or `:pass`. Any
+# other value will be treated as `:fail`.
+class AppIdentity::FaradayMiddleware < Faraday::Middleware
+  @identity_app: AppIdentity::App
+  @header: String
+  @on_failure: :fail
+          | :pass
+          | :skip
+          | ^(untyped env, untyped app, String header) -> (untyped | :fail | :pass | :skip)
+  @disallowed: (Set[Integer] | Array[Integer])?
+
+  def initialize: (untyped app, ?::Hash[untyped, untyped] options) -> void
+
+  def call: (untyped env) -> untyped
+
+  private
+
+  def handle_failure: (untyped on_failure) -> untyped
+end

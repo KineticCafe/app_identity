@@ -1,0 +1,27 @@
+---
+- file: lib/app_identity/app.rb
+  diagnostics:
+  - range:
+      start:
+        line: 164
+        character: 17
+      end:
+        line: 164
+        character: 22
+    severity: ERROR
+    message: Unexpected positional argument
+    code: Ruby::UnexpectedPositionalArgument
+- file: lib/app_identity.rb
+  diagnostics:
+  - range:
+      start:
+        line: 32
+        character: 2
+      end:
+        line: 32
+        character: 74
+    severity: ERROR
+    message: |-
+      Cannot assign a value of type `::Hash[::Symbol, (::String | ::Integer)]` to a constant of type `{ :name => ::String, :spec_version => ::Integer, :version => ::String }`
+        ::Hash[::Symbol, (::String | ::Integer)] <: { :name => ::String, :spec_version => ::Integer, :version => ::String }
+    code: Ruby::IncompatibleAssignment
