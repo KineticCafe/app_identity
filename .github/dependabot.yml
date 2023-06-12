@@ -5,15 +5,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "mix"
-    directory: "/elixir" # Location of package manifests
+  - package-ecosystem: npm
+    directory: /ts
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "bundler"
-    directory: "/ruby"
+      interval: weekly
+  - package-ecosystem: mix
+    directory: /elixir
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      interval: weekly
+  - package-ecosystem: bundler
+    directory: /ruby
     schedule:
-      interval: "weekly"
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
