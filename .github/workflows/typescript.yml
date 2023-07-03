@@ -26,8 +26,13 @@ jobs:
           - 16
           - 18
         pnpm:
-          - 6
-          - 7 # latest
+          - 6.x.x
+          - 7.x.x
+          - 8.x.x # latest
+        exclude:
+          - os: ubuntu-latest
+            pnpm: 8.x.x
+            node: 14
 
     runs-on: ${{ matrix.os }}
 

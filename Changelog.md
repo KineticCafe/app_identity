@@ -8,9 +8,9 @@
 > - [Ruby](ruby/Changelog.md)
 > - [Typescript](ts/Changelog.md)
 
-## 4.1 / 2023-04-20
+## 4.1 / 2023-07-07
 
-- Security recommendations to the generation and in-memory use of application
+- Security recommendations for the generation and in-memory use of application
   `secret` values by libraries.
 
 ## 4.0 / 2022-09-07
