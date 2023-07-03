@@ -44,10 +44,10 @@ if Code.ensure_loaded?(Plug.Conn) do
                            }
     ```
 
-    Later in the processing pipeline, a later function (a controller or in
-    a route-specific Phoenix pipeline) would call a `require_application` or
-    `require_service` function which pulls from `conn.private.app_identity` with
-    the appropriate header group name for verification.
+    Later in request processsing, a controller or a route-specific Phoenix
+    pipeline coud call a `require_application` function which pulls from
+    `conn.private.app_identity` with the appropriate header group name for
+    verification.
 
     If there are _separate_ pools of applications defined, or there is a need to
     have different `on_failure` conditions, then configure two AppIdentity.Plugs

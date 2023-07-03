@@ -50,7 +50,7 @@ defmodule AppIdentity.MixProject do
 
   if Version.compare(System.version(), "1.11.0") == :lt do
     @versions %{
-      poison: ">= 3.0.0 and < 5.0.0",
+      poison: ">= 3.0.0 and < 6.0.0",
       ex_doc: "~> 0.27.0"
     }
 

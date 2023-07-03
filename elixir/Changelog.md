@@ -1,6 +1,6 @@
 # App Identity for Elixir Changelog
 
-## 1.2.0 / 2023-04-20
+## 1.2.0 / 2023-07-07
 
 - Add support for header groups in `AppIdentity.Plug` to better handle fallback
   headers. Kinetic’s original Elixir implementation always verified only the
@@ -17,9 +17,9 @@
   ```
 
   AppIdentity.Plug always processes all values of a header and puts the result
-  in a map with the header name as the key, it meant that we would have had to
-  check these results in turn. Instead, the `header_groups` option allows you to
-  collect all _related_ headers into one result key:
+  in a map with the header name as the key, it meant that each header result
+  would need to be checked individually. Instead, the `header_groups` option
+  collects _related_ headers into a single result key:
 
   ```elixir
   plug AppIdentity.Plug, header_groups: %{
@@ -27,15 +27,15 @@
   }, ...
   ```
 
-- Add support for alternate names so that `AppIdentity.Plug` can be
-  specified multiple times in a pipeline and will store its data separately.
+- Add support for alternate names so that `AppIdentity.Plug` can be specified
+  multiple times in a pipeline and will store its data separately.
 
 ## 1.1.0 / 2023-03-28
 
 - Add optional Telemetry support. If `:telemetry` is in your application's
-  dependencies, and Telemetry support is not explicitly disabled, events
-  will be emitted for `AppIdentity.generate_proof/2`,
-  `AppIdentity.verify_proof/3`, and `AppIdentity.Plug`.
+  dependencies, and Telemetry support is not explicitly disabled, events will be
+  emitted for `AppIdentity.generate_proof/2`, `AppIdentity.verify_proof/3`, and
+  `AppIdentity.Plug`.
 
   Disable by adding this line to your application's configuration:'
 
