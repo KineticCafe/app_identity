@@ -27,16 +27,9 @@ App Identity is _not_:
   secure for user authentication, and would require undefined side channels to
   communicate the shared secrets.
 
-App Identity algorithm versions are strictly upgradeable. That is, a version
-1 app can verify version 1, 2, 3, or 4 proofs. However, a version 2 app will
-_never_ validate a version 1 proof.
-
-| App Version | `1` | `2` | `3` | `4` |
-| ----------- | --- | --- | --- | --- |
-| `1`         | ✅  | ✅  | ✅  | ✅  |
-| `2`         | ⛔️ | ✅  | ✅  | ✅  |
-| `3`         | ⛔️ | ⛔️ | ✅  | ✅  |
-| `4`         | ⛔️ | ⛔️ | ⛔️ | ✅  |
+App Identity algorithm versions are strictly upgradeable. See
+[Algorithm Versions](spec/README.md#algorithm-versions) in the specification
+for details.
 
 ### Indications and Contraindications
 
