@@ -66,18 +66,50 @@ defmodule AppIdentity do
   <table>
     <thead>
       <tr>
-        <th rowspan=2>Version</th>
+        <th rowspan=2>App Identity<br />Version</th>
         <th rowspan=2>Nonce</th>
         <th rowspan=2>Digest Algorithm</th>
-        <th colspan=4>Can Verify</th>
+        <th colspan=4>Can Verify Proof<br />from Version</th>
       </tr>
       <tr><th>1</th><th>2</th><th>3</th><th>4</th></tr>
     </thead>
     <tbody>
-      <tr><th>1</th><td>random</td><td>SHA 256</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
-      <tr><th>2</th><td>timestamp ± fuzz</td><td>SHA 256</td><td>⛔️</td><td>✅</td><td>✅</td><td>✅</td></tr>
-      <tr><th>3</th><td>timestamp ± fuzz</td><td>SHA 384</td><td>⛔️</td><td>⛔️</td><td>✅</td><td>✅</td></tr>
-      <tr><th>4</th><td>timestamp ± fuzz</td><td>SHA 512</td><td>⛔️</td><td>⛔️</td><td>⛔️</td><td>✅</td></tr>
+      <tr>
+        <th>1</th>
+        <td>random</td>
+        <td>SHA2-256</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+      </tr>
+      <tr>
+        <th>2</th>
+        <td>timestamp ± fuzz</td>
+        <td>SHA2-256</td>
+        <td align="center">-</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+      </tr>
+      <tr>
+        <th>3</th>
+        <td>timestamp ± fuzz</td>
+        <td>SHA2-384</td>
+        <td align="center">-</td>
+        <td align="center">-</td>
+        <td align="center">Yes</td>
+        <td align="center">Yes</td>
+      </tr>
+      <tr>
+        <th>4</th>
+        <td>timestamp ± fuzz</td>
+        <td>SHA2-512</td>
+        <td align="center">-</td>
+        <td align="center">-</td>
+        <td align="center">-</td>
+        <td align="center">Yes</td>
+      </tr>
     </tbody>
   </table>
   """
