@@ -101,10 +101,42 @@ a version 1 app can verify version 1, 2, 3, or 4 proofs. However, a version
     <tr><th>1</th><th>2</th><th>3</th><th>4</th></tr>
   </thead>
   <tbody>
-    <tr><th>1</th><td>random</td><td>SHA 256</td><td align="center"> Yes </td><td align="center"> Yes </td><td align="center"> Yes </td><td align="center"> Yes </td></tr>
-    <tr><th>2</th><td>timestamp ± fuzz</td><td>SHA 256</td><td align="center"> - </td><td align="center"> Yes </td><td align="center"> Yes </td><td align="center"> Yes </td></tr>
-    <tr><th>3</th><td>timestamp ± fuzz</td><td>SHA 384</td><td align="center"> - </td><td align="center"> - </td><td align="center"> Yes </td><td align="center"> Yes </td></tr>
-    <tr><th>4</th><td>timestamp ± fuzz</td><td>SHA 512</td><td align="center"> - </td><td align="center"> - </td><td align="center"> - </td><td align="center"> Yes </td></tr>
+    <tr>
+      <th>1</th>
+      <td>random</td>
+      <td>SHA2-256</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>timestamp ± fuzz</td>
+      <td>SHA2-256</td>
+      <td align="center">-</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>timestamp ± fuzz</td>
+      <td>SHA2-384</td>
+      <td align="center">-</td>
+      <td align="center">-</td>
+      <td align="center">Yes</td>
+      <td align="center">Yes</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>timestamp ± fuzz</td>
+      <td>SHA2-512</td>
+      <td align="center">-</td>
+      <td align="center">-</td>
+      <td align="center">-</td>
+      <td align="center">Yes</td>
+    </tr>
   </tbody>
 </table>
 
