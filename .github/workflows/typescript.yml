@@ -47,7 +47,12 @@ jobs:
         working-directory: ./ts
       - run: pnpm lint
         working-directory: ./ts
-      - run: pnpm format:check
+      - run: |
+          pnpm format:check || {
+            pnpm format
+            git diff
+            exit 1
+          }
         working-directory: ./ts
       - run: pnpm build:all
         working-directory: ./ts
