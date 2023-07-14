@@ -1,9 +1,9 @@
 defmodule AppIdentity.Proof do
-  @proof_string_separator ":"
-
   @moduledoc """
-  A structure describing a computed or parsed App Identity proof.
+  A struct describing a computed or parsed App Identity proof.
   """
+
+  @proof_string_separator ":"
 
   alias AppIdentity.{App, Validation, Versions}
 
@@ -20,7 +20,7 @@ defmodule AppIdentity.Proof do
   @type t :: %__MODULE__{
           id: AppIdentity.id(),
           nonce: AppIdentity.nonce(),
-          padlock: String.t(),
+          padlock: binary(),
           version: AppIdentity.version()
         }
 
@@ -102,7 +102,7 @@ defmodule AppIdentity.Proof do
   #     {:error, ~S(Can't make a Proof out of ["An odd looking string"])}
   # """
 
-  @spec from_string(proof :: String.t()) :: {:ok, proof :: t} | {:error, reason :: String.t()}
+  @spec from_string(proof :: binary()) :: {:ok, proof :: t} | {:error, reason :: String.t()}
   def from_string(candidate) when is_binary(candidate) do
     case Base.url_decode64(candidate, padding: false) do
       {:ok, proof_string} ->
@@ -132,7 +132,7 @@ defmodule AppIdentity.Proof do
   #     ...> AppIdentity.Proof.to_string(proof)
   #     "2:123:a nonce:locked"
   # """
-  @spec to_string(proof :: t) :: String.t()
+  @spec to_string(proof :: t) :: binary()
   def to_string(%__MODULE__{version: 1} = proof) do
     [proof.id, proof.nonce, proof.padlock]
     |> Enum.join(@proof_string_separator)

@@ -15,7 +15,10 @@ defmodule AppIdentity.PlugCase do
 
   setup context do
     {:ok, _} = Application.ensure_all_started(:plug)
-    AppIdentity.Case.setup_context(context)
+
+    context
+    |> AppIdentity.Case.setup_context()
+    |> tap(fn context -> AppIdentity.PlugCallbacks.init(context: context) end)
   end
 
   def assert_plug_telemetry_span(status, options \\ []) do
@@ -40,5 +43,25 @@ defmodule AppIdentity.PlugCase do
     end
 
     assert_received {_ref, {^status, _headers, _body}}
+  end
+
+  def add_req_header(%{req_headers: headers} = conn, key, value) do
+    %{conn | req_headers: [{key, value} | headers]}
+  end
+
+  def make_finder(context) do
+    fn proof ->
+      context
+      |> Map.values()
+      |> Enum.filter(&match?(%AppIdentity.App{}, &1))
+      |> Enum.find(fn %{id: id} -> id == proof.id end)
+    end
+  end
+
+  if Version.compare(System.version(), "1.12.0") == :lt do
+    defp tap(value, fun) do
+      fun.(value)
+      value
+    end
   end
 end

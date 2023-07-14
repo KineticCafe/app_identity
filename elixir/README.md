@@ -43,7 +43,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:app_identity, "~> 1.0"}
+    {:app_identity, "~> 1.3"}
   ]
 end
 ```

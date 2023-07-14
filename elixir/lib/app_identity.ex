@@ -4,8 +4,7 @@ defmodule AppIdentity do
   [identity proof algorithm](spec.md).
 
   It implements identity proof generation and validation functions. These
-  functions expect to work with an application structure
-  (`t:AppIdentity.App.t/0`).
+  functions expect to work with an application struct (`t:AppIdentity.App.t/0`).
 
   ## Telemetry Support
 
@@ -21,8 +20,7 @@ defmodule AppIdentity do
 
       config :app_identity, AppIdentity.Telemetry, enabled: false
 
-  Remember to run `mix deps.compile --force tesla` after changing this setting
-  to ensure the change is picked up.
+  Recompile `app_identity` if this setting is changed.
   """
 
   alias AppIdentity.{App, AppIdentityError, Proof}
@@ -129,7 +127,7 @@ defmodule AppIdentity do
   servers. The timestamp will be parsed and compared to the server time (also in
   sync with an NTP server).
   """
-  @type nonce :: String.t()
+  @type nonce :: binary()
 
   @typedoc """
   A list of algorithm versions that are not allowed.
@@ -200,7 +198,7 @@ defmodule AppIdentity do
   - `[:app_identity, :generate_proof, :stop]`
   """
   @spec generate_proof(App.t() | App.loader() | App.t(), [option()]) ::
-          {:ok, String.t()} | :error
+          {:ok, binary()} | :error
   def generate_proof(app, options \\ []) do
     case AppIdentity.Internal.generate_proof(app, options) do
       {:ok, _} = ok -> ok
@@ -251,7 +249,7 @@ defmodule AppIdentity do
 
   Telemetry events are emitted *before* any error exceptions are thrown.
   """
-  @spec generate_proof!(App.t() | App.loader() | App.t(), [option()]) :: String.t()
+  @spec generate_proof!(App.t() | App.loader() | App.t(), [option()]) :: binary()
   def generate_proof!(app, options \\ []) do
     case AppIdentity.Internal.generate_proof(app, options) do
       {:ok, value} -> value
@@ -263,7 +261,7 @@ defmodule AppIdentity do
   Parses a proof string into an AppIdentity.Proof struct. Returns `{:ok, proof}`
   or `:error`.
   """
-  @spec parse_proof(Proof.t() | String.t()) :: {:ok, Proof.t()} | :error
+  @spec parse_proof(Proof.t() | binary()) :: {:ok, Proof.t()} | :error
   def parse_proof(proof) do
     case AppIdentity.Internal.parse_proof(proof) do
       {:ok, _} = ok -> ok
@@ -275,7 +273,7 @@ defmodule AppIdentity do
   Parses a proof string into an AppIdentity.Proof struct. Returns the parsed
   proof or raises an exception.
   """
-  @spec parse_proof!(Proof.t() | String.t()) :: Proof.t()
+  @spec parse_proof!(Proof.t() | binary()) :: Proof.t()
   def parse_proof!(proof) do
     case AppIdentity.Internal.parse_proof(proof) do
       {:ok, value} -> value
@@ -315,7 +313,7 @@ defmodule AppIdentity do
   - `[:app_identity, :verify_proof, :start]`
   - `[:app_identity, :verify_proof, :stop]`
   """
-  @spec verify_proof(Proof.t() | String.t(), App.finder() | App.input() | App.t(), [
+  @spec verify_proof(Proof.t() | binary(), App.finder() | App.input() | App.t(), [
           option()
         ]) ::
           {:ok, App.t() | nil} | :error
@@ -361,7 +359,7 @@ defmodule AppIdentity do
 
   Telemetry events are emitted *before* any error exceptions are thrown.
   """
-  @spec verify_proof!(Proof.t() | String.t(), App.finder() | App.t(), [option()]) ::
+  @spec verify_proof!(Proof.t() | binary(), App.finder() | App.t(), [option()]) ::
           App.t() | nil
   def verify_proof!(proof, app, options \\ []) do
     case AppIdentity.Internal.verify_proof(proof, app, options) do
