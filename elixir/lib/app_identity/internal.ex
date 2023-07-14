@@ -18,7 +18,7 @@ defmodule AppIdentity.Internal do
           app :: App.input() | App.loader() | App.t(),
           options :: [AppIdentity.option()]
         ) ::
-          {:ok, proof :: String.t()} | {:error, reason :: String.t()}
+          {:ok, proof :: binary()} | {:error, reason :: String.t()}
   def generate_proof(app, options \\ [])
 
   def generate_proof(%App{} = app, options) do
@@ -45,7 +45,7 @@ defmodule AppIdentity.Internal do
 
   # See AppIdentity.parse_proof/1 for details. This version returns `{:ok,
   # proof}` or `{:error, reason}`.
-  @spec parse_proof(proof :: Proof.t() | String.t()) ::
+  @spec parse_proof(proof :: Proof.t() | binary()) ::
           {:ok, proof :: Proof.t()} | {:error, reason :: String.t()}
   def parse_proof(%Proof{} = proof) do
     {:ok, proof}
@@ -58,7 +58,7 @@ defmodule AppIdentity.Internal do
   # See AppIdentity.verify_proof/3 for details. This version returns `{:ok,
   # proof}` or `{:error, reason}`.
   @spec verify_proof(
-          proof :: Proof.t() | String.t(),
+          proof :: Proof.t() | binary(),
           app :: App.finder() | App.input() | App.t(),
           options :: [AppIdentity.option()]
         ) :: {:ok, app :: App.t() | nil} | {:error, reason :: String.t()}

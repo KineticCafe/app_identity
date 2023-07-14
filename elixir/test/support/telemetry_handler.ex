@@ -1,7 +1,7 @@
 defmodule AppIdentity.TelemetryHandler do
   @moduledoc """
-  This utility module is used during job tests to capture telemetry events
-  and send them back to the test processes that registered the handler.
+  This utility module is used during tests to capture telemetry events and send
+  them back to the test processes that registered the handler.
 
   Adapted from Oban.TelemetryHandler.
   """

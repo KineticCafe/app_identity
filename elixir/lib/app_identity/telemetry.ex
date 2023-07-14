@@ -67,22 +67,50 @@ defmodule AppIdentity.Telemetry do
   #### `[:app_identity, :plug, :start]` Metadata
 
   - `conn`: `t:Plug.Conn.t/0`
-  - `options`: A map with the following keys (derived from
-    `t:AppIdentity.Plug.option/0`):
-    - `apps`: a list of `t:telemetry_app/0`
-    - `finder`: Either a value of `t:AppIdentity.Plug.on_failure/0` or the
-      string `"function"` if the `on_failure` value is
-      `t:AppIdentity.Plug.on_failure_fn/0`.
+  - `options`: A map that may have the following keys (derived from
+    `t:AppIdentity.Plug.Config.param/0`):
+    - `apps`: a list of `t:telemetry_app/0` values
+    - `finder`: if present, the string `"function (anonymous)"` for an anonymous
+      finder function or `"function (module.function/1)"` for a finder function
+      specified by name.
+    - `headers`: a list of identity header names
+    - `header_groups`: a map of header groups to lists of header names
+    - `on_failure`: the atom value of `t:AppIdentity.Plug.Config.on_failure/0`
+      or if the `on_failure` configuration is
+      `t:AppIdentity.Plug.Config.on_failure_callback/0`, it will be either the
+      string `"function (anonymous)"` for an anonymous callback or `"function
+      (module.function/1)"` for a named callback.
+    - `on_success`: if present, either the string `"function (anonymous)"` for
+      an anonymous callback or `"function (module.function/1)"` for a named
+      callback.
+    - `on_resolution`: if present, either the string `"function (anonymous)"`
+      for an anonymous callback or `"function (module.function/1)"` for a named
+      callback.
+    - `disallowed`: a `t:AppIdentity.disallowed/0` value.
 
   #### `[:app_identity, :plug, :stop]` Metadata
 
   - `conn`: `t:Plug.Conn.t/0`, updated after processing
   - `options`: A map with the following keys (derived from
-    `t:AppIdentity.Plug.option/0`):
-    - `apps`: a list of `t:telemetry_app/0`
-    - `finder`: Either a value of `t:AppIdentity.Plug.on_failure/0` or the
-      string `"function"` if the `on_failure` value is
-      `t:AppIdentity.Plug.on_failure_fn/0`.
+    `t:AppIdentity.Plug.Config.param/0`):
+    - `apps`: a list of `t:telemetry_app/0` values
+    - `finder`: if present, the string `"function (anonymous)"` for an anonymous
+      finder function or `"function (module.function/1)"` for a finder function
+      specified by name.
+    - `headers`: a list of identity header names
+    - `header_groups`: a map of header groups to lists of header names
+    - `on_failure`: the atom value of `t:AppIdentity.Plug.Config.on_failure/0`
+      or if the `on_failure` configuration is
+      `t:AppIdentity.Plug.Config.on_failure_callback/0`, it will be either the
+      string `"function (anonymous)"` for an anonymous callback or `"function
+      (module.function/1)"` for a named callback.
+    - `on_success`: if present, either the string `"function (anonymous)"` for
+      an anonymous callback or `"function (module.function/1)"` for a named
+      callback.
+    - `on_resolution`: if present, either the string `"function (anonymous)"`
+      for an anonymous callback or `"function (module.function/1)"` for a named
+      callback.
+    - `disallowed`: a `t:AppIdentity.disallowed/0` value.
 
   #### `[:app_identity, :verify_proof, :start]` Metadata
 
@@ -110,8 +138,11 @@ defmodule AppIdentity.Telemetry do
 
       config :app_identity, AppIdentity.Telemetry, enabled: false
 
-  Remember to run `mix deps.compile --force app_identity` after changing this setting
-  to ensure the change is picked up.
+  Recompile `app_identity` if this setting is changed:
+
+  ```console
+  $ mix deps.compile --force app_identity
+  ```
   """
 
   @enabled Code.ensure_loaded?(:telemetry) &&
@@ -139,7 +170,7 @@ defmodule AppIdentity.Telemetry do
   """
   @opaque telemetry_app ::
             nil
-            | binary()
+            | String.t()
             | %{
                 required(:id) => term(),
                 required(:version) => term(),
@@ -153,8 +184,7 @@ defmodule AppIdentity.Telemetry do
 
   # Start a telemetry span.
   @doc false
-  @spec start_span(telemetry_type, metadata :: term) ::
-          {metadata :: term, span_context}
+  @spec start_span(telemetry_type, metadata :: map()) :: {metadata :: map(), span_context}
   if @enabled do
     def start_span(telemetry_type, metadata) do
       metadata = span_metadata(metadata)
@@ -177,7 +207,7 @@ defmodule AppIdentity.Telemetry do
 
   # Stop a started telemetry span.
   @doc false
-  @spec stop_span(span_context, metadata :: term) :: :ok
+  @spec stop_span(span_context, metadata :: map()) :: :ok
   if @enabled do
     def stop_span({telemetry_type, start_time}, metadata) do
       stop_time = :erlang.monotonic_time()
@@ -206,9 +236,9 @@ defmodule AppIdentity.Telemetry do
     end
   end
 
-  # Turns the provided app into something telemetry friendly. either `nil`,
-  # `"loader"`, `"finder"`, or a partial `t:App.input/0` map
-  # (`secret` is excluded).
+  # Turns the provided input into something telemetry friendly. either `nil`,
+  # `"loader"`, `"finder (anonymous)"`, `"finder (module.function/1)"` or
+  # a partial `t:App.input/0` map (`secret` is excluded).
   @doc false
   @spec telemetry_app(input) :: telemetry_app
   if @enabled do
@@ -221,7 +251,11 @@ defmodule AppIdentity.Telemetry do
     end
 
     def telemetry_app(app) when is_function(app, 1) do
-      "finder"
+      "finder (anonymous)"
+    end
+
+    def telemetry_app({module, finder}) when is_atom(module) and is_atom(finder) do
+      "finder (#{String.replace_prefix(to_string(module), "Elixir.", "")}.#{finder}/1)"
     end
 
     def telemetry_app(%{"id" => _} = app) do

@@ -1,10 +1,10 @@
 defmodule AppIdentity.App do
   @moduledoc """
-  The structure used by the App Identity proof generation and verification
+  The struct used by the App Identity proof generation and verification
   algorithms. This should be constructed from a provided map or struct, such as
   a static configuration file or a database record.
 
-  The original structure or map is stored in the `source` attribute.
+  The original app input is stored in the `source` attribute.
   """
 
   import AppIdentity.Validation, only: [validate: 2]
@@ -23,7 +23,7 @@ defmodule AppIdentity.App do
   @type config ::
           nil
           | %{optional(:fuzz) => pos_integer(), optional(atom()) => term()}
-          | %{optional(String.t()) => term()}
+          | %{optional(binary()) => term()}
 
   @typedoc """
   A map or struct that can be converted into an App struct. If the map uses

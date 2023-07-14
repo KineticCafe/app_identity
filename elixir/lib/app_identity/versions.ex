@@ -65,7 +65,7 @@ defmodule AppIdentity.Versions do
   Creates a digest value for use in a padlock according to the provided algorithm version.
   """
   @spec make_digest(App.t(), AppIdentity.nonce(), AppIdentity.version()) ::
-          {:ok, digest :: String.t()} | {:error, reason :: String.t()}
+          {:ok, digest :: binary()} | {:error, reason :: String.t()}
   def make_digest(%{id: id, secret: secret}, nonce, version) do
     case version(version) do
       {:ok, mod} ->

@@ -1,5 +1,25 @@
 # App Identity for Elixir Changelog
 
+## 1.3.0 / 2023-07-20
+
+- Rename all spec uses of `String.t()` to `binary()` as
+
+- Extensive reorganization of the `AppIdentity.Plug` documentation to improve
+  the readability of the configuration.
+
+- Refactored configuration into `AppIdentity.Plug.Config` from the plug itself.
+  This was done in part to resolve a Dialyzer issue.
+
+- Add `on_resolution` and `on_success` callbacks in `AppIdentity.Plug.Config` to
+  better support various workflows (such as adding proof validation results to
+  `Logger.metadata/1`).
+
+- Extended the `AppIdentity.Plug.Config.finder` callback to accept a tuple
+  `{module, function}`.
+
+- Improved `AppIdentity.Plug.Config` telemetry context formatting to include the
+  plug `name`.
+
 ## 1.2.0 / 2023-07-07
 
 - Add support for header groups in `AppIdentity.Plug` to better handle fallback

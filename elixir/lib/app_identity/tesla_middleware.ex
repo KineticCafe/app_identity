@@ -11,7 +11,8 @@ if Code.ensure_loaded?(Tesla.Middleware) do
     - `disallowed`: A list of algorithm versions that are not allowed when
       processing received identity proofs. See `t:AppIdentity.disallowed/0`.
 
-    - `header`: (required) The header to use for sending the app identity proof.
+    - `header`: (required) The valid HTTP header to use for sending the app
+      identity proof.
 
     - `on_failure`: (optional) The action to take when an app identity proof
       cannot be generated for any reason *except* configuration errors. May be
@@ -44,14 +45,14 @@ if Code.ensure_loaded?(Tesla.Middleware) do
     @type option ::
             AppIdentity.disallowed()
             | {:app, App.input() | App.loader() | App.t()}
-            | {:header, String.t()}
-            | {:on_failure, on_failure | on_failure_fn}
+            | {:header, binary()}
+            | {:on_failure, on_failure | on_failure_callback}
 
     @type on_failure ::
             :fail | :pass | :skip
 
-    @type on_failure_fn ::
-            (Tesla.Env.t(), App.t(), header :: String.t() -> on_failure | Tesla.Env.t())
+    @type on_failure_callback ::
+            (Tesla.Env.t(), App.t(), header :: binary() -> on_failure | Tesla.Env.t())
             | {module(), function :: atom()}
 
     @impl Tesla.Middleware

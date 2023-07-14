@@ -1,30 +1,13 @@
 defmodule AppIdentityPlugTest do
-  use AppIdentity.PlugCase
+  use AppIdentity.PlugCase, async: true
   use Plug.Test
 
   alias AppIdentity.Plug, as: Subject
+  alias AppIdentity.PlugCallbacks
 
   doctest Subject
 
   @default_header "application-identity"
-
-  defmodule OnFailure do
-    def forbidden(_) do
-      :forbidden
-    end
-
-    def halt_401(_) do
-      {:halt, 401}
-    end
-
-    def halt_teapot(_) do
-      {:halt, 418, "Teapot"}
-    end
-
-    def continue(_) do
-      :continue
-    end
-  end
 
   def call(conn, opts) do
     conn = Subject.call(conn, opts)
@@ -35,99 +18,6 @@ defmodule AppIdentityPlugTest do
       conn
       |> put_resp_header("content-type", "text/plain")
       |> send_resp(200, "OK")
-    end
-  end
-
-  def add_req_header(%{req_headers: headers} = conn, key, value) do
-    %{conn | req_headers: [{key, value} | headers]}
-  end
-
-  def make_finder(context) do
-    fn proof ->
-      context
-      |> Map.values()
-      |> Enum.filter(&match?(%AppIdentity.App{}, &1))
-      |> Enum.find(fn %{id: id} -> id == proof.id end)
-    end
-  end
-
-  describe "init/1" do
-    test "fails without headers or header groups", %{v1: v1} do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: `headers` or `header_groups` option is required",
-        fn ->
-          Subject.init(apps: [v1])
-        end
-      )
-    end
-
-    test "fails with headers and header groups", %{v1: v1} do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: only `headers` or `header_groups` option may be specified",
-        fn ->
-          Subject.init(apps: [v1], headers: ["v1"], header_groups: %{"a" => ["b"]})
-        end
-      )
-    end
-
-    test "fails with invalid header name", %{v1: v1} do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: `headers` value is invalid",
-        fn ->
-          Subject.init(apps: [v1], headers: [""])
-        end
-      )
-    end
-
-    test "fails with empty list of headers", %{v1: v1} do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: `headers` value is invalid",
-        fn ->
-          Subject.init(apps: [v1], headers: [])
-        end
-      )
-    end
-
-    test "fails without apps or finder" do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: one of `apps` or `finder` options is required",
-        fn ->
-          Subject.init(headers: @default_header)
-        end
-      )
-    end
-
-    test "fails if apps do not create correctly" do
-      assert_error_reason(
-        "AppIdentity.Plug configuration error: one of `apps` or `finder` options is required",
-        fn ->
-          Subject.init(apps: [], headers: [@default_header])
-        end
-      )
-
-      assert_error_reason(
-        "app can only be created from a map or struct",
-        fn ->
-          Subject.init(apps: [3], headers: [@default_header])
-        end
-      )
-    end
-
-    test "succeeds if provided a finder", context do
-      assert %{finder: finder, apps: %{}, headers: _} =
-               Subject.init(finder: make_finder(context), headers: [@default_header])
-
-      assert is_function(finder, 1)
-    end
-
-    test "provides only headers list for headers", %{v1: v1} do
-      assert %{headers: [@default_header], header_groups: nil} =
-               Subject.init(apps: [v1], headers: [@default_header])
-    end
-
-    test "provides only headers_group for a header_groups map", %{v1: v1} do
-      assert %{headers: nil, header_groups: %{"a" => ~w[b c], "c" => ["a"]}} =
-               Subject.init(apps: [v1], header_groups: %{"a" => ~w[b c], "c" => ["a"]})
     end
   end
 
@@ -297,7 +187,6 @@ defmodule AppIdentityPlugTest do
       assert_plug_telemetry_span(200, apps: apps, clients: [v1, v2])
     end
 
-    @tag :focus
     test "only includes header groups with results present", %{v1: v1} do
       conn =
         "get"
@@ -427,9 +316,9 @@ defmodule AppIdentityPlugTest do
     for {desc, value} <- %{
           ":forbidden" => :forbidden,
           "function returns :forbidden" => quote(do: fn _ -> :forbidden end),
-          "{module, function} returns :forbidden" => {OnFailure, :forbidden}
+          "{module, function} returns :forbidden" => {PlugCallbacks, :forbidden}
         } do
-      test "halts with 403 (no body) with on_failure #{desc}", %{v1: v1} do
+      test "halts with 403 (no body) with options.on_failure #{desc}", %{v1: v1} do
         conn =
           "get"
           |> conn("/")
@@ -444,9 +333,9 @@ defmodule AppIdentityPlugTest do
     for {desc, value} <- %{
           "{:halt, 401}" => {:halt, 401},
           "function returns {:halt, 401}" => quote(do: fn _ -> {:halt, 401} end),
-          "{module, function} returns {:halt, 401}" => {OnFailure, :halt_401}
+          "{module, function} returns {:halt, 401}" => {PlugCallbacks, :halt_401}
         } do
-      test "halts with 401 (no body) with on_failure #{desc}", %{v1: v1} do
+      test "halts with 401 (no body) with options.on_failure #{desc}", %{v1: v1} do
         conn =
           "get"
           |> conn("/")
@@ -462,9 +351,9 @@ defmodule AppIdentityPlugTest do
           "{:halt, 418, Teapot}" => quote(do: {:halt, 418, "Teapot"}),
           "function returns {:halt, 418, Teapot}" =>
             quote(do: fn _ -> {:halt, 418, "Teapot"} end),
-          "{module, function} returns {:halt, 418, Teapot}" => {OnFailure, :halt_teapot}
+          "{module, function} returns {:halt, 418, Teapot}" => {PlugCallbacks, :halt_teapot}
         } do
-      test "halts with 418 Teapot with on_failure #{desc}", %{v1: v1} do
+      test "halts with 418 Teapot with options.on_failure #{desc}", %{v1: v1} do
         conn =
           "get"
           |> conn("/")
@@ -479,9 +368,9 @@ defmodule AppIdentityPlugTest do
     for {desc, value} <- %{
           ":continue" => :continue,
           "function returns :continue" => quote(do: fn _ -> :continue end),
-          "{module, function} returns :continue" => {OnFailure, :continue}
+          "{module, function} returns :continue" => {PlugCallbacks, :continue}
         } do
-      test "continues on app finder failure when on_failure #{desc}", context do
+      test "continues on app finder failure when options.on_failure #{desc}", context do
         {:ok, alt} = AppIdentity.App.new(v1())
 
         conn =
@@ -501,7 +390,27 @@ defmodule AppIdentityPlugTest do
         assert_plug_telemetry_span(200, apps: apps, clients: alt)
       end
 
-      test "continues on proof validation failure when on_failure #{desc}", %{v1: v1} do
+      test "continues on app finder module failure when options.on_failure #{desc}" do
+        {:ok, alt} = AppIdentity.App.new(v1())
+
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, AppIdentity.generate_proof!(alt))
+          |> call(
+            headers: [@default_header],
+            on_failure: unquote(value),
+            finder: {PlugCallbacks, :finder}
+          )
+
+        apps = %{@default_header => [nil]}
+
+        assert_successful_request(conn)
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: alt)
+      end
+
+      test "continues on proof validation failure when options.on_failure #{desc}", %{v1: v1} do
         conn =
           "get"
           |> conn("/")
@@ -515,7 +424,10 @@ defmodule AppIdentityPlugTest do
         assert_plug_telemetry_span(200, apps: apps)
       end
 
-      test "continues on proof app location failure when on_failure #{desc}", %{v1: v1, v2: v2} do
+      test "continues on proof app location failure when options.on_failure #{desc}", %{
+        v1: v1,
+        v2: v2
+      } do
         conn =
           "get"
           |> conn("/")
@@ -529,7 +441,7 @@ defmodule AppIdentityPlugTest do
         assert_plug_telemetry_span(200, apps: apps, clients: v2)
       end
 
-      test "continues on proof app validation failure when on_failure #{desc}", %{v1: v1} do
+      test "continues on proof app validation failure when options.on_failure #{desc}", %{v1: v1} do
         alt = %{v1 | secret: fn -> "a different secret" end}
 
         conn =
@@ -543,6 +455,74 @@ defmodule AppIdentityPlugTest do
         assert_successful_request(conn)
         assert_private_app_identity(conn, apps)
         assert_plug_telemetry_span(200, apps: apps, clients: alt)
+      end
+    end
+
+    for {desc, value} <- %{
+          "anonymous function" => quote(do: fn conn -> PlugCallbacks.on_resolution(conn) end),
+          "{module, function}" => {PlugCallbacks, :on_resolution}
+        } do
+      test "options.on_resolution #{desc} is called on successful validation", %{v1: v1} do
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+          |> call(headers: [@default_header], apps: [v1], on_resolution: unquote(value))
+
+        apps = %{@default_header => [verified(v1)]}
+
+        assert_successful_request(conn)
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: v1)
+
+        assert %{errors?: false} == conn.private[:on_resolution]
+      end
+
+      test "options.on_resolution #{desc} is called on failed validation", %{v1: v1} do
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, "invalid proof")
+          |> call(headers: [@default_header], apps: [v1], on_resolution: unquote(value))
+
+        assert_failed_request(conn)
+        assert_plug_telemetry_span(403)
+
+        assert %{errors?: true} == conn.private[:on_resolution]
+      end
+    end
+
+    for {desc, value} <- %{
+          "anonymous function" => quote(do: fn conn -> PlugCallbacks.on_success(conn) end),
+          "{module, function}" => {PlugCallbacks, :on_success}
+        } do
+      test "options.on_success #{desc} is called on successful validation", %{v1: v1} do
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, AppIdentity.generate_proof!(v1))
+          |> call(headers: [@default_header], apps: [v1], on_success: unquote(value))
+
+        apps = %{@default_header => [verified(v1)]}
+
+        assert_successful_request(conn)
+        assert_private_app_identity(conn, apps)
+        assert_plug_telemetry_span(200, apps: apps, clients: v1)
+
+        assert %{errors?: false} == conn.private[:on_success]
+      end
+
+      test "options.on_success #{desc} is not called on failed validation", %{v1: v1} do
+        conn =
+          "get"
+          |> conn("/")
+          |> put_req_header(@default_header, "invalid proof")
+          |> call(headers: [@default_header], apps: [v1], on_success: unquote(value))
+
+        assert_failed_request(conn)
+        assert_plug_telemetry_span(403)
+
+        refute Map.has_key?(conn.private, :on_success)
       end
     end
   end
