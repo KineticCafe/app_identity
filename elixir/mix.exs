@@ -4,7 +4,7 @@ defmodule AppIdentity.MixProject do
   def project do
     [
       app: :app_identity,
-      version: "1.2.0",
+      version: "1.3.0",
       description: "Fast, lightweight, cryptographically secure app authentication",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
