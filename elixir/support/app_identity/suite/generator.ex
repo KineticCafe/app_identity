@@ -103,18 +103,17 @@ defmodule AppIdentity.Suite.Generator do
     end
   end
 
-  @priv_dir List.to_string(:code.priv_dir(:app_identity))
-
-  @required_test_file Path.join(@priv_dir, "required.json")
-  @optional_test_file Path.join(@priv_dir, "optional.json")
+  @file_path Path.dirname(__ENV__.file)
+  @required_file Path.join(@file_path, "required.json")
+  @optional_file Path.join(@file_path, "optional.json")
 
   @tests %{
-    required: Jason.decode!(File.read!(@required_test_file)),
-    optional: Jason.decode!(File.read!(@optional_test_file))
+    required: Jason.decode!(File.read!(@required_file)),
+    optional: Jason.decode!(File.read!(@optional_file))
   }
 
-  @external_resource @required_test_file
-  @external_resource @optional_test_file
+  @external_resource @required_file
+  @external_resource @optional_file
 
   defp generate_suite do
     %{

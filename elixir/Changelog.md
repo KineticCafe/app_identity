@@ -1,6 +1,14 @@
 # App Identity for Elixir Changelog
 
-## 1.3.0 / 2023-07-20
+## 1.3.1 / 2023-07-20
+
+- Packages released to hex.pm by default include the `priv/` directory, but
+  nothing is done to ensure that those packages include anything other than the
+  literal files. The `priv/` directory contained two symbolic links
+  (`optional.json` and `required.json`) which were symlinks to the project
+  integration suite generators, only used in integration testing.
+
+## 1.3.0 / 2023-07-19
 
 - Rename all spec uses of `String.t()` to `binary()` as
 

@@ -4,7 +4,7 @@ defmodule AppIdentity.MixProject do
   def project do
     [
       app: :app_identity,
-      version: "1.3.0",
+      version: "1.3.1",
       description: "Fast, lightweight, cryptographically secure app authentication",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
@@ -28,6 +28,7 @@ defmodule AppIdentity.MixProject do
         ]
       ],
       package: [
+        files: ~w(lib .formatter.exs mix.exs *.md),
         licenses: ["Apache-2.0"],
         links: %{
           "Project" => "https://github.com/KineticCafe/app_identity",
