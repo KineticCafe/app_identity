@@ -1,23 +1,42 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /ts
     schedule:
-      interval: weekly
+      interval: monthly
+
+    groups:
+      ts-dev:
+        patterns:
+          - concurrently
+          - '@tsconfig/*'
+          - '@types/*'
+          - '@typescript-eslint/*'
+          - eslint
+          - 'eslint-plugin-*'
+          - prettier
+          - 'ts-*'
+          - tsup
+          - typedoc
+          - typescript
+          - vitest
+
   - package-ecosystem: mix
     directory: /elixir
     schedule:
-      interval: weekly
+      interval: monthly
+
   - package-ecosystem: bundler
     directory: /ruby
     schedule:
-      interval: weekly
+      interval: monthly
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
+
+    groups:
+      actions:
+        patterns:
+          - '*'

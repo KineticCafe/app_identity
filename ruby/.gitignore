@@ -4,3 +4,4 @@
 Gemfile.lock
 gemfiles/*.lock
 pkg/
+.gem_rbs_collection
