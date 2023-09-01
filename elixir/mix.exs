@@ -49,34 +49,33 @@ defmodule AppIdentity.MixProject do
     ]
   end
 
-  if Version.compare(System.version(), "1.11.0") == :lt do
-    @versions %{
-      poison: ">= 3.0.0 and < 6.0.0",
-      ex_doc: "~> 0.27.0"
-    }
-
-    @extra [{:earmark_parser, "1.4.19"}]
-  else
-    @versions %{
-      poison: ">= 3.0.0",
-      ex_doc: "~> 0.29"
-    }
-
-    @extra []
-  end
-
   defp deps do
+    dialyxir =
+      if Version.compare(System.version(), "1.12.0") == :lt, do: "~> 1.3.0", else: "~> 1.4"
+
+    poison =
+      if Version.compare(System.version(), "1.11.0") == :lt,
+        do: ">= 3.0.0 and < 6.0.0",
+        else: ">= 3.0.0"
+
+    {ex_doc, extra} =
+      if Version.compare(System.version(), "1.11.0") == :lt do
+        {"~> 0.27.0", [{:earmark_parser, "1.4.19"}]}
+      else
+        {"~> 0.29", []}
+      end
+
     [
       {:jason, "~> 1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
-      {:poison, @versions.poison, optional: true},
+      {:poison, poison, optional: true},
       {:telemetry, "~> 0.4 or ~> 1.0", optional: true},
       {:tesla, "~> 1.0", optional: true},
       {:credo, "~> 1.0", only: [:dev], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:ex_doc, @versions.ex_doc, only: [:dev], runtime: false},
+      {:dialyxir, dialyxir, only: [:dev], runtime: false},
+      {:ex_doc, ex_doc, only: [:dev], runtime: false},
       {:secure_random, "~> 0.5", only: [:dev, :test]}
-    ] ++ @extra
+    ] ++ extra
   end
 
   defp elixirc_paths(:test) do
