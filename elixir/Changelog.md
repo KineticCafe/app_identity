@@ -1,5 +1,11 @@
 # App Identity for Elixir Changelog
 
+## 1.3.2 / 2023-09-05
+
+- Resolved an issue where padlock values sent using lowercase hex values were
+  not comparing properly. Added tests for the case as well as an additional
+  validation doctest.
+
 ## 1.3.1 / 2023-07-20
 
 - Packages released to hex.pm by default include the `priv/` directory, but
@@ -10,7 +16,8 @@
 
 ## 1.3.0 / 2023-07-19
 
-- Rename all spec uses of `String.t()` to `binary()` as
+- Rename many spec uses of `String.t()` to `binary()` as we do not necessarily
+  require UTF-8.
 
 - Extensive reorganization of the `AppIdentity.Plug` documentation to improve
   the readability of the configuration.

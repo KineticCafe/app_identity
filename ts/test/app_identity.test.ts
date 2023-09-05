@@ -132,6 +132,34 @@ test('verify success v2 custom fuzz', () => {
   expect(verifyProofWithDiagnostic(proof, v2)).toBeVerified(app)
 })
 
+test('verify success v1 (lowercase proof)', () => {
+  const v1 = Support.v1Input()
+  const app = new App(v1)
+  const padlock = Support.buildPadlock(app, { case: 'lower' })
+  const proof = Support.buildProof(app, padlock)
+
+  expect(verifyProofWithDiagnostic(proof, v1)).toBeVerified(app)
+})
+
+test('verify success v2 default fuzz (lowercase proof)', () => {
+  const v2 = Support.v2Input()
+  const app = new App(v2)
+  const nonce = Support.timestampNonce(-6, 'minutes')
+  const padlock = Support.buildPadlock(app, { nonce })
+  const proof = Support.buildProof(app, padlock, { nonce, case: 'lower' })
+  expect(verifyProofWithDiagnostic(proof, v2)).toBeVerified(app)
+})
+
+test('verify success v2 custom fuzz (lowercase proof)', () => {
+  const v2 = Support.v2Input(300)
+  const app = new App(v2)
+  const nonce = Support.timestampNonce(-2, 'minutes')
+  const padlock = Support.buildPadlock(app, { nonce })
+  const proof = Support.buildProof(app, padlock, { nonce, case: 'lower' })
+
+  expect(verifyProofWithDiagnostic(proof, v2)).toBeVerified(app)
+})
+
 test('verify fail on different app ids', () => {
   const v1 = Support.v1Input()
   const app = new App(v1)

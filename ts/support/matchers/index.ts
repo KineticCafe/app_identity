@@ -4,7 +4,7 @@ import { App } from '../../src/app'
 
 interface AppIdentityMatchers<R = unknown> {
   // eslint-disable-next-line no-unused-vars
-  toBeVerified(expected: App): R
+  toBeVerified(expected: App | null): R
 }
 
 declare global {

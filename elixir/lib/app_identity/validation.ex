@@ -48,6 +48,12 @@ defmodule AppIdentity.Validation do
       iex> AppIdentity.Validation.validate(:padlock, "")
       {:error, "padlock must not be an empty string"}
 
+      iex> AppIdentity.Validation.validate(:padlock, "zzz")
+      {:error, "padlock must be a hex string value"}
+
+      iex> AppIdentity.Validation.validate(:padlock, "fff")
+      {:ok, "FFF"}
+
       iex> AppIdentity.Validation.validate(:secret, "")
       {:error, "secret must not be an empty binary string"}
 
@@ -106,6 +112,18 @@ defmodule AppIdentity.Validation do
 
   def validate(:padlock, value) when not is_binary(value) do
     {:error, "padlock must be a string value"}
+  end
+
+  def validate(:padlock, "") do
+    {:error, "padlock must not be an empty string"}
+  end
+
+  def validate(:padlock, value) do
+    if Regex.match?(~r/^[[:xdigit:]]+$/, value) do
+      {:ok, String.upcase(value)}
+    else
+      {:error, "padlock must be a hex string value"}
+    end
   end
 
   def validate(:nonce, value) when not is_binary(value) do
