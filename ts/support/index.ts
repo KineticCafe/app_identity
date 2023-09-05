@@ -74,7 +74,10 @@ export const buildPadlock = (
 
   const hash = createHash(versionAlgorithm(version as number))
   hash.update(raw, 'utf-8')
-  return hash.digest('hex').toUpperCase()
+
+  return options['case'] === 'lower'
+    ? hash.digest('hex').toLowerCase()
+    : hash.digest('hex').toUpperCase()
 }
 
 export const buildProof = (

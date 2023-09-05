@@ -83,34 +83,42 @@ defmodule AppIdentityTest do
     assert_verify_proof_telemetry_span(v2, proof, error: "proof and app version mismatch")
   end
 
-  test "verify success v1", %{v1: v1, v1_app: v1_app} do
-    padlock = build_padlock(v1_app)
-    proof = build_proof(v1_app, padlock)
+  for padlock_case <- [:upper, :lower] do
+    test "verify success v1 (padlock case #{padlock_case})", %{v1: v1, v1_app: v1_app} do
+      padlock = build_padlock(v1_app, case: unquote(padlock_case))
 
-    assert {:ok, verified(v1_app)} == Subject.verify_proof(proof, v1)
-    assert_verify_proof_telemetry_span(v1, proof)
-  end
+      proof = build_proof(v1_app, padlock)
 
-  test "verify success v2 default fuzz", %{v2: v2, v2_app: v2_app} do
-    nonce = timestamp_nonce(-6, :minutes)
-    padlock = build_padlock(v2_app, nonce: nonce)
-    proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
+      assert {:ok, verified(v1_app)} == Subject.verify_proof(proof, v1)
+      assert_verify_proof_telemetry_span(v1, proof)
+    end
 
-    assert {:ok, verified(v2_app)} == Subject.verify_proof(proof, v2)
-    assert_verify_proof_telemetry_span(v2, proof)
-  end
+    test "verify success v2 default fuzz (padlock case #{padlock_case})", %{
+      v2: v2,
+      v2_app: v2_app
+    } do
+      nonce = timestamp_nonce(-6, :minutes)
 
-  test "verify success v2 custom fuzz" do
-    v2 = v2(fuzz: 300)
-    {:ok, v2_app} = AppIdentity.App.new(v2)
+      padlock = build_padlock(v2_app, nonce: nonce, case: unquote(padlock_case))
 
-    nonce = timestamp_nonce(-2, :minutes)
-    padlock = build_padlock(v2_app, nonce: nonce)
-    proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
+      proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
 
-    assert verified(v2_app) == Subject.verify_proof!(proof, v2)
+      assert {:ok, verified(v2_app)} == Subject.verify_proof(proof, v2)
+      assert_verify_proof_telemetry_span(v2, proof)
+    end
 
-    assert_verify_proof_telemetry_span(v2, proof)
+    test "verify success v2 custom fuzz (padlock case #{padlock_case})" do
+      v2 = v2(fuzz: 300)
+      {:ok, v2_app} = AppIdentity.App.new(v2)
+
+      nonce = timestamp_nonce(-2, :minutes)
+      padlock = build_padlock(v2_app, nonce: nonce, case: unquote(padlock_case))
+      proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
+
+      assert verified(v2_app) == Subject.verify_proof!(proof, v2)
+
+      assert_verify_proof_telemetry_span(v2, proof)
+    end
   end
 
   test "verify fail on different app ids", %{v1: v1, v1_app: v1_app} do
@@ -128,5 +136,18 @@ defmodule AppIdentityTest do
     assert {:ok, nil} == Subject.verify_proof(proof, v1)
 
     assert_verify_proof_telemetry_span(v1, proof, app: :none)
+  end
+
+  test "verify fail on non-hex padlock", %{v1: v1, v1_app: v1_app} do
+    padlock =
+      v1_app
+      |> build_padlock()
+      |> String.replace(~r/[A-F]/, "z")
+
+    proof = build_proof(v1_app, padlock)
+
+    assert :error == Subject.verify_proof(proof, v1)
+
+    assert_verify_proof_telemetry_span(v1, proof, error: "padlock must be a hex string value")
   end
 end

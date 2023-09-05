@@ -63,7 +63,8 @@ class AppIdentity
         raise AppIdentity::Error, "padlock must be a string" unless padlock.is_a?(String)
         validate_not_empty(:padlock, padlock)
         validate_no_colons(:padlock, padlock)
-      }
+        raise AppIdentity::Error, "padlock must be a hex string" unless padlock.match?(/^[a-f0-9]+$/i)
+      }.upcase
     end
 
     private

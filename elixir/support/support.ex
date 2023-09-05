@@ -80,7 +80,7 @@ defmodule AppIdentity.Support do
 
     hash
     |> :crypto.hash(raw)
-    |> Base.encode16(case: :upper)
+    |> Base.encode16(case: Keyword.get(options, :case, :upper))
   end
 
   def build_proof(app, padlock, options \\ []) do
