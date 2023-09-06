@@ -8,7 +8,7 @@
  * [spec]: https://github.com/KineticCafe/app-identity/blob/main/spec/README.md
  */
 
-import { name as NAME, version as VERSION } from '../package.json'
+import packageJSON from '../package.json' with { type: 'json' }
 import {
   generateProofWithDiagnostic,
   generateProofWithDiagnosticAsync,
@@ -29,6 +29,8 @@ import type {
 } from './app.js'
 import type { Proof } from './proof.js'
 import type { Disallowed, Nonce, Version } from './types.js'
+
+const { name: NAME, version: VERSION } = packageJSON
 
 /**
  * Generate an identity proof string for the given application.
@@ -146,7 +148,6 @@ export const verifyProof = (
  * A version 1 app can have a fixed nonce, which will always produce the same
  * value.
  *
- *
  * ```javascript
  * v1 = {id: "decaf", secret: "bad", version: 1}
  * proof = await AppIdentity.generateProofAsync(v1, { nonce: "hello"})
@@ -227,7 +228,11 @@ export const verifyProofAsync = (
   }
 }
 
-export { RuntimeAdapter, getRuntimeAdapter, setRuntimeAdapter } from './adapter.js'
+export {
+  getRuntimeAdapter,
+  RuntimeAdapter,
+  setRuntimeAdapter,
+} from './adapter.js'
 
 export { App } from './app.js'
 export { AppIdentityError } from './app_identity_error.js'

@@ -1,6 +1,6 @@
 import { Info as CoreInfo } from '@kineticcafe/app-identity'
 
-import { name as NAME, version as VERSION } from '../package.json'
+import packageJSON from '../package.json' with { type: 'json' }
 
 import type { AppIdentityVersionInfo as CoreAppIdentityVersionInfo } from '@kineticcafe/app-identity'
 
@@ -34,19 +34,16 @@ export interface AppIdentityVersionInfo extends CoreAppIdentityVersionInfo {
  * This value is immutable.
  */
 export const Info: AppIdentityVersionInfo = Object.freeze({
-  name: NAME as string,
-  version: VERSION as string,
+  name: packageJSON.name as string,
+  version: packageJSON.version as string,
   spec_version: CoreInfo.spec_version,
   core: CoreInfo,
 })
 
 export {
+  allowVersion,
   App,
   AppIdentityError,
-  Proof,
-  Validations,
-  Versions,
-  allowVersion,
   disallowVersion,
   generateProof,
   generateProofAsync,
@@ -55,10 +52,13 @@ export {
   getRuntimeAdapter,
   parseProof,
   parseProofWithDiagnostic,
+  Proof,
+  Validations,
   verifyProof,
   verifyProofAsync,
   verifyProofWithDiagnostic,
   verifyProofWithDiagnosticAsync,
+  Versions,
 } from '@kineticcafe/app-identity'
 
 export type {

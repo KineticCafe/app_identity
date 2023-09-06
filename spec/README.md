@@ -11,8 +11,9 @@ over the wire.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in [BCP 14][] [RFC2119][]
-[RFC8174][] when, and only when, they appear in all capitals, as shown here.
+document are to be interpreted as described in [BCP 14][bcp14]
+[RFC 2119][rfc2119] [RFC 8174][rfc8174] when, and only when, they appear in all
+capitals, as shown here.
 
 Core algorithmic concepts will be expressed with _emphasis_.
 
@@ -21,10 +22,10 @@ are informative and may have bugs.
 
 ## Version and Versioning
 
-This specification is versioned with a modified [Semantic Versioning][] scheme.
-The major version of the specification will always be the number of algorithm
-versions defined. Minor versions of the specification MAY be used adjust the
-text.
+This specification is versioned with a modified [Semantic Versioning][semver]
+scheme. The major version of the specification will always be the number of
+algorithm versions defined. Minor versions of the specification MAY be used
+adjust the text.
 
 The current specification is 4.2.
 
@@ -33,28 +34,28 @@ The current specification is 4.2.
 For the purposes of this specification, the following attributes are REQUIRED on
 an application:
 
-- `id`: The unique identifier of the application, which MUST be presented as
-  a string. Identifiers MUST NOT include an ASCII colon (`:`) or they
-  MUST be encoded and validating servers must know how to locate
-  applications encoded this way.
+- `id`: The unique identifier of the application, which MUST be presented as a
+  string. Identifiers MUST NOT include an ASCII colon (`:`) or they MUST be
+  encoded and validating servers must know how to locate applications encoded
+  this way.
 
-  It is RECOMMENDED that this value be globally unique and extremely
-  difficult to guess. Identifier types meeting such criteria include UUIDs
+  It is RECOMMENDED that this value be globally unique and extremely difficult
+  to guess. Identifier types meeting such criteria include UUIDs
   ([version 4][uuidv4], [version 7][uuidv7], or [version 8][uuidv8]),
   [ULID][ulid], or [ksuid][ksuid].
 
-  Identifiers MAY include a class identifier (such as `appid=1234`, or the
-  Rails [Global ID][global id] format). If an identifier is short, an integer,
-  or a compound value, the use of a class identifier is RECOMMENDED.
+  Identifiers MAY include a class identifier (such as `appid=1234`, or the Rails
+  [Global ID][global id] format). If an identifier is short, an integer, or a
+  compound value, the use of a class identifier is RECOMMENDED.
 
-- `secret`: The random value used as the secret key. This value MUST be used
-  as presented. That is, if the secret is presented as a Base64 value, the
-  secret is the Base64 value, not a decoded version of it.
+- `secret`: The random value used as the secret key. This value MUST be used as
+  presented. That is, if the secret is presented as a Base64 value, the secret
+  is the Base64 value, not a decoded version of it.
 
-  Application secrets SHOULD be prefixed with a fixed value, such as
-  `appid_`. This improves the ability of security tools (such as [gitleaks][],
-  [GitGuardian][], or [GitHub secret scanning][]) to detect that an application
-  secret key has been leaked.
+  Application secrets SHOULD be prefixed with a fixed value, such as `appid_`.
+  This improves the ability of security tools (such as [gitleaks][gitleaks],
+  [GitGuardian][GitGuardian], or [GitHub secret scanning][github-scanning]) to
+  detect that an application secret key has been leaked.
 
   Where possible, implementations SHOULD use memory-safe storage for the
   `secret` value and MUST prevent accidental exposure of the secret in logs
@@ -67,8 +68,8 @@ an application:
 
 - `version`: The minimum algorithm version supported by the application, an
   integer value. The reference implementations of App Identity do not restrict
-  the `version` for backwards compatibility purposes, but new services
-  SHOULD consider version 1 applications deprecated.
+  the `version` for backwards compatibility purposes, but new services SHOULD
+  consider version 1 applications deprecated.
 
 - `config`: A configuration object which affects proof verification. Only one
   key for this object is defined when `version` 2 or higher. The `config` only
@@ -156,9 +157,8 @@ validate a version 1 proof.
 The client identity proof is a short, cryptographically signed value, composed
 from the _id_, a _nonce_, and an intermediary _padlock_ generated using the
 application _secret_. The application _id_ and _secret_ SHOULD be provided
-securely for compile-time inclusion; all care SHOULD be taken to ensure that
-the secret is not easily extractable from the application or shared in the
-clear.
+securely for compile-time inclusion; all care SHOULD be taken to ensure that the
+secret is not easily extractable from the application or shared in the clear.
 
 The generation of a proof looks like this:
 
@@ -177,23 +177,23 @@ The verification of a proof looks like this:
 ### Nonce
 
 Depending on the version of the application algorithm, the _nonce_ may contain
-any byte sequences except ASCII colon (`:`), but it is RECOMMENDED that
-the value be UTF-8 safe.
+any byte sequences except ASCII colon (`:`), but it is RECOMMENDED that the
+value be UTF-8 safe.
 
 #### Random Nonces
 
 Version 1 nonces SHOULD be cryptographically secure and non-sequential, but
 sufficiently fine-grained timestamps (those including microseconds, as
-`yyyymmddHHMMSS.sss`) MAY be used. Version 1 proofs verify that the nonce is
-at least one byte long and do not contain an ASCII colon (`:`).
+`yyyymmddHHMMSS.sss`) MAY be used. Version 1 proofs verify that the nonce is at
+least one byte long and do not contain an ASCII colon (`:`).
 
 **Typescript (Node)**:
 
 ```typescript
-import { randomBytes } from 'crypto'
-import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
+import { randomBytes } from "crypto";
+import base64url from "base64-url"; // https://www.npmjs.com/package/base64-url
 
-base64url.encode(randomBytes(32).toString())
+base64url.encode(randomBytes(32).toString());
 ```
 
 **Ruby**:
@@ -237,8 +237,8 @@ basic formatting. The clocks of the generating and verifying systems MUST be
 synchronized for the verification to work as intended, so NTP is strongly
 RECOMMENDED.
 
-For the purposes of this document, ISO 8601 basic formatting is this [ABNF][]
-definition adapted from [RFC3339][]:
+For the purposes of this document, ISO 8601 basic formatting is this
+[ABNF][ABNF] definition adapted from [RFC3339][RFC3339]:
 
 ```abnf
 date-fullyear = 4DIGIT
@@ -259,16 +259,16 @@ full-time     = partial-time time-offset
 date-time     = full-date "T" full-time
 ```
 
-This format differs from [RFC3339][] [§5.6][§5.6] timestamp format in the
+This format differs from [RFC3339][RFC3339] [§5.6][§5.6] timestamp format in the
 following ways:
 
-1. It MUST be UTC and the timezone character MUST be `Z`. No other
-   timezone specifier is permitted, and it MUST NOT be omitted.
-2. It MUST only have the ASCII characters `[.0-9TZ]`. It MAY have the
-   point character (`.`) only preceding the optional fractional seconds digits.
+1. It MUST be UTC and the timezone character MUST be `Z`. No other timezone
+   specifier is permitted, and it MUST NOT be omitted.
+2. It MUST only have the ASCII characters `[.0-9TZ]`. It MAY have the point
+   character (`.`) only preceding the optional fractional seconds digits.
 
-Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` MUST be
-presented as `20200225T192003.321423Z`.
+Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` MUST be presented
+as `20200225T192003.321423Z`.
 
 The C-style `strftime` pattern for this format is `'%Y%m%dT%H%M%S.%6NZ'`, and
 the PostgreSQL `TO_CHAR` pattern is `'YYYYMMDD"T"HH24MISS.FF6Z'`.
@@ -276,7 +276,7 @@ the PostgreSQL `TO_CHAR` pattern is `'YYYYMMDD"T"HH24MISS.FF6Z'`.
 **Typescript (Node)**:
 
 ```typescript
-new Date().toISOString().replace(/[-:]/g, '')
+new Date().toISOString().replace(/[-:]/g, "");
 ```
 
 **Ruby**:
@@ -314,10 +314,10 @@ version.
 
 ```typescript
 // This demonstrates a version 3 padlock
-import { createHash } from 'crypto'
-const hash = createHash('sha384')
-hash.update(raw, 'utf-8')
-hash.digest('hex').toUpperCase()
+import { createHash } from "crypto";
+const hash = createHash("sha384");
+hash.update(raw, "utf-8");
+hash.digest("hex").toUpperCase();
 ```
 
 **Ruby**:
@@ -392,21 +392,21 @@ for (int i = 0; i < hash.length; i++) {
 ```
 
 Validation of the padlock will convert this digest to uppercase, so the values
-`c0ffee` and `C0FFEE` are identical. It is RECOMMENDED that padlocks be
-passed as uppercase hex values.
+`c0ffee` and `C0FFEE` are identical. It is RECOMMENDED that padlocks be passed
+as uppercase hex values.
 
 ### Proof Presentation
 
-Clients MUST present the computed _padlock_ to the server in a way that
-allows verification. This is called the _proof_, which contains the algorithm
+Clients MUST present the computed _padlock_ to the server in a way that allows
+verification. This is called the _proof_, which contains the algorithm
 _version_, the application _id_, the _nonce_, and the _padlock_. It is typically
 provided as a single concatenated string (using colons) and then Base64 encoded.
 
 **Typescript (Node)**:
 
 ```typescript
-import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
-base64url.encode([version, id, nonce, padlock].join(':'))
+import base64url from "base64-url"; // https://www.npmjs.com/package/base64-url
+base64url.encode([version, id, nonce, padlock].join(":"));
 ```
 
 **Ruby**:
@@ -443,16 +443,16 @@ String proof = new String(encodedHash, "UTF-8");
 ```
 
 [global id]: https://github.com/rails/globalid
-[bcp 14]: httphttps://www.rfc-editor.org/info/bcp14
+[bcp14]: httphttps://www.rfc-editor.org/info/bcp14
 [rfc2119]: https://datatracker.ietf.org/doc/html/rfc2119
 [rfc8174]: https://datatracker.ietf.org/doc/html/rfc8174
 [rfc3339]: https://datatracker.ietf.org/doc/html/rfc3339
 [§5.6]: https://tools.ietf.org/html/rfc3339#section-5.6
-[semantic versioning]: http://semver.org/
+[semver]: http://semver.org/
 [abnf]: https://www.rfc-editor.org/rfc/rfc2234.txt
 [gitguardian]: https://www.gitguardian.com
 [gitleaks]: https://gitleaks.io
-[github secret scanning]: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
+[github-scanning]: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
 [uuidv4]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-4
 [uuidv7]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-7
 [uuidv8]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-8

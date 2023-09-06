@@ -21,6 +21,8 @@
     // module: node16 and moduleResolution: node16 from @tsconfigs/node20
     // resolvePackageJsonExports and resolvePackageJsonImports are implied
     "resolveJsonModule": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
 
     // Emit
     "declaration": true,

@@ -6,7 +6,7 @@
 ## Description
 
 AppIdentity is an Elixir implementation of the Kinetic Commerce application
-identity proof algorithm as described in its [spec][].
+identity proof algorithm as described in its [spec][spec].
 
 ## Synopsis
 
@@ -22,7 +22,6 @@ There is a Plug available for authenticating applications, `AppIdentity.Plug`.
 plug AppIdentity.Plug,
   headers: ["app-identity-proof"],
   finder: fn %{id: id} = _proof -> IdentityApplications.get(id) end
-
 ```
 
 There is a Tesla Middleware for providing proof generation for clients.
@@ -69,14 +68,15 @@ def deps do
 end
 ```
 
-Optional features are present when [Plug][] and/or [Tesla][] are part of your
-application.
+Optional features are present when [Plug][Plug] and/or [Tesla][Tesla] are part
+of your application.
 
-Documentation can found at [HexDocs][docs] or generated with [ex_doc][].
+Documentation can found at [HexDocs][docs] or generated with [ex\_doc][ex_doc].
 
 ## Semantic Versioning
 
-`AppIdentity` uses a [Semantic Versioning][] scheme with one significant change:
+`AppIdentity` uses a [Semantic Versioning][Semantic Versioning] scheme with one
+significant change:
 
 - When PATCH is zero (`0`), it will be omitted from version references.
 
@@ -86,8 +86,8 @@ revisions.
 ## Contributing
 
 AppIdentity for Elixir [welcomes contributions](./Contributing.md). This
-project, like all Kinetic Commerce [open source projects][], is under the
-Kinetic Commerce Open Source [Code of Conduct][kccoc].
+project, like all Kinetic Commerce [open source projects][open source projects],
+is under the Kinetic Commerce Open Source [Code of Conduct][kccoc].
 
 AppIdentity for Elixir is licensed under the Apache License, version 2.0 and
 requires certification of a Developer Certificate of Origin. See

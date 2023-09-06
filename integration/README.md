@@ -25,33 +25,33 @@ Each implementation has tooling to generate and run integration suites.
 
 ## Integration Suite Definition
 
-An App Identity integration test suite is a generated JSON file containing
-a test `Suite`. Simplified, it looks like this:
+An App Identity integration test suite is a generated JSON file containing a
+test `Suite`. Simplified, it looks like this:
 
 ```typescript
 interface Suite {
-  name: string
-  version: string
-  description?: string
-  spec_version: number
+  name: string;
+  version: string;
+  description?: string;
+  spec_version: number;
   tests: {
-    description: string
+    description: string;
     app: {
-      id: number | string
-      secret: string
-      version: number
-      config?: { fuzz?: number }
-    }
-    proof: string
-    expect: 'pass' | 'fail'
-    required: boolean
-    spec_version: number
-  }[]
+      id: number | string;
+      secret: string;
+      version: number;
+      config?: { fuzz?: number };
+    };
+    proof: string;
+    expect: "pass" | "fail";
+    required: boolean;
+    spec_version: number;
+  }[];
 }
 ```
 
-For more detail on how this is made available, see [Integration
-Tooling](#integration-tooling).
+For more detail on how this is made available, see
+[Integration Tooling](#integration-tooling).
 
 ## Implementation Requirements
 
@@ -72,8 +72,8 @@ The test description tables below are _informative_. The test descriptions in
 _normative_, although suite implementations _usually_ use the JSON
 representations.
 
-For more detail on the test description files, see [Integration
-Tooling](#integration-tooling).
+For more detail on the test description files, see
+[Integration Tooling](#integration-tooling).
 
 #### Required Tests
 
@@ -167,8 +167,8 @@ the padlock and proof than is generated for the included app. That is, if the
 app id is provided as `decafbad`, the padlock and proof might be generated with
 `deadbeef`. The exact values used _do not matter_, but must differ.
 
-The tests described as `Incorrect Secret` generate the padlock and proof with
-a _different_ secret than is generated for the included app. That is, if the app
+The tests described as `Incorrect Secret` generate the padlock and proof with a
+_different_ secret than is generated for the included app. That is, if the app
 secret is `iaccepttherisk`, the padlock and proof might be generated with
 `myvoiceismypassword`. The exact values used _do not matter_, but must differ.
 
@@ -207,8 +207,8 @@ could be used for code generation.
 
 The suite runner is a tool that reads a provided test suite and verifies it
 against the public API of the implementation under test. The suite runner
-**must** use the [TAP][] format (version 14). The runner should accept multiple
-suite files and merge them into a single set of tests for output.
+**must** use the [TAP][TAP] format (version 14). The runner should accept
+multiple suite files and merge them into a single set of tests for output.
 
 The runner **must** be able to switch between normal and strict execution, and
 **should** be able to enable diagnostic output. The default run mode should be
@@ -276,9 +276,9 @@ not ok 75 - Proof V4, Mismatched Padlock
 
 #### Diagnostic Output
 
-If diagnostic output can be enabled, it **must** use the [YAML diagnostic
-format][yaml] to output the details of the failure. This may require the use of
-non-public APIs in the implementation.
+If diagnostic output can be enabled, it **must** use the
+[YAML diagnostic format][yaml] to output the details of the failure. This may
+require the use of non-public APIs in the implementation.
 
 ```tap
 TAP Version 14
@@ -309,7 +309,8 @@ This file is generated from [`shema.ts`](./schema.ts) using
 `ts-json-schema-generator`.
 
 If a suite specification modification is required, the [`shema.ts`](./schema.ts)
-should be modified directly and the JSON schema should be generated with `make
+should be modified directly and the JSON schema should be generated with
+`make
 schema.json`.
 
 ### Test Description Files
@@ -401,9 +402,12 @@ testing).
 When implementing an integration suite generator, it is recommended that you
 study one or more of the reference implementation generators:
 
-- Elixir: [`support/app_identity/suite/generator.ex`](../elixir/support/app_identity/suite/generator.ex)
-- Ruby: [`lib/app_identity/suite/generator.rb`](../ruby/lib/app_identity/suite/generator.rb)
-- Typescript: [`packages/suite/src/generator.ts`](../ts/packages/suite/src/generator.ts)
+- Elixir:
+  [`support/app_identity/suite/generator.ex`](../elixir/support/app_identity/suite/generator.ex)
+- Ruby:
+  [`lib/app_identity/suite/generator.rb`](../ruby/lib/app_identity/suite/generator.rb)
+- Typescript:
+  [`packages/suite/src/generator.ts`](../ts/packages/suite/src/generator.ts)
 
 ### `tapview`
 
@@ -412,20 +416,19 @@ For condensed TAP output, we have included Eric S. Raymond's `tapview` version
 
 > tapview - a TAP (Test Anything Protocol) viewer in pure POSIX shell
 >
-> This code is intended to be embedded in your project. The author
-> grants permission for it to be distributed under the prevailing
-> license of your project if you choose, provided that license is
-> OSD-compliant; otherwise the following SPDX tag incorporates the
-> MIT No Attribution license by reference.
+> This code is intended to be embedded in your project. The author grants
+> permission for it to be distributed under the prevailing license of your
+> project if you choose, provided that license is OSD-compliant; otherwise the
+> following SPDX tag incorporates the MIT No Attribution license by reference.
 >
 > SPDX-FileCopyrightText: (C) Eric S. Raymond <esr@thyrsus.com>
 > SPDX-License-Identifier: MIT-0
 >
 > This version shipped on 2024-02-05.
 >
-> A newer version may be available at https://gitlab.com/esr/tapview;
-> check the ship date against the commit list there to see if it
-> might be a good idea to update.
+> A newer version may be available at https://gitlab.com/esr/tapview; check the
+> ship date against the commit list there to see if it might be a good idea to
+> update.
 
 [tap]: https://testanything.org/tap-version-14-specification.html
 [yaml]: https://testanything.org/tap-version-14-specification.html#yaml-diagnostics

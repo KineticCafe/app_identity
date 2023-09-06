@@ -1,7 +1,7 @@
 # Licence
 
-App Identity for Node is copyright © 2022 Kinetic Commerce and contributors
-and is licensed under [Apache License, version 2.0][apache-license-20].
+App Identity for Node is copyright © 2022 Kinetic Commerce and contributors and
+is licensed under [Apache License, version 2.0][apache-license-20].
 
 ## Developer Certificate of Origin
 
