@@ -24,8 +24,8 @@ This **includes**:
 
 This **excludes**:
 
-- `integration/tapview`, which is copyright Eric S. Raymond and licensed under
-  a permissive MIT no-attribute (MIT-0) license.
+- `integration/tapview`, which is copyright Eric S. Raymond and licensed under a
+  permissive MIT no-attribute (MIT-0) license.
 
 ## Documentation
 
@@ -52,8 +52,8 @@ All contributors **must** certify they are able and willing to provide their
 contributions under the terms of this project's licences with the certification
 of the [Developer Certificate of Origin (Version 1.1)](licences/dco.txt).
 
-Such certification is provided by ensuring that a `Signed-off-by` [commit
-trailer][] is present on every commit:
+Such certification is provided by ensuring that a `Signed-off-by`
+[commit trailer][trailer] is present on every commit:
 
     Signed-off-by: FirstName LastName <email@example.org>
 
@@ -64,4 +64,4 @@ The `Signed-off-by` trailer can be automatically added by git with the `-s` or
 git commit --signoff
 ```
 
-[commit trailer]: https://git-scm.com/docs/git-interpret-trailers
+[trailer]: https://git-scm.com/docs/git-interpret-trailers

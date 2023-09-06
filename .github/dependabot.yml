@@ -4,6 +4,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    commit-message:
+      prefix: 'deps'
 
   - package-ecosystem: npm
     directory: /ts
@@ -12,13 +14,19 @@ updates:
     ignore:
       - dependency-name: '@types/node'
         versions: ["22.x.x"]
+    commit-message:
+      prefix: 'deps(ts)'
 
   - package-ecosystem: mix
     directory: /elixir
     schedule:
       interval: monthly
+    commit-message:
+      prefix: 'deps(elixir)'
 
   - package-ecosystem: bundler
     directory: /ruby
     schedule:
       interval: monthly
+    commit-message:
+      prefix: 'deps(ruby)'

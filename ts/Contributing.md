@@ -2,13 +2,13 @@
 
 We value contributions to AppIdentity for JavaScript—bug reports, discussions,
 feature requests, and code contributions. New features should be proposed and
-[discussed][] prior to implementation, and release of any new feature may be
-delayed until implemented in the reference implementations.
+[discussed][discussed] prior to implementation, and release of any new feature
+may be delayed until implemented in the reference implementations.
 
 Before contributing patches, please read the [Licence](./Licence.md).
 
-App Identity is governed under the Kinetic Commerce Open Source [Code of
-Conduct][].
+App Identity is governed under the Kinetic Commerce Open Source
+[Code of Conduct][coc].
 
 ## Code Guidelines
 
@@ -18,24 +18,25 @@ Identity reference implementations:
 - All code changes require tests. In most cases, this will be added or updated
   unit tests.
 
-  For the Typescript implementation, we use [vitest][].
+  For the Typescript implementation, we use [vitest][vitest].
 
-  In some cases, new [integration tests][] will be required, which will require
-  updates to the integration test generators for all implementations.
+  In some cases, new [integration tests][integration-tests] will be required,
+  which will require updates to the integration test generators for all
+  implementations.
 
 - We use code formatters, static analysis tools, and linting to ensure
   consistent styles and formatting. There should be no warnings output from
   compile or test run processes.
 
-  For the Typescript implementation, we use [Biome][] and `tsc --noEmit`.
+  For the Typescript implementation, we use [Biome][Biome] and `tsc --noEmit`.
 
 - Proposed changes should be on a thoughtfully-named topic branch and organized
   into logical commit chunks as appropriate.
 
-- Use [Conventional Commits][] with our [conventions][].
+- Use [Conventional Commits][conventional] with our [conventions][conventions].
 
-- Versions must not be updated in pull requests; implementations may have
-  other restrictions on file updates as they are part of the release process.
+- Versions must not be updated in pull requests; implementations may have other
+  restrictions on file updates as they are part of the release process.
 
 - Documentation should be added or updated as appropriate for new or updated
   functionality.
@@ -51,10 +52,11 @@ Identity reference implementations:
 
 As one of the reference App Identity implementations, AppIdentity for JavaScript
 provides a package, `@kineticcafe/app-identity-suite-ts`, that can `generate`
-and `run` [integration test suite files][].
+and `run` [integration test suite files][integration-files].
 
-These files can be shared as files (see the [integration workflow][]) or passed
-between suite generators and suite runners through a pipe.
+These files can be shared as files (see the
+[integration workflow][integration-workflow]) or passed between suite generators
+and suite runners through a pipe.
 
 ```console
 $ npm install --global @kineticcafe/app-identity-suite-ts
@@ -99,12 +101,12 @@ Runs one or more integration suites.
   - `-D`, `--diagnostic`: Enables output diagnostics
 
 [biome]: https://biomejs.dev/
-[code of conduct]: https://github.com/KineticCafe/code-of-conduct
-[conventional commits]: https://www.conventionalcommits.org/en/v1.0.0/
+[coc]: https://github.com/KineticCafe/code-of-conduct
+[conventional]: https://www.conventionalcommits.org/en/v1.0.0/
 [conventions]: https://github.com/KineticCafe/app-identity/blob/main/Contributing.md#commit-conventions
 [discussed]: https://github.com/KineticCafe/app_identity/discussions
-[integration test suite files]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md#integration-suite-definition
-[integration tests]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md
-[integration workflow]: https://github.com/KineticCafe/app_identity/blob/main/.github/workflows/integration.yml
+[integration-files]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md#integration-suite-definition
+[integration-tests]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md
+[integration-workflow]: https://github.com/KineticCafe/app_identity/blob/main/.github/workflows/integration.yml
 [quality commit messages]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [vitest]: https://vitest.dev/

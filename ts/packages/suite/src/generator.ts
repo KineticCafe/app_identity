@@ -10,8 +10,8 @@ import {
   useNodeRuntimeAdapter,
 } from '@kineticcafe/app-identity-node'
 
-import optional from './optional.json'
-import required from './required.json'
+import optional from './optional.json' with { type: 'json' }
+import required from './required.json' with { type: 'json' }
 import * as Support from './support.js'
 
 import type * as Generator from './generator/types.js'

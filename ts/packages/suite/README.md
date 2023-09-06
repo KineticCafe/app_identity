@@ -5,8 +5,8 @@
 
 ## Description
 
-@kineticcafe/app-identity-suite-ts is the [integration test][] tool for
-AppIdentity for JavaScript.
+@kineticcafe/app-identity-suite-ts is the [integration test][integration test]
+tool for AppIdentity for JavaScript.
 
 ## Synopsis
 
@@ -56,7 +56,8 @@ npm install --global @kineticcafe/app-identity-suite-ts@^2.0
 
 ## Semantic Versioning
 
-`AppIdentity` uses a [Semantic Versioning][] scheme with one significant change:
+`AppIdentity` uses a [Semantic Versioning][semver] scheme with one significant
+change:
 
 - When PATCH is zero (`0`), it will be omitted from version references.
 
@@ -65,18 +66,18 @@ revisions.
 
 ## Contributing
 
-AppIdentity for JavaScript [welcomes contributions][]. This project, like all Kinetic
-Commerce [open source projects][], is under the Kinetic Commerce Open Source
-[Code of Conduct][].
+AppIdentity for JavaScript [welcomes contributions][contributions]. This
+project, like all Kinetic Commerce [open source projects][projects], is under
+the Kinetic Commerce Open Source [Code of Conduct][coc].
 
 AppIdentity for Elixir is licensed under the Apache License, version 2.0 and
-requires certification via a Developer Certificate of Origin. See [Licence][]
-for more details.
+requires certification via a Developer Certificate of Origin. See
+[Licence][Licence] for more details.
 
-[code of conduct]: https://github.com/KineticCafe/code-of-conduct
+[coc]: https://github.com/KineticCafe/code-of-conduct
 [integration test]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md
 [licence]: https://github.com/KineticCafe/app-identity/blob/main/ts/Licence.md
-[open source projects]: https://github.com/KineticCafe
-[semantic versioning]: http://semver.org/
+[projects]: https://github.com/KineticCafe
+[semver]: http://semver.org/
 [spec]: https://github.com/KineticCafe/app-identity/blob/main/spec/README.md
-[welcomes contributions]: https://github.com/KineticCafe/app-identity/blob/main/ts/Contributing.md
+[contributions]: https://github.com/KineticCafe/app-identity/blob/main/ts/Contributing.md

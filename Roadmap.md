@@ -24,18 +24,19 @@ There are some known issues:
 Improvements under consideration include:
 
 - Additional hashing algorithm support, such as SHA-3 variants. SHA-3 was only
-  recently finalized and none of the reference languages have native support
-  for the SHA-3 variants in their standard libraries.
+  recently finalized and none of the reference languages have native support for
+  the SHA-3 variants in their standard libraries.
 
 - Parameter extension and shuffling. Although versions 2, 3, and 4 are resistant
-  to replay attacks with the use of a verified timestamp nonce, it could be
-  useful to have versions that can shuffle the parameters so that the position
-  of the secret is not always in the same place during padlock hashing. That is,
-  instead of the padlock ordered as `version id nonce padlock`, it might be
-  `padlock nonce version id` or `nonce version id padlock` on a per-call basis,
-  and the order of the parameters would indicate the order of the padlock
-  parameters (e.g., `secret nonce id` and `nonce id secret`). This and other
-  possible improvements would help fight key extension attacks.
+  to replay attacks and length extension attacks with the use of a verified
+  timestamp nonce, it could be useful to have versions that can shuffle the
+  parameters so that the position of the secret is not always in the same place
+  during padlock hashing. That is, instead of the padlock ordered as
+  `version id nonce padlock`, it might be `padlock nonce version id` or
+  `nonce version id padlock` on a per-call basis, and the order of the
+  parameters would indicate the order of the padlock parameters (e.g.,
+  `secret nonce id` and `nonce id secret`). This and other possible improvements
+  would help fight length extension attacks.
 
 - Multiple rounds. Some algorithm versions might provide multiple rounds of
   digest calculation putting the parameters in different (but defined) orders.

@@ -28,8 +28,8 @@ App Identity is _not_:
   communicate the shared secrets.
 
 App Identity algorithm versions are strictly upgradeable. See
-[Algorithm Versions](spec/README.md#algorithm-versions) in the specification
-for details.
+[Algorithm Versions](spec/README.md#algorithm-versions) in the specification for
+details.
 
 ### Indications and Contraindications
 
@@ -58,10 +58,10 @@ This repository contains three reference implementations:
 - [Ruby](ruby/README.md)
 - [Typescript](ts/README.md) for Node
 
-The versioning of each of the reference implementations mostly follows [Semantic
-Versioning][], but are not linked to each other. Each implementation identifies
-which [specification version](spec/README.md#version-and-versioning) it
-supports.
+The versioning of each of the reference implementations mostly follows
+[Semantic Versioning][semver], but are not linked to each other. Each
+implementation identifies which
+[specification version](spec/README.md#version-and-versioning) it supports.
 
 ### Other Implementations
 
@@ -84,7 +84,7 @@ Non-reference implementations should be written to the provided
 suite.
 
 If you are looking for assistance in developing or testing your implementation,
-please start a [discussion][].
+please start a [discussion][discussion].
 
 ## Contributing
 
@@ -92,4 +92,4 @@ See [Contributing.md](./Contributing.md).
 
 [pr]: https://github.com/KineticCafe/app_identity/pulls/
 [discussion]: https://github.com/KineticCafe/app_identity/discussions/
-[semantic versioning]: http://semver.org/
+[semver]: http://semver.org/
