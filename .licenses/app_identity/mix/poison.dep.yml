@@ -1,0 +1,36 @@
+---
+name: poison
+version: 5.0.0
+scm: hex
+repo: hexpm
+type: mix
+license: 0bsd
+licenses:
+- sources: LICENSE
+  text: |
+    Copyright (C) 2021 Devin Alexander Torres <d@devinus.io>
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+- sources: README.md
+  text: |-
+    Poison is released under the [public-domain-equivalent][8] [0BSD][9] license.
+
+    [1]: http://www.erlang.org/euc/07/papers/1700Gustafsson.pdf
+    [2]: https://erlang.org/documentation/doc-12.0-rc1/erts-12.0/doc/html/BeamAsm.html
+    [3]: http://jlouisramblings.blogspot.com/2013/07/problematic-traits-in-erlang.html
+    [4]: https://tools.ietf.org/html/rfc7159
+    [5]: http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf
+    [6]: https://github.com/nst/JSONTestSuite
+    [7]: http://prog21.dadgum.com/70.html
+    [8]: https://en.wikipedia.org/wiki/Public-domain-equivalent_license
+    [9]: https://opensource.org/licenses/0BSD
+notices: []

@@ -1,0 +1,21 @@
+name: app_identity
+
+allowed:
+  - apache-2.0
+  - 0bsd
+  - bsd-2-clause
+  - bsd-3-clause
+  - mit
+  - isc
+
+reviewed:
+  mix:
+    - file_system # WTFPL
+
+apps:
+  - source_path: elixir
+  - source_path: ruby
+  - source_path: ts
+    sources:
+      npm: false
+      pnpm: true

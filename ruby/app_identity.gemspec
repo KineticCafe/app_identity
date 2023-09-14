@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "rubygems_mfa_required" => "true" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze, "Kinetic Commerce".freeze]
-  s.date = "2022-12-27"
+  s.date = "2023-09-14"
   s.description = "AppIdentity is a Ruby implementation of the Kinetic Commerce application\nidentity proof algorithm as described in its [spec][].".freeze
   s.email = ["aziegler@kineticcommerce.com".freeze, "dev@kineticcommerce.com".freeze]
   s.executables = ["app-identity-suite-ruby".freeze]
@@ -19,48 +19,26 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
   s.required_ruby_version = Gem::Requirement.new([">= 2.7".freeze, "< 4".freeze])
-  s.rubygems_version = "3.3.26".freeze
+  s.rubygems_version = "3.4.18".freeze
   s.summary = "AppIdentity is a Ruby implementation of the Kinetic Commerce application identity proof algorithm as described in its [spec][].".freeze
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
-  end
+  s.specification_version = 4
 
-  if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<optimist>.freeze, ["~> 3.0"])
-    s.add_development_dependency(%q<minitest>.freeze, ["~> 5.16"])
-    s.add_development_dependency(%q<appraisal>.freeze, ["~> 2.4"])
-    s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0"])
-    s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-    s.add_development_dependency(%q<hoe-git2>.freeze, ["~> 1.7"])
-    s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<minitest-autotest>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<minitest-bisect>.freeze, ["~> 1.2"])
-    s.add_development_dependency(%q<minitest-focus>.freeze, ["~> 1.1"])
-    s.add_development_dependency(%q<minitest-pretty_diff>.freeze, ["~> 0.1"])
-    s.add_development_dependency(%q<rack-test>.freeze, ["~> 2.0"])
-    s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
-    s.add_development_dependency(%q<rdoc>.freeze, ["~> 6.4"])
-    s.add_development_dependency(%q<standard>.freeze, ["~> 1.0"])
-    s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.21"])
-  else
-    s.add_dependency(%q<optimist>.freeze, ["~> 3.0"])
-    s.add_dependency(%q<minitest>.freeze, ["~> 5.16"])
-    s.add_dependency(%q<appraisal>.freeze, ["~> 2.4"])
-    s.add_dependency(%q<hoe>.freeze, ["~> 4.0"])
-    s.add_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
-    s.add_dependency(%q<hoe-git2>.freeze, ["~> 1.7"])
-    s.add_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<minitest-autotest>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<minitest-bisect>.freeze, ["~> 1.2"])
-    s.add_dependency(%q<minitest-focus>.freeze, ["~> 1.1"])
-    s.add_dependency(%q<minitest-pretty_diff>.freeze, ["~> 0.1"])
-    s.add_dependency(%q<rack-test>.freeze, ["~> 2.0"])
-    s.add_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
-    s.add_dependency(%q<rdoc>.freeze, ["~> 6.4"])
-    s.add_dependency(%q<standard>.freeze, ["~> 1.0"])
-    s.add_dependency(%q<simplecov>.freeze, ["~> 0.21"])
-  end
+  s.add_runtime_dependency(%q<optimist>.freeze, ["~> 3.1"])
+  s.add_development_dependency(%q<minitest>.freeze, ["~> 5.20"])
+  s.add_development_dependency(%q<appraisal>.freeze, ["~> 2.4"])
+  s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0"])
+  s.add_development_dependency(%q<hoe-doofus>.freeze, ["~> 1.0"])
+  s.add_development_dependency(%q<hoe-gemspec2>.freeze, ["~> 1.1"])
+  s.add_development_dependency(%q<hoe-git2>.freeze, ["~> 1.7"])
+  s.add_development_dependency(%q<hoe-rubygems>.freeze, ["~> 1.0"])
+  s.add_development_dependency(%q<minitest-autotest>.freeze, ["~> 1.0"])
+  s.add_development_dependency(%q<minitest-bisect>.freeze, ["~> 1.2"])
+  s.add_development_dependency(%q<minitest-focus>.freeze, ["~> 1.1"])
+  s.add_development_dependency(%q<minitest-pretty_diff>.freeze, ["~> 0.1"])
+  s.add_development_dependency(%q<rack-test>.freeze, ["~> 2.0"])
+  s.add_development_dependency(%q<rake>.freeze, [">= 10.0", "< 14"])
+  s.add_development_dependency(%q<rdoc>.freeze, ["~> 6.4"])
+  s.add_development_dependency(%q<standard>.freeze, ["~> 1.0"])
+  s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.21"])
 end
