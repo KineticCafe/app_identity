@@ -7,43 +7,53 @@ application secret key, and a hashing algorithm. The secret key is embedded in
 client applications and stored securely on the server, so it is never passed
 over the wire.
 
-## Terminology Notes
+## Terminology and Typographic Notes
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in [RFC2199][rfc2119].
+The key words **must**, **must not**, **required**, **shall**, **shall not**,
+**should**, **should not**, **recommended**, **may**, and **optional** in this
+document are to be interpreted as described in [RFC2199][rfc2119].
 
-Only the text of this specification is _normative_. Code examples in this
-document are _informative_ and may have bugs.
+Core algorithmic concepts will be expressed with _emphasis_.
+
+Only the text of this specification is normative. Code examples in this document
+are informative and may have bugs.
 
 ## Version and Versioning
 
 This specification is versioned with a modified [Semantic Versioning][] scheme.
-The major version of the specification will always be the highest algorithms
-version defined. Minor versions may adjust the text of the specification.
+The major version of the specification will always be the number of algorithm
+versions defined. Minor versions of the specification **may** be used adjust the
+text.
 
-The current specification is `4.1`, as four algorithm versions have been
-defined.
+The current specification is 4.2.
 
 ## Application
 
-For the purposes of this specification, an `application` requires the following
-attributes:
+For the purposes of this specification, an application **requires** the
+following attributes:
 
-- `id`: The unique identifier of the application. It is recommended that this
-  value is a `UUID`. When using an integer identifier, it is recommended that
-  this value be extended, such as that provided by Rails [Global ID][global id].
-  Such representations are _also_ recommended if the ID is a compound value.
-  Non-string identifiers must be converted to string values.
+- `id`: The unique identifier of the application, which **must** be presented as
+  a string. Identifiers **must not** include an ASCII colon (`:`) or they
+  **must** be encoded and validating servers must know how to locate
+  applications encoded this way.
 
-- `secret`: The random value used as the secret key. This value _must_ be used
-  as presented (if presented as a base-64 value, the secret _is_ the base-64
-  value, not a decoded version of it).
+  It is **recommended** that this value be globally unique and extremely
+  difficult to guess. Identifier types meeting such criteria include UUIDs
+  ([version 4][uuidv4], [version 7][uuidv7], or [version 8][uuidv8]),
+  [ULID][ulid], or [ksuid][ksuid].
 
-  Application secrets should be prefixed with a fixed value, such as `appid_`.
-  This improves the ability of security tools (such as [gitleaks][],
+  Identifiers **may** include a class identifier (such as `appid=1234`, or the
+  Rails [Global ID][global id] format). If an identifier is short, an integer,
+  or a compound value, the use of a class identifier is **recommended**.
+
+- `secret`: The random value used as the secret key. This value **must** be used
+  as presented. That is, if the secret is presented as a Base64 value, the
+  secret is the Base64 value, not a decoded version of it.
+
+  Application secrets **should** be prefixed with a fixed value, such as
+  `appid_`. This improves the ability of security tools (such as [gitleaks][],
   [GitGuardian][], or [GitHub secret scanning][]) to detect that an application
-  secret key has been leaked
+  secret key has been leaked.
 
   Where possible, implementations **should** use memory-safe storage for the
   `secret` value and **must** prevent accidental exposure of the secret in logs
@@ -67,11 +77,11 @@ attributes:
     or higher algorithms. If not present, defaults to `600` seconds, or ±600
     seconds (±10 minutes). Depending on the nature of the app being verified and
     the expected network conditions, a shorter time period than 600 seconds is
-    recommended.
+    **recommended**.
 
 ### Suggested Extra Fields
 
-The following fields are recommended for use on by proof verifiers.
+The following fields are suggested for use in defining applications.
 
 - `code`: A unique text identifier for the application. Not used in the proof
   algorithm, but used to manage the application on the servers.
@@ -80,15 +90,15 @@ The following fields are recommended for use on by proof verifiers.
   algorithm, but used for human consumption.
 
 - `type`: The type of the application. Because the server deals with many types
-  of applications, this value may be used to _limit_ access to APIs to only type
+  of applications, this value may be used to limit access to APIs to only type
   of applications.
 
 ## Algorithm Versions
 
 The algorithm version controls both the shape of the nonce and the specific
-algorithm chosen for hashing. Versions are _strictly upgradeable_. That is,
-a version 1 app can verify version 1, 2, 3, or 4 proofs. However, a version
-2 app will _never_ validate a version 1 proof.
+algorithm chosen for hashing. Versions are strictly upgradeable. A version 1 app
+can verify version 1, 2, 3, or 4 proofs. However, a version 2 app will never
+validate a version 1 proof.
 
 <table>
   <thead>
@@ -142,11 +152,12 @@ a version 1 app can verify version 1, 2, 3, or 4 proofs. However, a version
 
 ## Identity Proof
 
-The client identity proof is a short signed value, composed from the _id_,
-a _nonce_, and an intermediary _padlock_ generated using the _application
-secret_. The application id and secret will be provided securely for
-compile-time inclusion; all care should be taken to ensure that the secret is
-not easily extractable from the application or shared in the clear.
+The client identity proof is a short, cryptographically signed value, composed
+from the _id_, a _nonce_, and an intermediary _padlock_ generated using the
+application _secret_. The application _id_ and _secret_ **should** be provided
+securely for compile-time inclusion; all care **should** be taken to ensure that
+the secret is not easily extractable from the application or shared in the
+clear.
 
 The generation of a proof looks like this:
 
@@ -165,15 +176,24 @@ The verification of a proof looks like this:
 ### Nonce
 
 Depending on the version of the application algorithm, the _nonce_ may contain
-any byte sequences _except_ ASCII colon (`:`), but it is recommended that the
-value be UTF-8 safe.
+any byte sequences except ASCII colon (`:`), but it is **recommended** that
+the value be UTF-8 safe.
 
 #### Random Nonces
 
-Version 1 nonces should be cryptographically secure and non-sequential, but
+Version 1 nonces **should** be cryptographically secure and non-sequential, but
 sufficiently fine-grained timestamps (those including microseconds, as
-`yyyymmddHHMMSS.sss`) _may_ be used. Version 1 proofs verify that the nonce is
-at least one byte long and do not contain a colon (`:`).
+`yyyymmddHHMMSS.sss`) **may** be used. Version 1 proofs verify that the nonce is
+at least one byte long and do not contain an ASCII colon (`:`).
+
+**Typescript (Node)**:
+
+```typescript
+import { randomBytes } from 'crypto'
+import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
+
+base64url.encode(randomBytes(32).toString())
+```
 
 **Ruby**:
 
@@ -189,15 +209,6 @@ nonce2 = SecureRandom.hex(32)
 # Elixir
 Base.url_encode64(:crypto.strong_rand_bytes(32), padding: true)
 Base.encode16(:crypto.strong_rand_bytes(32))
-```
-
-**Typescript (Node)**:
-
-```typescript
-import { randomBytes } from 'crypto'
-import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
-
-base64url.encode(randomBytes(32).toString())
 ```
 
 **Swift**:
@@ -221,8 +232,9 @@ secure_random_base64_bytes(32)
 #### Timestamp Nonces
 
 Version 2, 3, and 4 nonces **must** be a UTC timestamp formatted using ISO 8601
-basic formatting. The timestamp _should_ be generated on a clock synced with NTP
-and _should_ be verified using a clock synced with NTP.
+basic formatting. The clocks of the generating and verifying systems **must** be
+synchronized for the verification to work as intended, so NTP is strongly
+**recommended**.
 
 For the purposes of this document, ISO 8601 basic formatting is this [ABNF][]
 definition adapted from [RFC3339][]:
@@ -236,7 +248,7 @@ time-hour     = 2DIGIT  ; 00-23
 time-minute   = 2DIGIT  ; 00-59
 time-second   = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second
                         ; rules
-time-secfrac  = "." 1\*DIGIT
+time-secfrac  = "." 1*DIGIT
 time-offset   = "Z"
 
 partial-time  = time-hour time-minute time-second [time-secfrac]
@@ -246,23 +258,25 @@ full-time     = partial-time time-offset
 date-time     = full-date "T" full-time
 ```
 
-The timestamp must be an ASCII 7-bit or UTF-8 string using only ASCII
-characters, and the special characters `T` and `Z` **must** be specified
-uppercase.
-
 This format differs from [RFC3339][] [§5.6][§5.6] timestamp format in the
 following ways:
 
-1. It **must** be UTC and the timezone character must be `Z`. No other timezone
-   specifier is permitted, and it must not be omitted.
-2. It **must** only have the characters `[.0-9TZ]`. It **may** have the point
-   character (`.`) only preceding the _optional_ fractional seconds digits.
+1. It **must** be UTC and the timezone character **must** be `Z`. No other
+   timezone specifier is permitted, and it **must not** be omitted.
+2. It **must** only have the ASCII characters `[.0-9TZ]`. It **may** have the
+   point character (`.`) only preceding the optional fractional seconds digits.
 
-Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` must be presented
-as `20200225T192003.321423Z`.
+Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` **must** be
+presented as `20200225T192003.321423Z`.
 
 The C-style `strftime` pattern for this format is `'%Y%m%dT%H%M%S.%6NZ'`, and
 the PostgreSQL `TO_CHAR` pattern is `'YYYYMMDD"T"HH24MISS.FF6Z'`.
+
+**Typescript (Node)**:
+
+```typescript
+new Date().toISOString().replace(/[-:]/g, '')
+```
 
 **Ruby**:
 
@@ -283,18 +297,27 @@ case DateTime.now("Etc/UTC") do
 end
 ```
 
+### Padlock Calculation
+
+To compute the padlock value:
+
+1. Concatenate the application _id_, the _nonce_, and the application _secret_
+   with ASCII colon (`:`) between each part.
+2. Calculate the digest of the above value.
+3. Convert to a base 16 string representation.
+
+As noted previously, the digest algorithm used varies based on the application
+version.
+
 **Typescript (Node)**:
 
 ```typescript
-new Date().toISOString().replace(/[-:]/g, '')
+// This demonstrates a version 3 padlock
+import { createHash } from 'crypto'
+const hash = createHash('sha384')
+hash.update(raw, 'utf-8')
+hash.digest('hex').toUpperCase()
 ```
-
-### Padlock Calculation
-
-To compute the padlock value, concatenate the application id, the nonce, and the
-application secret using colons, then calculate the digest of the value and
-convert to a base 16 string representation. As noted previously, the digest
-algorithm used varies based on the application version.
 
 **Ruby**:
 
@@ -310,15 +333,6 @@ Digest::SHA256.hexdigest([version, id, nonce, secret].join(':')).upcase
 |> Enum.join(":")
 |> then(&:crypto.hash(:sha256, &1))
 |> Base.encode16(case: :upper)
-```
-
-**Typescript (Node)**:
-
-```typescript
-import { createHash } from 'crypto'
-const hash = createHash('sha384')
-hash.update(raw, 'utf-8')
-hash.digest('hex').toUpperCase()
 ```
 
 **Swift**:
@@ -377,16 +391,22 @@ for (int i = 0; i < hash.length; i++) {
 ```
 
 Validation of the padlock will convert this digest to uppercase, so the values
-`c0ffee` and `C0FFEE` are identical. It is recommended that padlocks be passed
-as uppercase hex values.
+`c0ffee` and `C0FFEE` are identical. It is **recommended** that padlocks be
+passed as uppercase hex values.
 
-### Padlock Presentation
+### Proof Presentation
 
-The padlock cannot be presented by itself, because the digest used are one-way
-cryptographic hashes. Therefore, the client must supply the id (used to find the
-client definition on the server) and the nonce (because the nonce is generated
-by the client application and not known by the server). This will typically be
-provided as a concatenated, base-64-encoded string:
+Clients **must** present the computed _padlock_ to the server in a way that
+allows verification. This is called the _proof_, which contains the algorithm
+_version_, the application _id_, the _nonce_, and the _padlock_. It is typically
+provided as a single concatenated string (using colons) and then Base64 encoded.
+
+**Typescript (Node)**:
+
+```typescript
+import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
+base64url.encode([version, id, nonce, padlock].join(':'))
+```
 
 **Ruby**:
 
@@ -413,14 +433,6 @@ let value = "\(version):\(id):\(nonce):\(padlock)"
 let proof = Data(value.utf8).base64EncodedString()
 ```
 
-**Typescript**:
-
-```typescript
-import base64url from 'base64-url' // https://www.npmjs.com/package/base64-url
-const parts = version === 1 ? [id, nonce, padlock] : [version, id, nonce, padlock]
-base64url.encode(parts.join(':'))
-```
-
 **Java**:
 
 ```java
@@ -438,3 +450,8 @@ String proof = new String(encodedHash, "UTF-8");
 [gitguardian]: https://www.gitguardian.com
 [gitleaks]: https://gitleaks.io
 [github secret scanning]: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
+[uuidv4]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-4
+[uuidv7]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-7
+[uuidv8]: https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis#name-uuid-version-8
+[ulid]: https://github.com/ulid/spec
+[ksuid]: https://github.com/segmentio/ksuid
