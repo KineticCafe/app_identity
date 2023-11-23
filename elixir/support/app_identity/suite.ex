@@ -7,7 +7,7 @@ defmodule AppIdentity.Suite do
     @banner
   end
 
-  if function_exported?(Kernel, :is_exception, 1) do
+  if macro_exported?(Kernel, :is_exception, 1) do
     def extract_message(term) when is_exception(term) do
       Exception.message(term)
     end

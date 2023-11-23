@@ -45,7 +45,7 @@ defmodule AppIdentity.App do
   A 0-arity loader function that returns a map or struct that can be converted
   into an App struct.
   """
-  @type loader :: (() -> input | t | {:ok, input | t} | invalid_input)
+  @type loader :: (-> input | t | {:ok, input | t} | invalid_input)
 
   @typedoc """
   A finder function accepting a Proof struct parameter that returns a map or
@@ -66,7 +66,7 @@ defmodule AppIdentity.App do
   """
   @type t :: %__MODULE__{
           id: AppIdentity.id(),
-          secret: (() -> AppIdentity.secret()),
+          secret: (-> AppIdentity.secret()),
           version: AppIdentity.version(),
           config: config(),
           source: nil | term(),
