@@ -19,11 +19,11 @@ defmodule AppIdentity.Support do
   end
 
   def v1(fuzz \\ nil) do
-    secret = SecureRandom.hex(32)
+    secret = random_hex(32)
 
     output = %{
       version: 1,
-      id: SecureRandom.uuid(),
+      id: uuidv4(),
       secret: fn -> secret end
     }
 
@@ -118,4 +118,36 @@ defmodule AppIdentity.Support do
   def adjust_timestamp(timestamp, diff, :hours) do
     DateTime.add(timestamp, diff * 24 * 60, :second)
   end
+
+  # The following code is adapted from https://hex.pm/packages/secure_random,
+  # released under the Apache 2.0 license, copyright 2017 Patrick Robertson and
+  # contributors.
+
+  defp uuidv4 do
+    <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.strong_rand_bytes(16)
+    <<g0::32, g1::16, g2::16, g3::16, g4::48>> = <<u0::48, 4::4, u1::12, 2::2, u2::62>>
+
+    hex_pad(g0, 8) <>
+      "-" <>
+      hex_pad(g1, 4) <>
+      "-" <>
+      hex_pad(g2, 4) <>
+      "-" <>
+      hex_pad(g3, 4) <>
+      "-" <>
+      hex_pad(g4, 12)
+  end
+
+  defp random_hex(length) do
+    Base.encode16(:crypto.strong_rand_bytes(length), case: :lower)
+  end
+
+  defp hex_pad(hex, count) do
+    hex = Integer.to_string(hex, 16)
+    lower(hex, :binary.copy("0", count - byte_size(hex)))
+  end
+
+  defp lower(<<h, t::binary>>, acc) when h in ?A..?F, do: lower(t, acc <> <<h + 32>>)
+  defp lower(<<h, t::binary>>, acc), do: lower(t, acc <> <<h>>)
+  defp lower(<<>>, acc), do: acc
 end

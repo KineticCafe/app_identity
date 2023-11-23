@@ -42,13 +42,13 @@ jobs:
           - elixir: '1.14'
             otp: '25'
             os: ubuntu-22.04
+          - elixir: '1.15'
+            otp: '26'
+            os: ubuntu-22.04
             check_formatted: true
             warnings_as_errors: true
             dialyzer: true
             credo: true
-          - elixir: '1.15'
-            otp: '26'
-            os: ubuntu-22.04
 
     runs-on: ${{ matrix.os }}
 
