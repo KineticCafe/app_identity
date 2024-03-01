@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "base64-url": "^2.3.3",
-    "commander": "^11.0.0",
+    "commander": "^12.0.0",
     "date-fns": "^2.29.3",
     "fast-glob": "^3.2.12"
   },
