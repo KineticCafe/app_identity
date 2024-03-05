@@ -1,7 +1,7 @@
 defmodule AppIdentity.Suite do
   @moduledoc false
 
-  @banner "#{AppIdentity.info(:name)} #{AppIdentity.info(:version)} (spec #{AppIdentity.info(:spec_version)}"
+  @banner "#{AppIdentity.info(:name)} #{AppIdentity.info(:version)} (spec #{AppIdentity.info(:spec_version)})"
 
   def banner do
     @banner

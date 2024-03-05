@@ -69,6 +69,10 @@ defmodule Mix.Tasks.AppIdentity do
     Suite.Runner.run(args)
   end
 
+  defp dispatch(["help"]) do
+    Suite.Help.run([])
+  end
+
   defp dispatch(["help" | args]) do
     Suite.Help.run(args)
   end
