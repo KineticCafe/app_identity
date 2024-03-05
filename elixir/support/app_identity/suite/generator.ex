@@ -206,8 +206,14 @@ defmodule AppIdentity.Suite.Generator do
         %{"offset_minutes" => _, "value" => _} ->
           fail!(type, input, index, "nonce must only have one sub-key")
 
-        %{"empty" => value} ->
-          %{empty: !!value}
+        %{"empty" => true} ->
+          %{empty: true}
+
+        %{"empty" => "true"} ->
+          %{empty: true}
+
+        %{"empty" => _} ->
+          fail!(type, input, index, "nonce.empty may only be true")
 
         %{"offset_minutes" => value} when is_integer(value) ->
           %{offset_minutes: value}
@@ -229,29 +235,77 @@ defmodule AppIdentity.Suite.Generator do
     output
   end
 
-  defp normalize_padlock(output, %{"padlock" => padlock} = input, type, index) do
-    must_have!(type, padlock, index, "nonce", input: input, name: "padlock.nonce")
-    Map.put_new(output, :padlock, %{nonce: padlock["nonce"]})
+  defp normalize_padlock(output, %{"padlock" => %{"value" => _} = padlock} = input, type, index) do
+    cond do
+      map_size(padlock) > 1 ->
+        fail!(type, input, index, "padlock.value must not have any other sub-keys specified")
+
+      padlock["value"] == "" ->
+        fail!(type, input, index, "padlock.value must not be an empty string")
+
+      true ->
+        Map.put_new(output, :padlock, %{value: padlock["value"]})
+    end
+  end
+
+  defp normalize_padlock(output, %{"padlock" => %{} = padlock} = input, type, index) do
+    if map_size(padlock) == 0 do
+      fail!(type, input, index, "padlock must have at least one sub-key: value, nonce, or case")
+    else
+      new =
+        case padlock do
+          %{"nonce" => _, "case" => _} ->
+            %{
+              nonce: padlock["nonce"],
+              case: normalize_padlock_case(padlock["case"], type, input, index)
+            }
+
+          %{"nonce" => _} ->
+            %{nonce: padlock["nonce"]}
+
+          %{"case" => _} ->
+            %{case: normalize_padlock_case(padlock["case"], type, input, index)}
+
+          _ ->
+            fail!(
+              type,
+              input,
+              index,
+              "padlock must have at least one sub-key: value, nonce, or case"
+            )
+        end
+
+      if new[:case] not in [nil, :lower, :random, :upper] do
+        fail!(type, input, index, "padlock.case must be one of 'lower', 'random', or 'upper'")
+      end
+
+      Map.put_new(output, :padlock, new)
+    end
   end
 
   defp normalize_padlock(output, _input, _type, _index) do
     output
   end
 
+  defp normalize_padlock_case("lower", _type, _input, _index), do: :lower
+  defp normalize_padlock_case(:lower, _type, _input, _index), do: :lower
+  defp normalize_padlock_case("random", _type, _input, _index), do: :random
+  defp normalize_padlock_case(:random, _type, _input, _index), do: :random
+  defp normalize_padlock_case("upper", _type, _input, _index), do: :upper
+  defp normalize_padlock_case(:upper, _type, _input, _index), do: :upper
+
+  defp normalize_padlock_case(_, type, input, index),
+    do: fail!(type, input, index, "padlock.case must be one of 'lower', 'random', or 'upper'")
+
   defp normalize_proof(output, %{"proof" => proof} = input, type, index) do
     must_have!(type, proof, index, "version", input: input, name: "proof.version")
 
-    new = %{version: proof["version"]}
+    new_proof =
+      [version: proof["version"], id: proof["id"], secret: proof["secret"]]
+      |> Enum.reject(&match?({_, nil}, &1))
+      |> Map.new()
 
-    extra =
-      case proof do
-        %{"id" => id, "secret" => secret} -> %{id: id, secret: secret}
-        %{"id" => id} -> %{id: id}
-        %{"secret" => secret} -> %{secret: secret}
-        _ -> %{}
-      end
-
-    Map.put_new(output, :proof, Map.merge(new, extra))
+    Map.put_new(output, :proof, new_proof)
   end
 
   defp make_proof(type, input, index, app) do
@@ -288,7 +342,24 @@ defmodule AppIdentity.Suite.Generator do
          app,
          nonce,
          version,
-         %{padlock: %{nonce: padlock_nonce}, proof: proof},
+         %{padlock: %{value: padlock_value}, proof: proof},
+         _type,
+         _index
+       ) do
+    {:ok,
+     Support.build_proof(app, padlock_value,
+       id: proof[:id],
+       nonce: nonce,
+       secret: proof[:secret],
+       version: version
+     )}
+  end
+
+  defp build_proof(
+         app,
+         nonce,
+         version,
+         %{padlock: %{nonce: padlock_nonce} = padlock, proof: proof},
          _type,
          _index
        ) do
@@ -297,7 +368,8 @@ defmodule AppIdentity.Suite.Generator do
         id: proof[:id],
         nonce: padlock_nonce,
         secret: proof[:secret],
-        version: version
+        version: version,
+        case: Map.get(padlock, :case, :random)
       )
 
     {:ok,
@@ -316,7 +388,8 @@ defmodule AppIdentity.Suite.Generator do
           id: proof[:id],
           nonce: nonce,
           secret: proof[:secret],
-          version: version
+          version: version,
+          case: get_in(input, [:padlock, :case]) || :random
         )
 
       {:ok,

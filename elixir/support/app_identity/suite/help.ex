@@ -34,6 +34,10 @@ defmodule AppIdentity.Suite.Help do
     strict: [version: :boolean, help: :boolean]
   ]
 
+  def run([]) do
+    AppIdentity.Suite.print_help(__MODULE__)
+  end
+
   def run(args) do
     {options, args, errors} = OptionParser.parse(args, @switches)
 

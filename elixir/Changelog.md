@@ -1,5 +1,10 @@
 # App Identity for Elixir Changelog
 
+## 1.4.0 / 2023-MM-DD
+
+- Made `mix app_identity help` more robust so that it works when not provided an
+  additional command, printing the same content as `mix help app_identity`.
+
 ## 1.3.2 / 2023-09-05
 
 - Resolved an issue where padlock values sent using lowercase hex values were

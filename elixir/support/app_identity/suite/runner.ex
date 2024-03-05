@@ -13,7 +13,7 @@ defmodule AppIdentity.Suite.Runner do
   ## Options for run:
 
       -S, --strict        Runs in strict mode; optional tests will cause failure
-      --stdin             Reads a suite from stdin
+      --stdin             Reads a suite from standard input
       -D, --diagnostic    Enables output diagnostics
 
   ## Global Options:
