@@ -189,7 +189,7 @@ class AppIdentity::Suite::Program # :nodoc:
         BANNER
 
         opt :strict, "Runs in strict mode; optional tests will cause failure", short: "S"
-        opt :stdin, "Reads a suite from stdin", short: :none
+        opt :stdin, "Reads a suite from standard input", short: :none
         opt :diagnostic, "Enables output diagnostics", short: "D"
 
         banner ""
