@@ -1,0 +1,142 @@
+name: Reviewdog
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  misspell:
+    if: ${{ github.event.action != 'closed' }}
+    name: Misspell
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: reviewdog/action-misspell@v1
+        with:
+          path: |
+            elixir/*.md
+            elixir/lib
+            elixir/licenses
+            elixir/mix.exs
+            elixir/support
+            elixir/test
+            integration
+            licenses
+            ruby/*.md
+            ruby/bin
+            ruby/lib
+            ruby/licenses
+            ruby/Rakefile
+            ruby/support
+            ruby/test
+            spec
+            ts/*.md
+            ts/packages/core/*.md
+            ts/packages/core/package.json
+            ts/packages/core/src
+            ts/packages/core/test
+            ts/packages/node/*.md
+            ts/packages/node/package.json
+            ts/packages/node/src
+            ts/packages/suite/*.md
+            ts/packages/suite/package.json
+            ts/packages/suite/src
+            ts/package.json
+            *.md
+          exclude: |
+            integration/tapview
+
+  actionlint:
+    if: ${{ github.event.action != 'closed' }}
+    name: Actionlint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: reviewdog/action-actionlint@v1
+
+  biome:
+    if: ${{ github.event.action != 'closed' }}
+    name: 'Typescript: Biome'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: ts/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./ts
+
+      - uses: mongolyy/reviewdog-action-biome@v1
+        with:
+          workdir: ./ts
+
+  standardrb:
+    if: ${{ github.event.action != 'closed' }}
+    name: 'Ruby: Standard'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ./ruby
+
+      - uses: kirillplatonov/action-standard@v1.0.1
+        with:
+          skip_install: true
+          use_bundler: true
+          workdir: ./ruby
+
+  credo:
+    if: ${{ github.event.action != 'closed' }}
+    name: 'Elixir: Credo'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-elixir@v1
+        id: install
+        with:
+          otp-version: '26'
+          elixir-version: '1.15'
+
+      - uses: actions/cache@v4
+        with:
+          key: builds@elixir-${{ steps.install.outputs.elixir-version }}-otp-${{ steps.install.outputs.otp-version }}-mix-${{ hashFiles('mix.lock') }}
+          path: |
+            elixir/deps
+            elxir/_build
+
+      - run: mix 'do' deps.get, deps.compile
+        working-directory: ./elixir
+
+      - uses: reviewdog/action-setup@v1.2.1
+
+      - name: 'mix credo --strict | reviewdog'
+        run: |
+          mix credo suggest --strict --format=flycheck |
+            reviewdog \
+              -efm="%f:%l:%c: %t: %m" \
+              -efm="%f:%l: %t: %m" \
+              -name="credo" \
+              -reporter="github-pr-check" -level="error"
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+        working-directory: ./elixir
