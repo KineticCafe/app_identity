@@ -15,3 +15,4 @@ jobs:
       - uses: KineticCafe/actions/dependabot-automerge@v1.2
         with:
           update-type: minor
+          merge-type: rebase

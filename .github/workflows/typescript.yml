@@ -2,14 +2,9 @@ name: TypeScript CI
 
 on:
   pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-  merge_group:
-    types:
-      - checks_requested
   workflow_dispatch:
 
 jobs:
@@ -22,18 +17,15 @@ jobs:
         os:
           - ubuntu-latest
         node:
-          - 16
-          - 18
           - 20
         pnpm:
-          - 7
           - 8 # latest
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: ${{ matrix.pnpm }}
       - uses: actions/setup-node@v4
@@ -41,20 +33,30 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
           cache-dependency-path: ts/pnpm-lock.yaml
+
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
       - run: pnpm test
         working-directory: ./ts
       - run: pnpm lint
         working-directory: ./ts
-      - run: |
+
+      - name: pnpm format:check
+        run: |
           pnpm format:check || {
             pnpm format
             git diff
             exit 1
           }
         working-directory: ./ts
+
       - run: pnpm build:all
         working-directory: ./ts
-      - run: pnpm cli:generate self.json && pnpm cli:run self.json --strict
+
+      - run: pnpm exec publint
+        working-directory: ./ts
+
+      - name: self-test
+        run: |
+          pnpm --silent cli:generate | pnpm --silent cli:run --strict
         working-directory: ./ts

@@ -5,6 +5,13 @@ on:
 
 jobs:
   check-dco:
+    name: Check DCO
     runs-on: ubuntu-latest
     steps:
-      - uses: KineticCafe/actions-dco@v1.1
+      - uses: actions/checkout@v4
+
+      - uses: KineticCafe/actions-dco@v1.3
+        with:
+          exempt-authors: |
+            @kineticcommerce.com
+            @kineticcafe.com
