@@ -6,7 +6,7 @@ export type Expect = 'pass' | 'fail'
 /**
  * App configuration.
  */
-export type Config = {
+export interface Config {
   /**
    * An optional fuzz configuration. The value must be a positive integer and is
    * measured in seconds.
@@ -17,7 +17,7 @@ export type Config = {
 /**
  * An App Identity app.
  */
-export type App = {
+export interface App {
   /**
    * A number or string identifier.
    */
@@ -34,12 +34,17 @@ export type App = {
    * The optional configuration.
    */
   config?: Config | null
+  /**
+   * Apps may have additional configuration values which are ignored by App
+   * Identity.
+   */
+  [key: string]: unknown
 }
 
 /**
  * An integration test to be run.
  */
-export type Test = {
+export interface Test {
   /**
    * A description of the test. Shown as part of the output.
    */
@@ -70,21 +75,41 @@ export type Test = {
 /**
  * An integration test suite.
  */
-export type Suite = {
+export interface Suite {
   /**
-   * The name of the implementation.
+   * The name of the implementation that generated the suite.
    */
   name: string
+
   /**
-   * The version of the implementation.
+   * The version of the implementation that generated the suite.
    */
   version: string
+
+  /**
+   * The description of the suite. Marked optional for backwards compatibility,
+   * it should be considered required for newer suite generators.
+   *
+   * This should generally be in the form `{name} {version} (spec {spec-version})`.
+   *
+   * If a runtime package is required to run the suite, such as
+   * @kineticcafe/app-identity-node, the form should be one of:
+   *
+   * - `{core-name} {core-version} ({runtime-name} {runtime-version}, spec ${spec-version})`
+   * - `{core-name} {core-version} ({runtime-name}, spec ${spec-version})`
+   *
+   * The latter form should be used if the package `core-version` and
+   * `runtime-version` entries are the same.
+   */
+  description?: string
+
   /**
    * The supported major specification version.
    */
   spec_version: number
+
   /**
    * The set of tests to run.
    */
-  tests: Array<Test>
+  tests: Test[]
 }

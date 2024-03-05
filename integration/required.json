@@ -510,5 +510,47 @@
       "version": 4
     },
     "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1, lowercase padlock",
+    "expect": "pass",
+    "padlock": {
+      "case": "lower"
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1, uppercase padlock",
+    "expect": "pass",
+    "padlock": {
+      "case": "upper"
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
+  },
+  {
+    "app": {
+      "version": 1
+    },
+    "description": "App V1, Proof V1, non-hex padlock value",
+    "expect": "fail",
+    "padlock": {
+      "value": "zoom"
+    },
+    "proof": {
+      "version": 1
+    },
+    "spec_version": 4
   }
 ]

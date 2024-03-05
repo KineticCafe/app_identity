@@ -1,0 +1,17 @@
+[private]
+default: schema_json optional_json required_json
+
+schema_json:
+  #! /usr/bin/env bash
+
+  pnpm --silent dlx ts-json-schema-generator -p schema.ts -e all -t Suite \
+    --strict-tuples > schema.json &&
+    echo Generated schema.json from schema.ts
+
+@optional_json:
+  yaml2json optional.yaml | jq . -S > optional.json
+  echo Generated optional.json from optional.yaml
+
+@required_json:
+  yaml2json required.yaml | jq . -S > required.json
+  echo Generated required.json from required.yaml
