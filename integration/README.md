@@ -7,8 +7,8 @@ implementation:
 
 - Generate a test suite and verify it with one or more reference
   implementations.
-- Generate a test suite using a reference implementation and verify
-  it against the implementation under test.
+- Generate a test suite using a reference implementation and verify it against
+  the implementation under test.
 
 For example, we run suite generation for each of the Elixir, Ruby, and
 Typescript implementations, and then verify each generated suite against teach
@@ -19,9 +19,9 @@ the Elixir implementation, etc.).
 
 Each implementation has tooling to generate and run integration suites.
 
-- [Elixir](../elixir/README.md#integration)
-- [Ruby](../ruby/README.md#integration)
-- [Typescript](../ts/README.md#integration)
+- [Elixir](../elixir/Contributing.md#integration-testing)
+- [Ruby](../ruby/Contributing.md#integration-testing)
+- [Typescript](../ts/Contributing.md#integration-testing)
 
 ## Integration Suite Definition
 
@@ -29,11 +29,12 @@ An App Identity integration test suite is a generated JSON file containing
 a test `Suite`. Simplified, it looks like this:
 
 ```typescript
-type Suite = {
+interface Suite {
   name: string
   version: string
+  description?: string
   spec_version: number
-  tests: Array<{
+  tests: {
     description: string
     app: {
       id: number | string
@@ -45,7 +46,7 @@ type Suite = {
     expect: 'pass' | 'fail'
     required: boolean
     spec_version: number
-  }>
+  }[]
 }
 ```
 
@@ -66,12 +67,12 @@ more other implementations. Conforming implementations **must** generate the
 tests described in Required Tests and **should** generate the tests described in
 Optional Tests.
 
-The test description tables below are _informative_. The suite descriptions in
-[`required.yaml`](required.yaml) and [`optional.yaml`](optional.yaml) are
+The test description tables below are _informative_. The test descriptions in
+[`required.yaml`](./required.yaml) and [`optional.yaml`](./optional.yaml) are
 _normative_, although suite implementations _usually_ use the JSON
 representations.
 
-For more detail on the suite description files, see [Integration
+For more detail on the test description files, see [Integration
 Tooling](#integration-tooling).
 
 #### Required Tests
@@ -123,8 +124,8 @@ be used.
 | App V3, Proof V4 old timestamp (custom fuzz) | `fail` |  3  |   4   | `20060102T150405.333Z` | `300` |
 | App V4, Proof V4 old timestamp (custom fuzz) | `fail` |  4  |   4   | `20060102T150405.333Z` | `300` |
 
-Required tests are also described in [required.json](required.json), which could
-be used for code generation.
+Required tests are also described in [required.json](./required.json), which
+could be used for code generation.
 
 #### Optional Tests
 
@@ -157,9 +158,9 @@ current time.
 | App V3, Proof V4 offset timestamp (custom fuzz) |  3  |   4   | `-6 minutes`  | `300` |
 | App V4, Proof V4 offset timestamp (custom fuzz) |  4  |   4   | `-6 minutes`  | `300` |
 
-The second set of tests require the explicit construction of bad payloads.
-Where the App version column is empty, the tests **may** be generated with V1
-apps only, but it is recommended that all appropriate combinations be generated.
+The second set of tests require the explicit construction of bad payloads. Where
+the App version column is empty, the tests **may** be generated with V1 apps
+only, but it is recommended that all appropriate combinations be generated.
 
 The tests described as `Incorrect Proof ID` use a _different_ id when generating
 the padlock and proof than is generated for the included app. That is, if the
@@ -173,8 +174,8 @@ secret is `iaccepttherisk`, the padlock and proof might be generated with
 
 The tests described as `Mismatched Padlock` generate the padlock with different
 data than the proof. In our unit tests, we usually do this with a nonce value of
-`bad padlock` for building the padlock, and the normal nonce value when generating the
-proof.
+`bad padlock` for building the padlock, and the normal nonce value when
+generating the proof.
 
 | Description                   | App | Proof | Nonce                      |
 | ----------------------------- | :-: | :---: | -------------------------- |
@@ -199,8 +200,8 @@ proof.
 | Proof V3, Mismatched Padlock  |     |   3   |                            |
 | Proof V4, Mismatched Padlock  |     |   4   |                            |
 
-Optional tests are also described in [optional.json](optional.json), which could
-be used for code generation.
+Optional tests are also described in [optional.json](./optional.json), which
+could be used for code generation.
 
 ### Suite Runner
 
@@ -298,50 +299,133 @@ not ok 75 - Proof V4, Mismatched Padlock
 There is tooling present that assists with the definition and development of the
 integration suite JSON schema and the definition of the integration suites.
 
-There is a `Makefile` to convert the support files from their canonical formats
+There is a `Justfile` to convert the support files from their canonical formats
 to the commonly-used support formats.
 
 ### Integration Suite Specification
 
-Integration suites are defined by a JSON schema, [`schema.json`](schema.json).
-This file is generated from [`shema.ts`](schema.ts) using
+Integration suites are defined by a JSON schema, [`schema.json`](./schema.json).
+This file is generated from [`shema.ts`](./schema.ts) using
 `ts-json-schema-generator`.
 
-If a suite specification modification is required, the [`shema.ts`](schema.ts)
-should be modified directly and JSON schema should be generated with `make schema.json`.
+If a suite specification modification is required, the [`shema.ts`](./schema.ts)
+should be modified directly and the JSON schema should be generated with `make
+schema.json`.
 
-### Suite Description Files
+### Test Description Files
 
 The tests that should be generated by a [suite generator](#suite-generator) are
-described by the files [`required.yaml`](required.yaml) and
-[`optional.yaml`](optional.yaml). The suite _descriptions_ are used by a suite
-generator to generate a test suite.
+described by the files [`required.yaml`](./required.yaml) and
+[`optional.yaml`](./optional.yaml). The test _descriptions_ are used by a suite
+generator to generate a test suite. The format is similar to the suite
+[format](#integration-suite-definition), but have some differences used by the
+generators.
+
+A simplified test definition looks like this:
+
+```typescript:
+type TestDefinition = {
+  description: string
+  spec_version: number
+  expect: 'pass' | 'fail'
+  app: {
+    version: number
+    config?: { fuzz: number }
+  }
+  proof: {
+    id?: string
+    secret?: string
+    version: number
+  }
+  padlock?: {
+    nonce?: string
+    case?: 'random' | 'upper' | 'lower' = 'random'
+  } | {
+    value: string
+  }
+  nonce?: {
+    value: string
+  } | {
+    offset_minutes: number
+  } | {
+    empty: true
+  }
+}
+```
+
+Most values in `TestDefinition` can be copied directly to the suite test, but
+others values are provided so that an alternative nonce, padlock, or proof can
+be generated so that suites may test potentially non-compliant values (negative
+testing).
+
+- `description`, `spec_version`, `expect`, and `app` are copied directly to the
+  suite test.
+
+- `proof` is required and requires `version` so that version upgrade is tested
+  (that is, that a version 1 app can verify version 2, 3, or 4 proofs.)
+
+  - `proof` _may_ have `id` and/or `secret` values so that negative tests around
+    incorrect `id` values or changed `secret` values may be generated.
+
+- `padlock` is _optional_. If unspecified, the character case of padlock strings
+  will be randomly determined to be either uppercase or lowercase. If specified,
+  it must be one of two shapes:
+
+  - `{ nonce?: string; case?: 'random' | 'upper' | 'lower' }`:
+
+    - `nonce` here specifies an explicit nonce to use, usually for negative
+      tests.
+
+    - `case` forces the character case of the padlock to `upper` or `lower`.
+
+    - Either is optional, but at least one must be specified.
+
+    - `padlock.case` should be ignored if AppIdentity internal functionality is
+      used to build the proof (that is, there is no proof, nonce, or padlock
+      customization).
+
+  - `{ value: string }`, where the `value` is a static value that will be used
+    as the padlock, primarily for negative tests. It will _not_ have its case
+    transformed.
+
+- `nonce` is optional and if specified, must be one of three shapes:
+
+  - `{ value: string }`, where the `value` is a static nonce to be used for
+    computation.
+
+  - `{ empty: true }`, indicating that an empty nonce is required for this test.
+
+  - `{ offset_minutes: integer }`, with an integer number of minutes that will
+    be used for computing the offset in order to test timestamp fuzzing.
 
 When implementing an integration suite generator, it is recommended that you
 study one or more of the reference implementation generators:
 
 - Elixir: [`support/app_identity/suite/generator.ex`](../elixir/support/app_identity/suite/generator.ex)
 - Ruby: [`lib/app_identity/suite/generator.rb`](../ruby/lib/app_identity/suite/generator.rb)
-- Typescript: [`support/generator.ts`](../ts/support/generator.ts)
+- Typescript: [`packages/suite/src/generator.ts`](../ts/packages/suite/src/generator.ts)
 
 ### `tapview`
 
-For condensed TAP output, we have included Eric S. Raymond's `tapview` verison
-1.3 in the integration directory.
+For condensed TAP output, we have included Eric S. Raymond's `tapview` version
+1.12 in the integration directory.
 
 > tapview - a TAP (Test Anything Protocol) viewer in pure POSIX shell
 >
-> Copyright by Eric S. Raymond
+> This code is intended to be embedded in your project. The author
+> grants permission for it to be distributed under the prevailing
+> license of your project if you choose, provided that license is
+> OSD-compliant; otherwise the following SPDX tag incorporates the
+> MIT No Attribution license by reference.
 >
-> This code is intended to be embedded in your project. The author grants
-> permission for it to be distributed under the prevailing license of your
-> project if you choose, provided that license is OSD-compliant; otherwise the
-> following SPDX tag incorporates a license by reference.
+> SPDX-FileCopyrightText: (C) Eric S. Raymond <esr@thyrsus.com>
+> SPDX-License-Identifier: MIT-0
 >
-> SPDX-License-Identifier: BSD-2-Clause
+> This version shipped on 2024-02-05.
 >
-> This is version 1.3
-> A newer version may be available at https://gitlab.com/esr/tapview
+> A newer version may be available at https://gitlab.com/esr/tapview;
+> check the ship date against the commit list there to see if it
+> might be a good idea to update.
 
 [tap]: https://testanything.org/tap-version-14-specification.html
 [yaml]: https://testanything.org/tap-version-14-specification.html#yaml-diagnostics

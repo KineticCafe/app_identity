@@ -3,11 +3,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "App": {
-      "additionalProperties": false,
+      "additionalProperties": {
+        "description": "Apps may have additional configuration values which are ignored by App Identity."
+      },
       "description": "An App Identity app.",
       "properties": {
         "config": {
-          "$ref": "#/definitions/Config",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Config"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "description": "The optional configuration."
         },
         "id": {
@@ -48,8 +57,12 @@
       "additionalProperties": false,
       "description": "An integration test suite.",
       "properties": {
+        "description": {
+          "description": "The description of the suite. Marked optional for backwards compatibility, it should be considered required for newer suite generators.\n\nThis should generally be in the form `{name} {version} (spec {spec-version})`.\n\nIf a runtime package is required to run the suite, such as",
+          "type": "string"
+        },
         "name": {
-          "description": "The name of the implementation.",
+          "description": "The name of the implementation that generated the suite.",
           "type": "string"
         },
         "spec_version": {
@@ -64,7 +77,7 @@
           "type": "array"
         },
         "version": {
-          "description": "The version of the implementation.",
+          "description": "The version of the implementation that generated the suite.",
           "type": "string"
         }
       },
