@@ -27,9 +27,16 @@ type TestInputNonce = {
   value?: string
 }
 
-type TestInputPadlock = {
-  nonce: string
-}
+type TestInputPadlock =
+  | {
+      nonce?: string
+      case?: 'random' | 'upper' | 'lower'
+      type: 'build'
+    }
+  | {
+      value: string
+      type: 'value'
+    }
 
 type TestInputProof = {
   id?: string
@@ -153,12 +160,22 @@ const makeProof = (
       nonce = app.generateNonce(version) as string
     }
 
-    if (input.padlock) {
-      const padlock = Support.buildPadlock(app, {
+    if (input.padlock?.type === 'value') {
+      return Support.buildProof(app, input.padlock.value, {
         id: input.proof.id,
-        nonce: input.padlock.nonce,
+        nonce,
         secret: input.proof.secret,
         version: input.proof.version,
+      })
+    }
+
+    if (input.padlock?.type === 'build') {
+      const padlock = Support.buildPadlock(app, {
+        id: input.proof.id,
+        nonce: input.padlock.nonce || nonce,
+        secret: input.proof.secret,
+        version: input.proof.version,
+        case: input.padlock.case || 'random',
       })
 
       return Support.buildProof(app, padlock, {
@@ -167,12 +184,15 @@ const makeProof = (
         secret: input.proof.secret,
         version: input.proof.version,
       })
-    } else if (input.proof.id || input.proof.secret || input.nonce) {
+    }
+
+    if (input.proof.id || input.proof.secret || input.nonce) {
       const padlock = Support.buildPadlock(app, {
         id: input.proof.id,
         nonce,
         secret: input.proof.secret,
         version: input.proof.version,
+        case: 'random',
       })
 
       return Support.buildProof(app, padlock, {
@@ -201,81 +221,216 @@ const normalizeTest = (type: InputType, input: Jsonish, index: number): TestInpu
     throw fail(type, input, index, `Invalid expect value '${input['expect']}'`)
   }
 
-  const test: Partial<TestInput> = {
+  let output: Partial<TestInput> = {
     description: input['description'] as string,
     expect: input['expect'] as Expect,
     spec_version: input['spec_version'] as number,
   }
 
-  if (has(input, 'app')) {
-    const tmp = input['app'] as Jsonish
+  output = normalizeApp(output, input, type, index)
+  output = normalizeNonce(output, input, type, index)
+  output = normalizePadlock(output, input, type, index)
+  return normalizeProof(output, input, type, index) as TestInput
+}
 
-    mustHave(type, tmp, index, 'version', { input, name: 'app.version' })
-
-    const app: Partial<TestInputApp> = {
-      version: tmp['version'] as number,
-    }
-
-    if (has(tmp, 'config')) {
-      const appConfig = tmp['config'] as Jsonish
-      mustHave(type, appConfig, index, 'fuzz', { input, name: 'app.config.fuzz' })
-      app.config = { fuzz: appConfig['fuzz'] as number }
-    }
-
-    test.app = app as TestInputApp
+const normalizeApp = (
+  output: Partial<TestInput>,
+  input: Jsonish,
+  type: InputType,
+  index: number
+): Partial<TestInput> => {
+  if (!has(input, 'app')) {
+    return output
   }
 
-  if (has(input, 'nonce')) {
-    const nonce: Partial<TestInputNonce> = {}
-    const tmp = input['nonce'] as Jsonish
+  const app = input['app'] as Jsonish
 
-    if (has(tmp, 'empty')) {
-      if (has(tmp, 'offset_minutes') || has(tmp, 'value')) {
-        throw fail(type, input, index, 'nonce must only have one sub-key')
+  mustHave(type, app, index, 'version', { input, name: 'app.version' })
+
+  const newApp: Partial<TestInputApp> = {
+    version: app['version'] as number,
+  }
+
+  if (has(app, 'config')) {
+    const appConfig = app['config'] as Jsonish
+    mustHave(type, appConfig, index, 'fuzz', { input, name: 'app.config.fuzz' })
+    newApp.config = { fuzz: appConfig['fuzz'] as number }
+  }
+
+  return {
+    ...output,
+    app: newApp as TestInputApp,
+  }
+}
+
+const normalizeNonce = (
+  output: Partial<TestInput>,
+  input: Jsonish,
+  type: InputType,
+  index: number
+): Partial<TestInput> => {
+  if (!has(input, 'nonce')) {
+    return output
+  }
+
+  const newNonce: Partial<TestInputNonce> = {}
+  const nonce = input['nonce'] as Jsonish
+
+  if (has(nonce, 'empty')) {
+    if (has(nonce, 'offset_minutes') || has(nonce, 'value')) {
+      throw fail(type, input, index, 'nonce must only have one sub-key')
+    }
+
+    if (nonce['empty'] === true || nonce['empty'] === 'true') {
+      return { ...output, nonce: { empty: true } }
+    }
+
+    throw fail(type, input, index, 'nonce.empty may only be true')
+  }
+
+  if (has(nonce, 'offset_minutes')) {
+    if (has(nonce, 'value')) {
+      throw fail(type, input, index, 'nonce must only have one sub-key')
+    }
+
+    const value = nonce['offset_minutes']
+
+    if (Number.isInteger(value)) {
+      return { ...output, nonce: { offset_minutes: value as number } }
+    }
+
+    throw fail(type, input, index, 'nonce.offset_minutes must be an integer')
+  }
+
+  if (has(nonce, 'value')) {
+    return { ...output, nonce: { value: nonce['value'] as string } }
+  }
+
+  throw fail(type, input, index, 'nonce requires exactly one sub-key')
+}
+
+const normalizePadlock = (
+  output: Partial<TestInput>,
+  input: Jsonish,
+  type: InputType,
+  index: number
+): Partial<TestInput> => {
+  if (!has(input, 'padlock')) {
+    return output
+  }
+
+  const padlock = input['padlock'] as Jsonish
+
+  if (Object.keys(padlock).length === 0) {
+    throw fail(
+      type,
+      input,
+      index,
+      'padlock must have at least one sub-key: value, nonce, or case'
+    )
+  }
+
+  if (has(padlock, 'value')) {
+    if (Object.keys(padlock).length > 1) {
+      throw fail(
+        type,
+        input,
+        index,
+        'padlock.value must not have any other sub-keys specified'
+      )
+    }
+
+    if (padlock['value'] == null || padlock['value'] === '') {
+      throw fail(type, input, index, 'padlock.value must not be an empty string')
+    }
+
+    return { ...output, padlock: { value: padlock['value'] as string, type: 'value' } }
+  }
+
+  if (has(padlock, 'nonce')) {
+    if (has(padlock, 'case')) {
+      return {
+        ...output,
+        padlock: {
+          nonce: padlock['nonce'] as string,
+          case: normalizePadlockCase(padlock['case'], type, input, index),
+          type: 'build',
+        },
       }
-
-      nonce.empty = !!tmp['empty']
-    } else if (has(tmp, 'offset_minutes')) {
-      if (has(tmp, 'value')) {
-        throw fail(type, input, index, 'nonce must only have one sub-key')
-      }
-
-      nonce.offset_minutes = tmp['offset_minutes'] as number
-    } else if (has(tmp, 'value')) {
-      nonce.value = tmp['value'] as string
-    } else {
-      throw fail(type, input, index, 'nonce requires exactly one sub-key')
     }
 
-    test.nonce = nonce as TestInputNonce
+    return { ...output, padlock: { nonce: padlock['nonce'] as string, type: 'build' } }
   }
 
-  if (has(input, 'padlock')) {
-    const tmp = input['padlock'] as Jsonish
-    mustHave(type, tmp, index, 'nonce', { input, name: 'padlock.nonce' })
-
-    test.padlock = { nonce: tmp['nonce'] as string }
+  if (has(padlock, 'case')) {
+    return {
+      ...output,
+      padlock: {
+        case: normalizePadlockCase(padlock['case'], type, input, index),
+        type: 'build',
+      },
+    }
   }
 
-  {
-    const tmp = input['proof'] as Jsonish
-    mustHave(type, tmp, index, 'version', { input, name: 'proof.version' })
-    const proof: Partial<TestInputProof> = {
-      version: tmp['version'] as number,
-    }
+  throw fail(
+    type,
+    input,
+    index,
+    'padlock must have at least one sub-key: value, nonce, or case'
+  )
+}
 
-    if (has(tmp, 'id')) {
-      proof.id = tmp['id'] as string
+const normalizePadlockCase = (
+  value: unknown,
+  type: InputType,
+  input: Jsonish,
+  index: number
+): 'random' | 'upper' | 'lower' => {
+  switch (value) {
+    case undefined:
+    case null:
+    case 'random': {
+      return 'random'
     }
-
-    if (has(tmp, 'secret')) {
-      proof.secret = tmp['secret'] as string
+    case 'upper': {
+      return 'upper'
     }
+    case 'lower': {
+      return 'lower'
+    }
+    default: {
+      throw fail(
+        type,
+        input,
+        index,
+        "padlock.case must be one of 'lower', 'random', or 'upper'"
+      )
+    }
+  }
+}
 
-    test.proof = proof as TestInputProof
+const normalizeProof = (
+  output: Partial<TestInput>,
+  input: Jsonish,
+  type: InputType,
+  index: number
+): Partial<TestInput> => {
+  const proof = input['proof'] as Jsonish
+  mustHave(type, proof, index, 'version', { input, name: 'proof.version' })
+
+  const newProof: Partial<TestInputProof> = {
+    version: proof['version'] as number,
   }
 
-  return test as TestInput
+  if (has(proof, 'id')) {
+    newProof.id = proof['id'] as string
+  }
+
+  if (has(proof, 'secret')) {
+    newProof.secret = proof['secret'] as string
+  }
+
+  return { ...output, proof: newProof as TestInputProof }
 }
 
 const fail = (

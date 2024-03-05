@@ -70,15 +70,40 @@ export const buildPadlock = (
   const secretValue = options['secret'] ?? app.secret
   const secret = typeof secretValue === 'function' ? secretValue() : secretValue
 
+  let padlockCase
+
+  switch (options['case']) {
+    case 'upper': {
+      padlockCase = 'upper'
+      break
+    }
+    case 'lower': {
+      padlockCase = 'lower'
+      break
+    }
+    case undefined:
+    case null:
+    case 'random': {
+      padlockCase = randomPadlockCase()
+      break
+    }
+    default: {
+      throw 'Invalid padlock case value provided'
+    }
+  }
+
   const raw = [id, nonce, secret].join(':')
 
   const hash = createHash(versionAlgorithm(version as number))
   hash.update(raw, 'utf-8')
 
-  return options['case'] === 'lower'
+  return padlockCase === 'lower'
     ? hash.digest('hex').toLowerCase()
     : hash.digest('hex').toUpperCase()
 }
+
+const randomPadlockCase = () =>
+  Math.floor(Math.random() * 10 + 1) < 5 ? 'upper' : 'lower'
 
 export const buildProof = (
   app: AppInput | App,
