@@ -4,6 +4,8 @@ require_relative "error"
 
 class AppIdentity
   module Validation # :nodoc:
+    extend self
+
     def validate_id(id) # :nodoc:
       id.tap {
         validate_not_nil(:id, id)

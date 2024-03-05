@@ -4,9 +4,6 @@ require "json"
 require "app_identity/support"
 
 class AppIdentity::Suite::Generator # :nodoc:
-  include AppIdentity::Validation
-  include AppIdentity::Support
-
   class << self
     private :new
 
@@ -81,9 +78,12 @@ class AppIdentity::Suite::Generator # :nodoc:
 
     app =
       if normalized[:app]
-        make_app(normalized.dig(:app, :version), normalized.dig(:app, :config, :fuzz))
+        AppIdentity::Support.make_app(
+          normalized.dig(:app, :version),
+          normalized.dig(:app, :config, :fuzz)
+        )
       else
-        make_app(1)
+        AppIdentity::Support.make_app(1)
       end
 
     {
@@ -101,121 +101,173 @@ class AppIdentity::Suite::Generator # :nodoc:
     must_have!(type, input, index, "expect")
     must_have!(type, input, index, "proof")
     must_have!(type, input, index, "spec_version")
+    must_be_one_of!(type, input, index, "expect", ["pass", "fail"])
 
-    if !%w[pass fail].include?(input["expect"])
-      fail!(type, input, index, "Invalid expect value '#{input["expect"]}'")
-    end
-
-    test = {
+    {
       description: input["description"],
       expect: input["expect"],
       spec_version: input["spec_version"]
-    }
+    }.merge(
+      normalize_app(input, type, index),
+      normalize_nonce(input, type, index),
+      normalize_padlock(input, type, index),
+      normalize_proof(input, type, index)
+    )
+  end
 
-    if input.key?("app")
-      tmp = input["app"]
+  def normalize_app(input, type, index)
+    if (app = input["app"])
+      must_have!(type, app, index, "version", input: input, name: "app.version")
 
-      must_have!(type, tmp, index, "version", input: input, name: "app.version")
+      new_app = {version: app["version"]}
 
-      app = {version: tmp["version"]}
-
-      if tmp.key?("config")
-        must_have!(type, tmp["config"], index, "fuzz", input: input, name: "app.config.fuzz")
-
-        app[:config] = {fuzz: tmp.dig("config", "fuzz")}
+      if app.key?("config")
+        must_have!(type, app["config"], index, "fuzz", input: input, name: "app.config.fuzz")
+        new_app[:config] = {fuzz: app.dig("config", "fuzz")}
       end
 
-      test[:app] = app
+      {app: new_app}
+    else
+      {}
     end
+  end
 
-    if input.key?("nonce")
-      nonce = {}
-      tmp = input["nonce"]
-
-      if tmp.key?("empty")
-        if tmp.key?("offset_minutes") || tmp.key?("value")
+  def normalize_nonce(input, type, index)
+    if (nonce = input["nonce"])
+      new_nonce =
+        if nonce.key?("empty") && nonce.key?("offset_minutes")
           fail!(type, input, index, "nonce must only have one sub-key")
+        elsif nonce.key?("empty") && nonce.key?("value")
+          fail!(type, input, index, "nonce must only have one sub-key")
+        elsif nonce.key?("offset_minutes") && nonce.key?("value")
+          fail!(type, input, index, "nonce must only have one sub-key")
+        elsif nonce["empty"] == true || nonce["empty"] == "true"
+          {empty: true}
+        elsif nonce.key?("empty")
+          fail!(type, input, index, "nonce.empty may only be true")
+        elsif nonce.key?("offset_minutes") && (value = nonce["offset_minutes"])
+          if value.is_a?(Integer)
+            {offset_minutes: value}
+          else
+            fail!(type, input, index, "nonce.offset_minutes must be an integer")
+          end
+        elsif nonce.key?("value")
+          {value: nonce["value"]}
+        else
+          fail!(type, input, index, "nonce requires exactly one sub-key")
         end
 
-        nonce[:empty] = !!tmp["empty"]
-      elsif tmp.key?("offset_minutes")
-        if tmp.key?("value")
-          fail!(type, input, index, "nonce must only have one sub-key")
-        end
+      {nonce: new_nonce}
+    else
+      {}
+    end
+  end
 
-        nonce[:offset_minutes] = tmp["offset_minutes"]
-      elsif tmp.key?("value")
-        nonce[:value] = tmp["value"]
+  def normalize_padlock(input, type, index)
+    if (padlock = input["padlock"])
+      new_padlock = if padlock.is_a?(Hash) && padlock.size == 0
+        fail!(type, input, index, "padlock must have at least one sub-key: value, nonce, or case")
+      elsif padlock.key?("value") && padlock.size > 1
+        fail!(type, input, index, "padlock.value must not have any other sub-keys specified")
+      elsif padlock.key?("value") && padlock["value"].empty?
+        fail!(type, input, index, "padlock.value must not be an empty string")
+      elsif padlock.key?("value")
+        {padlock: {value: padlock["value"]}}
+      elsif padlock.key?("nonce") && padlock.key?("case")
+        {
+          nonce: padlock["nonce"],
+          case: normalize_padlock_case(padlock["case"], type, input, index)
+        }
+      elsif padlock.key?("nonce")
+        {nonce: padlock["nonce"]}
+      elsif padlock.key?("case")
+        {case: normalize_padlock_case(padlock["case"], type, input, index)}
       else
-        fail!(type, input, index, "nonce requires exactly one sub-key")
+        fail!(type, input, index, "padlock must have at least one sub-key: value, nonce, or case")
       end
 
-      test[:nonce] = nonce
+      {padlock: new_padlock}
+    else
+      {}
     end
+  end
 
-    if input.key?("padlock")
-      tmp = input["padlock"]
-      must_have!(type, tmp, index, "nonce", input: input, name: "padlock.nonce")
-      test[:padlock] = {nonce: tmp["nonce"]}
+  def normalize_padlock_case(value, type, input, index)
+    case value
+    when "lower", :lower then :lower
+    when "random", :random then :random
+    when "upper", :upper then :upper
+    else
+      fail!(type, input, index, "padlock.case must be one of 'lower', 'random', or 'upper'")
     end
+  end
 
-    tmp = input["proof"]
-    must_have!(type, tmp, index, "version", input: input, name: "proof.version")
+  def normalize_proof(input, type, index)
+    proof = input["proof"]
+    must_have!(type, proof, index, "version", input: input, name: "proof.version")
 
-    proof = {version: tmp["version"]}
-    proof[:id] = tmp["id"] if tmp.key?("id")
-    proof[:secret] = tmp["secret"] if tmp.key?("secret")
-
-    test[:proof] = proof
-
-    test
+    {
+      proof: {
+        id: proof["id"],
+        secret: proof["secret"],
+        version: proof["version"]
+      }.delete_if { |_k, v| v.nil? }
+    }
   end
 
   def make_proof(type, input, index, app)
-    version = validate_version(input.fetch(:proof).fetch(:version))
+    version = AppIdentity::Validation.validate_version(input.fetch(:proof).fetch(:version))
 
     nonce =
       if input.dig(:nonce, :empty)
         ""
       elsif (value = input.dig(:nonce, :offset_minutes))
-        timestamp_nonce(value)
+        AppIdentity::Support.timestamp_nonce(value)
       elsif (value = input.dig(:nonce, :value))
         value
       else
         app.generate_nonce(version)
       end
 
-    if input[:padlock]
-      padlock = build_padlock(app, {
-        id: input.dig(:proof, :id),
-        nonce: input.dig(:padlock, :nonce),
-        secret: input.dig(:proof, :secret),
-        version: input.dig(:proof, :version)
-      })
-
-      return build_proof(app, padlock, {
+    if (padlock_value = input.dig(:padlock, :value))
+      Support.build_proof(app, padlock_value, {
         id: input.dig(:proof, :id),
         nonce: nonce,
         secret: input.dig(:proof, :secret),
         version: input.dig(:proof, :version)
       })
-    end
+    elsif (padlock = input[:padlock])
+      padlock = AppIdentity::Support.build_padlock(app, {
+        id: input.dig(:proof, :id),
+        nonce: padlock[:nonce] || nonce,
+        secret: input.dig(:proof, :secret),
+        version: input.dig(:proof, :version),
+        case: padlock[:case] || :random
+      })
 
-    if input.dig(:proof, :id) || input.dig(:proof, :secret) || input[:nonce]
-      padlock = build_padlock(app,
+      AppIdentity::Support.build_proof(app, padlock, {
+        id: input.dig(:proof, :id),
+        nonce: nonce,
+        secret: input.dig(:proof, :secret),
+        version: input.dig(:proof, :version)
+      })
+    elsif input.dig(:proof, :id) || input.dig(:proof, :secret) || input[:nonce]
+      padlock = AppIdentity::Support.build_padlock(app, {
+        id: input.dig(:proof, :id),
+        nonce: nonce,
+        secret: input.dig(:proof, :secret),
+        version: input.dig(:proof, :version),
+        case: :random
+      })
+
+      AppIdentity::Support.build_proof(app, padlock,
         id: input.dig(:proof, :id),
         nonce: nonce,
         secret: input.dig(:proof, :secret),
         version: input.dig(:proof, :version))
-
-      return build_proof(app, padlock,
-        id: input.dig(:proof, :id),
-        nonce: nonce,
-        secret: input.dig(:proof, :secret),
-        version: input.dig(:proof, :version))
+    else
+      AppIdentity::Internal.generate_proof!(app, nonce: nonce, version: version)
     end
-
-    AppIdentity::Internal.generate_proof!(app, nonce: nonce, version: version)
   rescue => ex
     fail!(type, input, index, ex.message)
   end

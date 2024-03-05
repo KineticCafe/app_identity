@@ -6,7 +6,7 @@ require "digest/sha2"
 # This module should only be used by the unit tests and the test suite
 # generator.
 module AppIdentity::Support # :nodoc:
-  private
+  extend self
 
   def make_app(version, fuzz = nil)
     case version
@@ -68,26 +68,37 @@ module AppIdentity::Support # :nodoc:
   end
 
   def build_padlock(app, opts = {})
-    app_id = opts.delete(:id) { app.id }
-    nonce = opts.delete(:nonce) { "nonce" }
-    secret = opts.delete(:secret) { app.secret }
+    app_id = opts[:id] || app.id
+    nonce = opts[:nonce] || "nonce"
+    secret = opts[:secret] || app.secret
     secret = secret.call if secret.respond_to?(:call)
-    version = opts.delete(:version) { app.version }
+    version = opts[:version] || app.version
+    padlock_case =
+      case opts[:case]
+      when :upper then :upper
+      when :lower then :lower
+      when nil, :random then (rand(1..10) < 5) ? :upper : :lower
+      else
+        raise "Invalid padlock case value provided"
+      end
 
-    case version
-    when 1, 2
-      Digest::SHA256.hexdigest([app_id, nonce, secret].join(":")).upcase
-    when 3
-      Digest::SHA384.hexdigest([app_id, nonce, secret].join(":")).upcase
-    when 4
-      Digest::SHA512.hexdigest([app_id, nonce, secret].join(":")).upcase
-    end
+    value =
+      case version
+      when 1, 2
+        Digest::SHA256.hexdigest([app_id, nonce, secret].join(":"))
+      when 3
+        Digest::SHA384.hexdigest([app_id, nonce, secret].join(":"))
+      when 4
+        Digest::SHA512.hexdigest([app_id, nonce, secret].join(":"))
+      end
+
+    (padlock_case == :upper) ? value.upcase : value.downcase
   end
 
   def build_proof(app, padlock, opts = {})
-    app_id = opts.delete(:id) { app.id }
-    nonce = opts.delete(:nonce) { "nonce" }
-    version = opts.delete(:version) { 1 }
+    app_id = opts[:id] || app.id
+    nonce = opts[:nonce] || "nonce"
+    version = opts[:version] || 1
 
     proof = (version == 1) ? "#{app_id}:#{nonce}:#{padlock}" : "#{version}:#{app_id}:#{nonce}:#{padlock}"
 
