@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "App Identity",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/*"],
+  "includeVersion": false,
+  "plugin": ["typedoc-material-theme", "typedoc-plugin-missing-exports"],
+  "sort": ["static-first", "source-order"]
+}
