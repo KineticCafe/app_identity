@@ -5,7 +5,7 @@ requests, and code contributions. New features should be proposed and
 [discussed][] prior to implementation, and release of any new feature may be
 delayed until implemented in the three reference implementations.
 
-Before contributing patches, please read the [Licence.md](licence.md).
+Before contributing patches, please read the [Licence](./Licence.md).
 
 App Identity is governed under the Kinetic Commerce Open Source [Code of
 Conduct][].

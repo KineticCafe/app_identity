@@ -55,13 +55,13 @@ revisions.
 
 ## Contributing
 
-AppIdentity for Ruby [welcomes contributions](Contributing.md). This project,
+AppIdentity for Ruby [welcomes contributions](./Contributing.md). This project,
 all Kinetic Commerce [open source projects][], is under the Kinetic Commerce
 Open Source [Code of Conduct][kccoc].
 
-AppIdentity for Ruby is licensed under the Apache Licence, version 2.0 and
+AppIdentity for Ruby is licensed under the Apache License, version 2.0 and
 requires certification via a Developer Certificate of Origin. See
-[Licence.md](Licence.md) for more details.
+[Licence](./Licence.md) for more details.
 
 [contributing]: Contributing.md
 [kccoc]: https://github.com/KineticCafe/code-of-conduct
