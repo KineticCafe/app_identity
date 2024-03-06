@@ -1,4 +1,4 @@
 packages:
   - 'packages/core'
   - 'packages/node'
-  - 'packages/cli'
+  - 'packages/suite'
