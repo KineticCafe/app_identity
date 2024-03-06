@@ -1,1 +1,0 @@
-../../integration/schema.ts
