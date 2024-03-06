@@ -88,19 +88,8 @@ please start a [discussion][].
 
 ## Contributing
 
-We value contributions to App Identity—bug reports, discussions, feature
-requests, and code contributions. New features should be proposed and
-[discussed][discussion] prior to implementation, and release of any new feature
-may be delayed until implemented in the reference implementations.
-
-Before contributing patches, please read the [Licence.md](Licence.md).
-
-App Identity is governed under the Kinetic Commerce Open Source [Code of
-Conduct][].
+See [Contributing.md](./Contributing.md).
 
 [pr]: https://github.com/KineticCafe/app_identity/pulls/
 [discussion]: https://github.com/KineticCafe/app_identity/discussions/
-[open source projects]: https://github.com/KineticCafe
 [semantic versioning]: http://semver.org/
-[dco]: licenses/dco.txt
-[code of conduct]: https://github.com/KineticCafe/code-of-conduct

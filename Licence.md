@@ -1,11 +1,12 @@
 # Licence
 
-- App Identity is copyright © 2022 Kinetic Commerce and contributors
+- App Identity is copyright © 2022–2024 Kinetic Commerce and
+  [contributors](./Contributing.md#contributors).
 
 ## Software
 
 All software in this repository, except as noted below, is licensed under
-[Apache Licence, version 2.0][apache-licence-20].
+[Apache License, version 2.0](licences/APACHE-2.0.txt).
 
 This **includes**:
 
@@ -24,12 +25,12 @@ This **includes**:
 This **excludes**:
 
 - `integration/tapview`, which is copyright Eric S. Raymond and licensed under
-  a permissive BSD-2-clause license.
+  a permissive MIT no-attribute (MIT-0) license.
 
 ## Documentation
 
 All documentation in this repository, except as noted below, is licensed under
-Creative Commons Attribution, version 4.0 ([CC BY 4.0][]).
+Creative Commons Attribution, version 4.0 ([CC BY 4.0](licences/CC-BY-4.0.txt)).
 
 This **includes**:
 
@@ -42,28 +43,25 @@ This **includes**:
 
 This **excludes**:
 
-- The copies of the Apache Licence, the Creative Commons Attribution Licence,
-  and the Developer Certificate of Origin in `licenses/`.
+- The copies of the Apache License, the Creative Commons Attribution Licence,
+  and the Developer Certificate of Origin in `licences/`.
 
 ## Developer Certificate of Origin
 
 All contributors **must** certify they are able and willing to provide their
-contributions under the terms of this project's licenses with the certification
-of the [Developer Certificate of Origin (Version 1.1)][dco].
+contributions under the terms of this project's licences with the certification
+of the [Developer Certificate of Origin (Version 1.1)](licences/dco.txt).
 
-Such certification is provided by ensuring that the following line must be
-included as the last line of a commit message for every commit contributed:
+Such certification is provided by ensuring that a `Signed-off-by` [commit
+trailer][] is present on every commit:
 
     Signed-off-by: FirstName LastName <email@example.org>
 
-The `Signed-off-by` line can be automatically added by git with the `-s` or
+The `Signed-off-by` trailer can be automatically added by git with the `-s` or
 `--signoff` option on `git commit`:
 
 ```sh
 git commit --signoff
 ```
 
-[apache-licence-20]: licences/APAHCE-2.0.txt
-[mit]: licenses/MIT.txt
-[cc by 4.0]: licenses/CC-BY-4.0.txt
-[dco]: licenses/dco.txt
+[commit trailer]: https://git-scm.com/docs/git-interpret-trailers
