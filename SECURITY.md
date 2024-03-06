@@ -12,10 +12,11 @@ The specification is a living document and is supported for two major versions
 unless otherwise noted.
 
 > Security reports for the version 1 algorithm will not be accepted. It has
-> a well-known issue and exists solely to provide support to already existing
-> apps until they can be upgraded. A future version of the specification will
-> shift from _recommending_ against the use of version 1 to actively
-> _prohibiting_ the use of version 1.
+> a well-known token lifetime issue and exists solely to provide support to
+> already existing apps until they can be upgraded.
+
+> A future version of the specification will shift from _recommending_ against
+> the use of version 1 to _prohibiting_ the use of version 1.
 
 ### Reference Release Support
 
@@ -32,7 +33,8 @@ released for 2.3.x and 3.2.x only.
 ## Reporting a Vulnerability
 
 Report security vulnerabilities to [security@kineticcommerce.com][]. Emails sent
-to this address should be encrypted using [age][] or [GnuPG][].
+to this address should be encrypted using [age][] (preferred) or [GnuPG][].
+Include the text `App Identity` in the subject.
 
 ### age Public Key
 
