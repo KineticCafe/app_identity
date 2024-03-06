@@ -9,9 +9,10 @@ over the wire.
 
 ## Terminology and Typographic Notes
 
-The key words **must**, **must not**, **required**, **shall**, **shall not**,
-**should**, **should not**, **recommended**, **may**, and **optional** in this
-document are to be interpreted as described in [RFC2199][rfc2119].
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in [BCP 14][] [RFC2119][]
+[RFC8174][] when, and only when, they appear in all capitals, as shown here.
 
 Core algorithmic concepts will be expressed with _emphasis_.
 
@@ -22,41 +23,41 @@ are informative and may have bugs.
 
 This specification is versioned with a modified [Semantic Versioning][] scheme.
 The major version of the specification will always be the number of algorithm
-versions defined. Minor versions of the specification **may** be used adjust the
+versions defined. Minor versions of the specification MAY be used adjust the
 text.
 
 The current specification is 4.2.
 
 ## Application
 
-For the purposes of this specification, an application **requires** the
-following attributes:
+For the purposes of this specification, the following attributes are REQUIRED on
+an application:
 
-- `id`: The unique identifier of the application, which **must** be presented as
-  a string. Identifiers **must not** include an ASCII colon (`:`) or they
-  **must** be encoded and validating servers must know how to locate
+- `id`: The unique identifier of the application, which MUST be presented as
+  a string. Identifiers MUST NOT include an ASCII colon (`:`) or they
+  MUST be encoded and validating servers must know how to locate
   applications encoded this way.
 
-  It is **recommended** that this value be globally unique and extremely
+  It is RECOMMENDED that this value be globally unique and extremely
   difficult to guess. Identifier types meeting such criteria include UUIDs
   ([version 4][uuidv4], [version 7][uuidv7], or [version 8][uuidv8]),
   [ULID][ulid], or [ksuid][ksuid].
 
-  Identifiers **may** include a class identifier (such as `appid=1234`, or the
+  Identifiers MAY include a class identifier (such as `appid=1234`, or the
   Rails [Global ID][global id] format). If an identifier is short, an integer,
-  or a compound value, the use of a class identifier is **recommended**.
+  or a compound value, the use of a class identifier is RECOMMENDED.
 
-- `secret`: The random value used as the secret key. This value **must** be used
+- `secret`: The random value used as the secret key. This value MUST be used
   as presented. That is, if the secret is presented as a Base64 value, the
   secret is the Base64 value, not a decoded version of it.
 
-  Application secrets **should** be prefixed with a fixed value, such as
+  Application secrets SHOULD be prefixed with a fixed value, such as
   `appid_`. This improves the ability of security tools (such as [gitleaks][],
   [GitGuardian][], or [GitHub secret scanning][]) to detect that an application
   secret key has been leaked.
 
-  Where possible, implementations **should** use memory-safe storage for the
-  `secret` value and **must** prevent accidental exposure of the secret in logs
+  Where possible, implementations SHOULD use memory-safe storage for the
+  `secret` value and MUST prevent accidental exposure of the secret in logs
   through normal object introspection.
 
   > All reference implementations use no-argument closures to store the secret
@@ -67,7 +68,7 @@ following attributes:
 - `version`: The minimum algorithm version supported by the application, an
   integer value. The reference implementations of App Identity do not restrict
   the `version` for backwards compatibility purposes, but new services
-  **should** consider version 1 applications deprecated.
+  SHOULD consider version 1 applications deprecated.
 
 - `config`: A configuration object which affects proof verification. Only one
   key for this object is defined when `version` 2 or higher. The `config` only
@@ -77,7 +78,7 @@ following attributes:
     or higher algorithms. If not present, defaults to `600` seconds, or ±600
     seconds (±10 minutes). Depending on the nature of the app being verified and
     the expected network conditions, a shorter time period than 600 seconds is
-    **recommended**.
+    RECOMMENDED.
 
 ### Suggested Extra Fields
 
@@ -154,8 +155,8 @@ validate a version 1 proof.
 
 The client identity proof is a short, cryptographically signed value, composed
 from the _id_, a _nonce_, and an intermediary _padlock_ generated using the
-application _secret_. The application _id_ and _secret_ **should** be provided
-securely for compile-time inclusion; all care **should** be taken to ensure that
+application _secret_. The application _id_ and _secret_ SHOULD be provided
+securely for compile-time inclusion; all care SHOULD be taken to ensure that
 the secret is not easily extractable from the application or shared in the
 clear.
 
@@ -176,14 +177,14 @@ The verification of a proof looks like this:
 ### Nonce
 
 Depending on the version of the application algorithm, the _nonce_ may contain
-any byte sequences except ASCII colon (`:`), but it is **recommended** that
+any byte sequences except ASCII colon (`:`), but it is RECOMMENDED that
 the value be UTF-8 safe.
 
 #### Random Nonces
 
-Version 1 nonces **should** be cryptographically secure and non-sequential, but
+Version 1 nonces SHOULD be cryptographically secure and non-sequential, but
 sufficiently fine-grained timestamps (those including microseconds, as
-`yyyymmddHHMMSS.sss`) **may** be used. Version 1 proofs verify that the nonce is
+`yyyymmddHHMMSS.sss`) MAY be used. Version 1 proofs verify that the nonce is
 at least one byte long and do not contain an ASCII colon (`:`).
 
 **Typescript (Node)**:
@@ -231,10 +232,10 @@ secure_random_base64_bytes(32)
 
 #### Timestamp Nonces
 
-Version 2, 3, and 4 nonces **must** be a UTC timestamp formatted using ISO 8601
-basic formatting. The clocks of the generating and verifying systems **must** be
+Version 2, 3, and 4 nonces MUST be a UTC timestamp formatted using ISO 8601
+basic formatting. The clocks of the generating and verifying systems MUST be
 synchronized for the verification to work as intended, so NTP is strongly
-**recommended**.
+RECOMMENDED.
 
 For the purposes of this document, ISO 8601 basic formatting is this [ABNF][]
 definition adapted from [RFC3339][]:
@@ -261,12 +262,12 @@ date-time     = full-date "T" full-time
 This format differs from [RFC3339][] [§5.6][§5.6] timestamp format in the
 following ways:
 
-1. It **must** be UTC and the timezone character **must** be `Z`. No other
-   timezone specifier is permitted, and it **must not** be omitted.
-2. It **must** only have the ASCII characters `[.0-9TZ]`. It **may** have the
+1. It MUST be UTC and the timezone character MUST be `Z`. No other
+   timezone specifier is permitted, and it MUST NOT be omitted.
+2. It MUST only have the ASCII characters `[.0-9TZ]`. It MAY have the
    point character (`.`) only preceding the optional fractional seconds digits.
 
-Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` **must** be
+Therefore, a timestamp of `2020-02-25T23:20:03.321423-04:00` MUST be
 presented as `20200225T192003.321423Z`.
 
 The C-style `strftime` pattern for this format is `'%Y%m%dT%H%M%S.%6NZ'`, and
@@ -391,12 +392,12 @@ for (int i = 0; i < hash.length; i++) {
 ```
 
 Validation of the padlock will convert this digest to uppercase, so the values
-`c0ffee` and `C0FFEE` are identical. It is **recommended** that padlocks be
+`c0ffee` and `C0FFEE` are identical. It is RECOMMENDED that padlocks be
 passed as uppercase hex values.
 
 ### Proof Presentation
 
-Clients **must** present the computed _padlock_ to the server in a way that
+Clients MUST present the computed _padlock_ to the server in a way that
 allows verification. This is called the _proof_, which contains the algorithm
 _version_, the application _id_, the _nonce_, and the _padlock_. It is typically
 provided as a single concatenated string (using colons) and then Base64 encoded.
@@ -442,7 +443,9 @@ String proof = new String(encodedHash, "UTF-8");
 ```
 
 [global id]: https://github.com/rails/globalid
+[bcp 14]: httphttps://www.rfc-editor.org/info/bcp14
 [rfc2119]: https://datatracker.ietf.org/doc/html/rfc2119
+[rfc8174]: https://datatracker.ietf.org/doc/html/rfc8174
 [rfc3339]: https://datatracker.ietf.org/doc/html/rfc3339
 [§5.6]: https://tools.ietf.org/html/rfc3339#section-5.6
 [semantic versioning]: http://semver.org/
