@@ -22,7 +22,7 @@ defmodule AppIdentity.MixProject do
           "Licence.md": [filename: "Licence.md", title: "Licence"],
           "licences/APACHE-2.0.txt": [
             filename: "APACHE-2.0.txt",
-            title: "Apache Licence, version 2.0"
+            title: "Apache License, version 2.0"
           ],
           "licences/dco.txt": [filename: "dco.txt", title: "Developer Certificate of Origin"]
         ]

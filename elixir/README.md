@@ -89,9 +89,9 @@ AppIdentity for Elixir [welcomes contributions](./Contributing.md). This
 project, like all Kinetic Commerce [open source projects][], is under the
 Kinetic Commerce Open Source [Code of Conduct][kccoc].
 
-AppIdentity for Elixir is licensed under the Apache Licence, version 2.0 and
+AppIdentity for Elixir is licensed under the Apache License, version 2.0 and
 requires certification of a Developer Certificate of Origin. See
-[Licence.md](./Licence.md) for more details.
+[Licence](./Licence.md) for more details.
 
 [docs]: https://hexdocs.pm/app_identity
 [ex_doc]: https://github.com/elixir-lang/ex_doc
