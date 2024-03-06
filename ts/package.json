@@ -1,79 +1,46 @@
 {
-  "name": "@kineticcafe/app-identity",
-  "version": "2.0.0",
-  "description": "Lightweight secure application authentication",
+  "name": "app-identity",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KineticCafe/app_identity.git"
+  },
   "author": "Kinetic Commerce & contributors",
   "homepage": "https://github.com/KineticCafe/app_identity#readme",
   "bugs": {
     "url": "https://github.com/KineticCafe/app_identity/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/KineticCafe/app_identity.git"
-  },
   "license": "Apache-2.0",
-  "keywords": [],
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
-  },
-  "bin": {
-    "app-identity-suite-ts": "dist/cli.js"
-  },
   "scripts": {
-    "build": "pnpm exec tsup",
-    "build:all": "pnpm run build && pnpm run build:docs",
-    "build:docs": "pnpm exec typedoc",
-    "build:simple": "pnpm exec tsup --no-dts-resolve --no-dts",
-    "build:watch": "concurrently 'pnpm exec tsup --watch' 'pnpm exec typedoc --watch --preserveWatchOutput'",
-    "cli": "pnpm exec ts-eager support/cli.ts",
-    "cli:generate": "pnpm exec ts-eager support/cli.ts generate",
-    "cli:run": "pnpm exec ts-eager support/cli.ts run",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint src/ test/ support/ --ext .js,.cjs,.mjs,.ts,.cts,.mts",
-    "prepublishOnly": "pnpm build",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage"
-  },
-  "files": [
-    "dist",
-    "src",
-    "support"
-  ],
-  "engines": {
-    "node": ">=16"
-  },
-  "dependencies": {
-    "base64-url": "^2.3.3",
-    "commander": "^11.0.0",
-    "date-fns": "^2.29.3",
-    "fast-glob": "^3.2.12"
+    "build": "pnpm recursive run build",
+    "build:all": "pnpm recursive run build:all",
+    "build:docs": "pnpm recursive run build:docs",
+    "build:watch": "pnpm recursive run --stream build:watch",
+    "check": "pnpm recursive run --stream check",
+    "check:fix": "pnpm recursive run --stream check:fix",
+    "cli": "tsx packages/cli/src/index.ts",
+    "cli:generate": "pnpm run cli generate",
+    "cli:run": "pnpm run cli run",
+    "format": "pnpm recursive run --stream format",
+    "format:check": "pnpm recursive run --stream format:check",
+    "lint": "pnpm recursive run --stream lint",
+    "lint:fix": "pnpm recursive run --stream lint:fix",
+    "test": "pnpm recursive run --stream test",
+    "test:coverage": "pnpm recursive run --stream test:coverage",
+    "test:watch": "pnpm recursive run --stream test:watch"
   },
   "devDependencies": {
-    "@tsconfig/node12": "latest",
-    "@types/base64-url": "^2.2.0",
-    "@types/node": "latest",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
-    "@typescript-eslint/parser": "^6.3.0",
-    "concurrently": "latest",
-    "eslint": "latest",
-    "eslint-plugin-prettier": "latest",
-    "prettier": "latest",
-    "ts-eager": "latest",
-    "tsup": "latest",
-    "typedoc": "latest",
-    "typescript": "latest",
-    "vite": "latest",
-    "vitest": "latest"
+    "@biomejs/biome": "1.5.3",
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.11.25",
+    "@vitest/coverage-v8": "^1.3.1",
+    "pkgroll": "^2.0.2",
+    "publint": "^0.2.7",
+    "tsx": "^4.7.1",
+    "typedoc": "^0.25.11",
+    "typedoc-material-theme": "^1.0.2",
+    "typedoc-plugin-missing-exports": "^2.2.0",
+    "typescript": "5.3.3",
+    "vitest": "^1.3.1"
   }
 }

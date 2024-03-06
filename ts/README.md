@@ -1,31 +1,47 @@
-# AppIdentity for Node (`@kineticcafe/app-identity`)
+# AppIdentity for JavaScript 2.0
 
 - code :: https://github.com/KineticCafe/app-identity/tree/main/ts/
 - issues :: https://github.com/KineticCafe/app-identity/issues
 
 ## Description
 
-AppIdentity is a Node.js implementation (written in Typescript) of the Kinetic
+AppIdentity for JavaScript is a Typescript implementation of the Kinetic
 Commerce application identity proof algorithm as described in its [spec][].
+
+There are three packages contained in this implementation:
+
+- @kineticcafe/app-identity: The core algorithmic implementation which can be
+  used on any JavaScript runtime with an appropriate runtime adapter.
+
+- @kineticcafe/app-identity-node: The runtime adapter for Node.js, which
+  re-exports the functional parts of @kineticcafe/app-identity.
+
+- @kineticcafe/app-identity-suite-ts: The [integration test][] tool, used to
+  generate and run integration tests.
 
 ## Synopsis
 
 ```javascript
-import * as AppIdentity from '@kineticcafe/app-identity'
+import * as AppIdentity from '@kineticcafe/app-identity-node'
+
+// Required at program start.
+AppIdentity.useNodeRuntimeAdapter()
 
 const app = { id, secret, version: 2 }
 const proof = AppIdentity.generateProof(app)
 AppIdentity.verifyProof(proof, app)
 ```
 
+We discourage the use of AppIdentity for JavaScript in a browser because the
+App Identity algorithm requires the use of shared secrets for validation.
+
 ## Installation
 
-`@kineticcafe/app-identity` should be added to your list of depdencies in
-`package.json`. This package is intended to be run on the server, not in the
-browser.
+`@kineticcafe/app-identity-node` (or `@kinetic/app-identity` with an appropriate
+runtime adapter) should be added to your list of dependencies in `package.json`.
 
-```sh
-npm add @kineticcafe/app-identity@^1.0
+```console
+$ npm add @kineticcafe/app-identity-node@^2.0
 ```
 
 ## Semantic Versioning
@@ -39,17 +55,18 @@ revisions.
 
 ## Contributing
 
-AppIdentity for Node [welcomes contributions][]. This project, like all Kinetic
-Commerce [open source projects][], is under the Kinetic Commerce Open Source
-[Code of Conduct][].
+AppIdentity for JavaScript [welcomes contributions][]. This project, like all
+Kinetic Commerce [open source projects][], is under the Kinetic Commerce Open
+Source [Code of Conduct][].
 
-AppIdentity for Elixir is licensed under the Apache Licence, version 2.0 and
-requires certification via a Developer Certificate of Origin. See [Licence.md][]
+AppIdentity for Elixir is licensed under the Apache License, version 2.0 and
+requires certification via a Developer Certificate of Origin. See [Licence][]
 for more details.
 
-[welcome contributions]: https://github.com/KineticCafe/app-identity/blob/main/ts/Contributing.md
 [code of conduct]: https://github.com/KineticCafe/code-of-conduct
+[integration test]: https://github.com/KineticCafe/app-identity/blob/main/integration/README.md
+[licence]: https://github.com/KineticCafe/app-identity/blob/main/ts/Licence.md
 [open source projects]: https://github.com/KineticCafe
 [semantic versioning]: http://semver.org/
 [spec]: https://github.com/KineticCafe/app-identity/blob/main/spec/README.md
-[licence.md]: https://github.com/KineticCafe/app-identity/blob/main/ts/Licence.md
+[welcomes contributions]: https://github.com/KineticCafe/app-identity/blob/main/ts/Contributing.md

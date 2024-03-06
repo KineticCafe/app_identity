@@ -1,0 +1,8 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "includeVersion": true,
+  "plugin": ["typedoc-material-theme"],
+  "sort": ["static-first", "source-order"]
+}
