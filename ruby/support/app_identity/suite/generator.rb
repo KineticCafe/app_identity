@@ -46,10 +46,14 @@ class AppIdentity::Suite::Generator # :nodoc:
   private
 
   def generate_suite
+    name, version, spec_version = AppIdentity::NAME, AppIdentity::VERSION, AppIdentity::SPEC_VERSION
+    description = "#{name} #{version} (spec #{spec_version})"
+
     {
-      name: AppIdentity::NAME,
-      version: AppIdentity::VERSION,
-      spec_version: AppIdentity::SPEC_VERSION,
+      name: name,
+      version: version,
+      spec_version: spec_version,
+      description: description,
       tests: [
         *generate_tests("required", load_json(required_tests)),
         *generate_tests("optional", load_json(optional_tests))
@@ -98,7 +102,6 @@ class AppIdentity::Suite::Generator # :nodoc:
 
   def normalize_test(type, input, index)
     must_have!(type, input, index, "description")
-    must_have!(type, input, index, "expect")
     must_have!(type, input, index, "proof")
     must_have!(type, input, index, "spec_version")
     must_be_one_of!(type, input, index, "expect", ["pass", "fail"])
@@ -172,7 +175,7 @@ class AppIdentity::Suite::Generator # :nodoc:
       elsif padlock.key?("value") && padlock["value"].empty?
         fail!(type, input, index, "padlock.value must not be an empty string")
       elsif padlock.key?("value")
-        {padlock: {value: padlock["value"]}}
+        {value: padlock["value"]}
       elsif padlock.key?("nonce") && padlock.key?("case")
         {
           nonce: padlock["nonce"],
@@ -230,7 +233,7 @@ class AppIdentity::Suite::Generator # :nodoc:
       end
 
     if (padlock_value = input.dig(:padlock, :value))
-      Support.build_proof(app, padlock_value, {
+      AppIdentity::Support.build_proof(app, padlock_value, {
         id: input.dig(:proof, :id),
         nonce: nonce,
         secret: input.dig(:proof, :secret),
@@ -288,6 +291,19 @@ class AppIdentity::Suite::Generator # :nodoc:
   def must_have!(type, input, index, key, options = {})
     return if input.key?(key)
     fail!(type, options[:input] || input, index, "missing #{options[:name] || key}")
+  end
+
+  def must_be_one_of!(type, input, index, key, values)
+    must_have!(type, input, index, key)
+
+    return if values.include?(input[key])
+
+    fail!(
+      type,
+      input,
+      index,
+      "Invalid #{key} value '#{input[key]}', must be one of: #{values.join(", ")}"
+    )
   end
 
   attr_reader :name, :options
