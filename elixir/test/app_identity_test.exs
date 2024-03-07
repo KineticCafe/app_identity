@@ -2,13 +2,11 @@ defmodule AppIdentityTest do
   use AppIdentity.Case, async: true
   doctest AppIdentity
 
-  alias AppIdentity, as: Subject
-
   for version <- AppIdentity.Versions.supported() do
     test "generate v#{version} proof", context do
       app_config = context[unquote(version)]
 
-      assert {:ok, proof} = Subject.generate_proof(app_config)
+      assert {:ok, proof} = AppIdentity.generate_proof(app_config)
 
       assert_generate_proof_telemetry_span(app_config, proof: proof)
 
@@ -22,25 +20,25 @@ defmodule AppIdentityTest do
       app_config = context[unquote(version)]
       app = AppIdentity.App.new!(app_config)
 
-      assert {:ok, proof} = Subject.generate_proof(app_config)
+      assert {:ok, proof} = AppIdentity.generate_proof(app_config)
 
       assert_generate_proof_telemetry_span(app_config, proof: proof)
 
-      assert {:ok, verified(app)} == Subject.verify_proof(proof, app_config)
+      assert {:ok, verified(app)} == AppIdentity.verify_proof(proof, app_config)
 
       assert_verify_proof_telemetry_span(app, proof)
     end
   end
 
   test "verify fails if not base64", %{v1: v1} do
-    assert :error == Subject.verify_proof("not base64", v1)
+    assert :error == AppIdentity.verify_proof("not base64", v1)
     assert_verify_proof_telemetry_span(v1, "not base64", error: "cannot decode proof string")
   end
 
   test "verify fail on insufficent parts", %{v1: v1} do
     proof = Base.url_encode64("a:b")
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
 
     assert_verify_proof_telemetry_span(v1, proof,
       error: "proof must have 3 parts (version 1) or 4 parts (any version)"
@@ -51,7 +49,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v1_app, nonce: "n:once")
     proof = build_proof(v1_app, padlock, nonce: "n:once")
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
 
     assert_verify_proof_telemetry_span(v1, proof,
       error: "version cannot be converted to a positive integer"
@@ -62,7 +60,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v1_app)
     proof = build_proof(v1_app, padlock, version: 2)
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
     assert_verify_proof_telemetry_span(v1, proof, error: "nonce does not look like a timestamp")
   end
 
@@ -71,7 +69,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v1_app, nonce: nonce)
     proof = build_proof(v1_app, padlock, version: 2, nonce: nonce)
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
     assert_verify_proof_telemetry_span(v1, proof, error: "nonce is invalid")
   end
 
@@ -79,7 +77,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v2_app, version: 1)
     proof = build_proof(v2_app, padlock, version: 1)
 
-    assert :error == Subject.verify_proof(proof, v2)
+    assert :error == AppIdentity.verify_proof(proof, v2)
     assert_verify_proof_telemetry_span(v2, proof, error: "proof and app version mismatch")
   end
 
@@ -89,7 +87,7 @@ defmodule AppIdentityTest do
 
       proof = build_proof(v1_app, padlock)
 
-      assert {:ok, verified(v1_app)} == Subject.verify_proof(proof, v1)
+      assert {:ok, verified(v1_app)} == AppIdentity.verify_proof(proof, v1)
       assert_verify_proof_telemetry_span(v1, proof)
     end
 
@@ -103,7 +101,7 @@ defmodule AppIdentityTest do
 
       proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
 
-      assert {:ok, verified(v2_app)} == Subject.verify_proof(proof, v2)
+      assert {:ok, verified(v2_app)} == AppIdentity.verify_proof(proof, v2)
       assert_verify_proof_telemetry_span(v2, proof)
     end
 
@@ -115,7 +113,7 @@ defmodule AppIdentityTest do
       padlock = build_padlock(v2_app, nonce: nonce, case: unquote(padlock_case))
       proof = build_proof(v2_app, padlock, version: 2, nonce: nonce)
 
-      assert verified(v2_app) == Subject.verify_proof!(proof, v2)
+      assert verified(v2_app) == AppIdentity.verify_proof!(proof, v2)
 
       assert_verify_proof_telemetry_span(v2, proof)
     end
@@ -125,7 +123,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v1_app, id: "00000000-0000-0000-0000-000000000000")
     proof = build_proof(v1_app, padlock, id: "00000000-0000-0000-0000-000000000000")
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
     assert_verify_proof_telemetry_span(v1, proof, error: "proof and app do not match")
   end
 
@@ -133,7 +131,7 @@ defmodule AppIdentityTest do
     padlock = build_padlock(v1_app, nonce: "foo")
     proof = build_proof(v1_app, padlock)
 
-    assert {:ok, nil} == Subject.verify_proof(proof, v1)
+    assert {:ok, nil} == AppIdentity.verify_proof(proof, v1)
 
     assert_verify_proof_telemetry_span(v1, proof, app: :none)
   end
@@ -142,11 +140,11 @@ defmodule AppIdentityTest do
     padlock =
       v1_app
       |> build_padlock()
-      |> String.replace(~r/[A-F]/, "z")
+      |> String.replace(~r/[A-F]/i, "z")
 
     proof = build_proof(v1_app, padlock)
 
-    assert :error == Subject.verify_proof(proof, v1)
+    assert :error == AppIdentity.verify_proof(proof, v1)
 
     assert_verify_proof_telemetry_span(v1, proof, error: "padlock must be a hex string value")
   end

@@ -116,10 +116,16 @@ defmodule AppIdentity.Suite.Generator do
   @external_resource @optional_file
 
   defp generate_suite do
+    name = AppIdentity.info(:name)
+    spec_version = AppIdentity.info(:spec_version)
+    version = AppIdentity.info(:version)
+    description = "#{name} #{version} (spec #{spec_version})"
+
     %{
-      name: AppIdentity.info(:name),
-      version: AppIdentity.info(:version),
-      spec_version: AppIdentity.info(:spec_version),
+      name: name,
+      version: version,
+      spec_version: spec_version,
+      description: description,
       tests: generate_tests(:required) ++ generate_tests(:optional)
     }
   end
@@ -196,36 +202,9 @@ defmodule AppIdentity.Suite.Generator do
 
   defp normalize_nonce(output, %{"nonce" => nonce} = input, type, index) do
     new_nonce =
-      case nonce do
-        %{"empty" => _, "offset_minutes" => _} ->
-          fail!(type, input, index, "nonce must only have one sub-key")
-
-        %{"empty" => _, "value" => _} ->
-          fail!(type, input, index, "nonce must only have one sub-key")
-
-        %{"offset_minutes" => _, "value" => _} ->
-          fail!(type, input, index, "nonce must only have one sub-key")
-
-        %{"empty" => true} ->
-          %{empty: true}
-
-        %{"empty" => "true"} ->
-          %{empty: true}
-
-        %{"empty" => _} ->
-          fail!(type, input, index, "nonce.empty may only be true")
-
-        %{"offset_minutes" => value} when is_integer(value) ->
-          %{offset_minutes: value}
-
-        %{"offset_minutes" => _} ->
-          fail!(type, input, index, "nonce.offset_minutes must be an integer")
-
-        %{"value" => value} ->
-          %{value: value}
-
-        _ ->
-          fail!(type, input, index, "nonce requires exactly one sub-key")
+      case resolve_normalized_nonce(nonce) do
+        {:ok, new_nonce} -> new_nonce
+        {:error, reason} -> fail!(type, input, index, reason)
       end
 
     Map.put_new(output, :nonce, new_nonce)
@@ -413,10 +392,28 @@ defmodule AppIdentity.Suite.Generator do
     end
   end
 
-  @spec fail!(:required | :optional, term, integer, term) :: no_return
+  @spec fail!(term(), term(), term(), term()) :: no_return()
   defp fail!(type, input, index, message) do
     Mix.raise(
       "Error in #{type} item #{index}: #{AppIdentity.Suite.extract_message(message)}\n#{inspect(input)}"
     )
   end
+
+  defp resolve_normalized_nonce(%{} = nonce) when map_size(nonce) > 1,
+    do: {:error, "nonce must only have one sub-key"}
+
+  defp resolve_normalized_nonce(%{"empty" => empty}) when empty in [true, "true"],
+    do: {:ok, %{empty: true}}
+
+  defp resolve_normalized_nonce(%{"empty" => _}), do: {:error, "nonce.empty may only be true"}
+
+  defp resolve_normalized_nonce(%{"offset_minutes" => value}) when is_integer(value),
+    do: {:ok, %{offset_minutes: value}}
+
+  defp resolve_normalized_nonce(%{"offset_minutes" => _}),
+    do: {:error, "nonce.offset_minutes must be an integer"}
+
+  defp resolve_normalized_nonce(%{"value" => value}), do: {:ok, %{value: value}}
+
+  defp resolve_normalized_nonce(_), do: {:error, "nonce requires exactly one sub-key"}
 end

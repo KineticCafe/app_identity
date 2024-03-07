@@ -51,43 +51,20 @@ defmodule AppIdentity.Support do
   end
 
   def build_padlock(app, options \\ []) do
-    secret = Keyword.get(options, :secret) || app.secret
-
-    secret =
-      if is_function(secret, 0) do
-        secret.()
-      else
-        secret
-      end
-
     raw =
       Enum.join(
         [
           Keyword.get(options, :id) || app.id,
           Keyword.get(options, :nonce) || "nonce",
-          secret
+          padlock_secret(app, options)
         ],
         ":"
       )
 
-    hash =
-      case Keyword.get(options, :version) || app.version do
-        1 -> :sha256
-        2 -> :sha256
-        3 -> :sha384
-        4 -> :sha512
-      end
-
-    output_case =
-      case Keyword.get(options, :case) || :random do
-        :upper -> :upper
-        :lower -> :lower
-        :random -> if :rand.uniform(10) <= 5, do: :upper, else: :lower
-      end
-
-    hash
+    app
+    |> padlock_algorithm(options)
     |> :crypto.hash(raw)
-    |> Base.encode16(case: output_case)
+    |> Base.encode16(case: padlock_case(options))
   end
 
   def build_proof(app, padlock, options \\ []) do
@@ -157,4 +134,31 @@ defmodule AppIdentity.Support do
   defp lower(<<h, t::binary>>, acc) when h in ?A..?F, do: lower(t, acc <> <<h + 32>>)
   defp lower(<<h, t::binary>>, acc), do: lower(t, acc <> <<h>>)
   defp lower(<<>>, acc), do: acc
+
+  defp padlock_secret(app, options) do
+    secret = Keyword.get(options, :secret) || app.secret
+
+    if is_function(secret, 0) do
+      secret.()
+    else
+      secret
+    end
+  end
+
+  defp padlock_algorithm(app, options) do
+    case Keyword.get(options, :version) || app.version do
+      1 -> :sha256
+      2 -> :sha256
+      3 -> :sha384
+      4 -> :sha512
+    end
+  end
+
+  defp padlock_case(options) do
+    case Keyword.get(options, :case) || :random do
+      :upper -> :upper
+      :lower -> :lower
+      :random -> if :rand.uniform(10) <= 5, do: :upper, else: :lower
+    end
+  end
 end
