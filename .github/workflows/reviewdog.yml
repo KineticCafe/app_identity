@@ -127,7 +127,7 @@ jobs:
       - run: mix 'do' deps.get, deps.compile
         working-directory: ./elixir
 
-      - uses: reviewdog/action-setup@v1.2.1
+      - uses: reviewdog/action-setup@v1.3.0
 
       - name: 'mix credo --strict | reviewdog'
         run: |
