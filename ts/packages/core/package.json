@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@juanelas/base64": "^1.1.5",
-    "date-fns": "^3.3.1"
+    "date-fns": "^3.4.0"
   },
   "dependencies": {
     "@kineticcafe/result": "^0.6.1"
