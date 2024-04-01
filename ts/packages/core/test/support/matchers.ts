@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 
-import { App } from '../../src/app.js'
+import type { App } from '../../src/app.js'
 
 interface AppIdentityMatchers<R = unknown> {
   toBeVerified: (expected: App | null) => R

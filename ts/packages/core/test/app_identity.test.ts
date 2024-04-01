@@ -164,7 +164,7 @@ describe('parseProof', () => {
       id: parts[1],
       nonce: parts[2],
       padlock: parts[3],
-      version: parseInt(parts[0]),
+      version: Number.parseInt(parts[0]),
     })
   })
 
@@ -178,7 +178,7 @@ describe('parseProof', () => {
       id: parts[1],
       nonce: parts[2],
       padlock: parts[3],
-      version: parseInt(parts[0]),
+      version: Number.parseInt(parts[0]),
     })
   })
 
@@ -192,7 +192,7 @@ describe('parseProof', () => {
       id: parts[1],
       nonce: parts[2],
       padlock: parts[3],
-      version: parseInt(parts[0]),
+      version: Number.parseInt(parts[0]),
     })
   })
 })

@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from 'crypto'
+import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { add as adjustDate } from 'date-fns'
 
 import { App, getRuntimeAdapter } from '@kineticcafe/app-identity-node'
