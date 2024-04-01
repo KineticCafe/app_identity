@@ -2,7 +2,7 @@ import { statSync, writeFileSync } from 'node:fs'
 import { join as joinPath } from 'node:path'
 import { Command } from '@commander-js/extra-typings'
 import {
-  App,
+  type App,
   AppIdentityError,
   Info,
   Validations,

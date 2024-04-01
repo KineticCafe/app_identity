@@ -102,7 +102,7 @@ describe('new App', () => {
       expect(() => new App(input({ version: '-1' }))).toThrowError(
         'version cannot be converted to an integer',
       )
-      expect(() => new App(input({ version: NaN }))).toThrowError(
+      expect(() => new App(input({ version: Number.NaN }))).toThrowError(
         'version cannot be converted to an integer',
       )
       expect(new App(input({ version: '1' })).version).toBe(1)

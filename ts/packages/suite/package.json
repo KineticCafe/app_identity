@@ -33,9 +33,7 @@
     "lint:fix": "biome lint . --apply",
     "prepack": "pnpm build"
   },
-  "files": [
-    "/dist"
-  ],
+  "files": ["/dist"],
   "engines": {
     "node": ">=20.0.0"
   },
