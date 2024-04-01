@@ -43,7 +43,7 @@
     "@commander-js/extra-typings": "^12.0.1",
     "@kineticcafe/app-identity-node": "workspace:^",
     "commander": "^12.0.0",
-    "date-fns": "^3.4.0",
+    "date-fns": "^3.6.0",
     "fast-glob": "^3.3.2"
   }
 }
