@@ -52,15 +52,26 @@ defmodule AppIdentity.MixProject do
   defp deps do
     poison =
       if Version.compare(System.version(), "1.11.0") == :lt,
-        do: ">= 3.0.0 and < 6.0.0",
+        do: ">= 3.0.0 and < 5.0.0",
         else: ">= 3.0.0"
+
+    plug_crypto =
+      if Version.compare(System.version(), "1.11.0") == :lt,
+        do: "~> 1.2.5",
+        else: ">= 1.2.0"
+
+    tesla =
+      if Version.compare(System.version(), "1.11.0") == :lt,
+        do: ">= 1.0.0 and < 1.8.1",
+        else: "~> 1.0"
 
     [
       {:jason, "~> 1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
       {:poison, poison, optional: true},
+      {:plug_crypto, plug_crypto, optional: true},
       {:telemetry, "~> 0.4 or ~> 1.0", optional: true},
-      {:tesla, "~> 1.0", optional: true}
+      {:tesla, tesla, optional: true}
     ] ++ dev_deps()
   end
 
