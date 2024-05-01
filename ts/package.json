@@ -32,15 +32,15 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.3",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.12.2",
+    "@types/node": "^20.12.7",
     "@vitest/coverage-v8": "^1.5.3",
     "pkgroll": "^2.0.2",
     "publint": "^0.2.7",
     "tsx": "^4.8.2",
-    "typedoc": "^0.25.12",
+    "typedoc": "^0.25.13",
     "typedoc-material-theme": "^1.0.2",
     "typedoc-plugin-missing-exports": "^2.2.0",
-    "typescript": "5.4.3",
-    "vitest": "^1.4.0"
+    "typescript": "5.4.5",
+    "vitest": "^1.5.3"
   }
 }
