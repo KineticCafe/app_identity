@@ -35,7 +35,7 @@
     "@types/node": "^20.13.0",
     "@vitest/coverage-v8": "^1.5.3",
     "pkgroll": "^2.1.1",
-    "publint": "^0.2.7",
+    "publint": "^0.2.8",
     "tsx": "^4.11.0",
     "typedoc": "^0.25.13",
     "typedoc-material-theme": "^1.0.2",
