@@ -33,17 +33,19 @@
     "build:docs": "typedoc",
     "build:watch": "concurrently 'pkgroll --watch' 'typedoc --watch --preserveWatchOutput'",
     "check": "biome check .",
-    "check:fix": "biome check --apply .",
+    "check:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "lint": "biome lint .",
-    "lint:fix": "biome lint . --apply",
+    "lint:fix": "biome lint . --write",
     "prepack": "pnpm build",
     "test": "vitest run",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest watch"
   },
-  "files": ["/dist"],
+  "files": [
+    "/dist"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },
