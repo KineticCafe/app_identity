@@ -75,7 +75,7 @@ class AppIdentity
       end
 
       def check_nonce!(nonce, config) # :nodoc:
-        super(nonce, config)
+        super
 
         timestamp = parse_timestamp!(nonce)
         config ||= default_config
