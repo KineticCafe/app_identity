@@ -9,7 +9,7 @@ on:
 
 jobs:
   typescript-ci:
-    name: Typescript (Node ${{ matrix.node }}, pnpm ${{ matrix.pnpm }}) - ${{ matrix.os }}
+    name: Typescript (Node ${{ matrix.node }}, pnpm 9) - ${{ matrix.os }}
 
     strategy:
       fail-fast: true
@@ -18,16 +18,13 @@ jobs:
           - ubuntu-latest
         node:
           - 20
-        pnpm:
-          - 8 # latest
+          - 22
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ matrix.pnpm }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
