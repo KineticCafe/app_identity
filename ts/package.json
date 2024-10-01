@@ -34,7 +34,7 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.0.2",
     "@vitest/coverage-v8": "^2.0.5",
-    "pkgroll": "^2.4.2",
+    "pkgroll": "^2.5.0",
     "publint": "^0.2.10",
     "tsx": "^4.19.0",
     "typedoc": "^0.26.6",
