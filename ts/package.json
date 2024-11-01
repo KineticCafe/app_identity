@@ -16,8 +16,8 @@
     "build:all": "pnpm recursive run build:all",
     "build:docs": "pnpm recursive run build:docs",
     "build:watch": "pnpm recursive run --stream build:watch",
-    "check": "pnpm biome check . && pnpm recursive run --stream check",
-    "check:fix": "pnpm biome check --write . && pnpm recursive run --stream check:fix",
+    "check": "pnpm biome check . && pnpm recursive run check",
+    "check:fix": "pnpm biome check --write . && pnpm recursive run check:fix",
     "cli": "pnpm --silent exec tsx packages/suite/src/index.ts",
     "cli:generate": "pnpm --silent run cli generate",
     "cli:run": "pnpm --silent run cli run",
@@ -28,8 +28,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^22.0.2",
-    "@vitest/coverage-v8": "^2.0.5",
+    "@types/node": "^22.8.6",
+    "@vitest/coverage-v8": "^2.1.4",
     "concurrently": "^9.0.1",
     "pkgroll": "^2.5.1",
     "publint": "^0.2.12",
@@ -37,8 +37,8 @@
     "typedoc": "^0.26.11",
     "typedoc-material-theme": "^1.1.0",
     "typedoc-plugin-missing-exports": "^3.0.0",
-    "typescript": "5.5.4",
-    "vitest": "^2.0.5"
+    "typescript": "5.6.3",
+    "vitest": "^2.1.4"
   },
   "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }
