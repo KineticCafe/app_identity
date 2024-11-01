@@ -30,6 +30,8 @@ jobs:
     steps:
       # Check out code
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # Typescript Setup
       - uses: pnpm/action-setup@v4

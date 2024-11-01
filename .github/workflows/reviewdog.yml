@@ -3,18 +3,21 @@ name: Reviewdog
 on:
   pull_request:
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   misspell:
     if: ${{ github.event.action != 'closed' }}
     name: Misspell
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - uses: reviewdog/action-misspell@v1
         with:
           path: |
@@ -55,8 +58,15 @@ jobs:
     name: Actionlint
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - uses: reviewdog/action-actionlint@v1
 
   biome:
@@ -64,8 +74,14 @@ jobs:
     name: 'Typescript: Biome'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
         with:
@@ -89,8 +105,14 @@ jobs:
     name: 'Ruby: Standard'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -109,8 +131,14 @@ jobs:
     name: 'Elixir: Credo'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: erlef/setup-elixir@v1
         id: install
