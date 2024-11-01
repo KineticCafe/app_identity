@@ -3,7 +3,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KineticCafe/app_identity.git"
+    "url": "git+https://github.com/KineticCafe/app_identity.git"
   },
   "author": "Kinetic Commerce & contributors",
   "homepage": "https://github.com/KineticCafe/app_identity#readme",
@@ -16,24 +16,22 @@
     "build:all": "pnpm recursive run build:all",
     "build:docs": "pnpm recursive run build:docs",
     "build:watch": "pnpm recursive run --stream build:watch",
-    "check": "pnpm recursive run --stream check",
-    "check:fix": "pnpm recursive run --stream check:fix",
+    "check": "pnpm biome check . && pnpm recursive run --stream check && pnpm recursive run --stream check:package && pnpm run check:package",
+    "check:fix": "pnpm biome check --write . && pnpm recursive run --stream check:fix",
+    "check:package": "pnpm exec publint run",
     "cli": "pnpm --silent exec tsx packages/suite/src/index.ts",
     "cli:generate": "pnpm --silent run cli generate",
     "cli:run": "pnpm --silent run cli run",
-    "format": "pnpm recursive run --stream format",
-    "format:check": "pnpm recursive run --stream format:check",
-    "lint": "pnpm recursive run --stream lint",
-    "lint:fix": "pnpm recursive run --stream lint:fix",
     "test": "pnpm recursive run --stream test",
     "test:coverage": "pnpm recursive run --stream test:coverage",
     "test:watch": "pnpm recursive run --stream test:watch"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.4",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.0.2",
     "@vitest/coverage-v8": "^2.0.5",
+    "concurrently": "^9.0.1",
     "pkgroll": "^2.5.0",
     "publint": "^0.2.10",
     "tsx": "^4.19.2",

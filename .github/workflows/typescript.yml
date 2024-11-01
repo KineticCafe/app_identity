@@ -39,22 +39,10 @@ jobs:
         working-directory: ./ts
       - run: pnpm test
         working-directory: ./ts
-      - run: pnpm lint
-        working-directory: ./ts
-
-      - name: pnpm format:check
-        run: |
-          pnpm format:check || {
-            pnpm format
-            git diff
-            exit 1
-          }
+      - run: pnpm check
         working-directory: ./ts
 
       - run: pnpm build:all
-        working-directory: ./ts
-
-      - run: pnpm exec publint
         working-directory: ./ts
 
       - name: self-test

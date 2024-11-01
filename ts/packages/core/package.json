@@ -3,7 +3,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KineticCafe/app_identity.git"
+    "url": "git+https://github.com/KineticCafe/app_identity.git"
   },
   "version": "2.0.0",
   "description": "Lightweight secure application authentication",
@@ -34,10 +34,7 @@
     "build:watch": "concurrently 'pkgroll --watch' 'typedoc --watch --preserveWatchOutput'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint . --write",
+    "check:package": "pnpm exec publint run",
     "prepack": "pnpm build",
     "test": "vitest run",
     "test:coverage": "vitest --coverage",

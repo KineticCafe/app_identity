@@ -58,5 +58,9 @@
     "noErrorTruncation": true
   },
   "exclude": ["**/node_modules", "**/*/lib", "**/*/dist"],
-  "references": [{ "path": "./packages/suite" }, { "path": "./packages/core" }, { "path": "./packages/node" }]
+  "references": [
+    { "path": "./packages/suite" },
+    { "path": "./packages/core" },
+    { "path": "./packages/node" }
+  ]
 }

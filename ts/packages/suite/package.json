@@ -5,7 +5,7 @@
   "description": "Lightweight secure application authentication (Typescript suite CLI)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KineticCafe/app_identity.git"
+    "url": "git+https://github.com/KineticCafe/app_identity.git"
   },
   "author": "Kinetic Commerce & contributors",
   "homepage": "https://github.com/KineticCafe/app_identity#readme",
@@ -24,13 +24,10 @@
     "build:watch": "concurrently 'pkgroll --watch' 'typedoc --watch --preserveWatchOutput'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
+    "check:package": "pnpm exec publint run",
     "cli": "tsx src/index.ts",
     "cli:generate": "pnpm run cli generate",
     "cli:run": "pnpm run cli run",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint . --write",
     "prepack": "pnpm build"
   },
   "files": ["/dist"],
