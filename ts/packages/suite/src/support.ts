@@ -120,7 +120,7 @@ export const buildPadlock = (
 ): string => {
   const version = options.version ?? app.version
   const id = options.id ?? app.id
-  const nonce = options.nonce === EMPTY_NONCE ? '' : options.nonce ?? 'nonce'
+  const nonce = options.nonce === EMPTY_NONCE ? '' : (options.nonce ?? 'nonce')
   const secretValue = options.secret ?? app.secret
   const secret = typeof secretValue === 'function' ? secretValue() : secretValue
 
@@ -174,7 +174,7 @@ export const buildProof = (
   options: BuildProofOptions = {},
 ): string => {
   const id = options.id ?? app.id
-  const nonce = options.nonce === EMPTY_NONCE ? '' : options.nonce ?? 'nonce'
+  const nonce = options.nonce === EMPTY_NONCE ? '' : (options.nonce ?? 'nonce')
   const version = options.version ?? (app.version || 1)
   const proof =
     version === 1
