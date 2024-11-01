@@ -34,7 +34,6 @@
     "build:watch": "concurrently 'pkgroll --watch' 'typedoc --watch --preserveWatchOutput'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-    "check:package": "pnpm exec publint run",
     "prepack": "pnpm build"
   },
   "engines": {

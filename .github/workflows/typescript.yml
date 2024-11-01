@@ -47,6 +47,12 @@ jobs:
       - run: pnpm build:all
         working-directory: ./ts
 
+      - name: Check the publications status
+        run: |
+          pnpm exec publint run
+          pnpm recursive --stream exec publint run
+        working-directory: ./ts
+
       - name: self-test
         run: |
           pnpm --silent cli:generate | pnpm --silent cli:run --strict
