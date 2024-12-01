@@ -30,7 +30,7 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.8.6",
     "@vitest/coverage-v8": "^2.1.4",
-    "concurrently": "^9.0.1",
+    "concurrently": "^9.1.0",
     "pkgroll": "^2.5.1",
     "publint": "^0.2.12",
     "tsx": "^4.19.2",
