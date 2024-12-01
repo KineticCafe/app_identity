@@ -36,8 +36,8 @@ importers:
         specifier: ^0.26.11
         version: 0.26.11(typescript@5.6.3)
       typedoc-material-theme:
-        specifier: ^1.1.0
-        version: 1.1.0(typedoc@0.26.11(typescript@5.6.3))
+        specifier: ^1.2.0
+        version: 1.2.0(typedoc@0.26.11(typescript@5.6.3))
       typedoc-plugin-missing-exports:
         specifier: ^3.1.0
         version: 3.1.0(typedoc@0.26.11(typescript@5.6.3))
@@ -486,8 +486,8 @@ packages:
   '@kineticcafe/result@0.6.1':
     resolution: {integrity: sha512-2/mJ/+0cAaVDwZtifIQmdH0bw0xatgFD5U0t8q1jjv0vkfd2P9WeBVuP8byF8bEOTQ182DC/mWvDXNDU5nYlBw==}
 
-  '@material/material-color-utilities@0.2.7':
-    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
+  '@material/material-color-utilities@0.3.0':
+    resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1318,11 +1318,11 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  typedoc-material-theme@1.1.0:
-    resolution: {integrity: sha512-LLWGVb8w+i+QGnsu/a0JKjcuzndFQt/UeGVOQz0HFFGGocROEHv5QYudIACrj+phL2LDwH05tJx0Ob3pYYH2UA==}
+  typedoc-material-theme@1.2.0:
+    resolution: {integrity: sha512-pZ07hqdxbyRtM+Tsu0s8BFLdANAyh2CWF0J2X07B9ldmvwbmVEfNdgpE0EYky/oFah9shv2o/KjElPtpnQi1+w==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
     peerDependencies:
-      typedoc: ^0.25.13 || ^0.26.3
+      typedoc: ^0.25.13 || ^0.26.x
 
   typedoc-plugin-missing-exports@3.1.0:
     resolution: {integrity: sha512-Sogbaj+qDa21NjB3SlIw4JXSwmcl/WOjwiPNaVEcPhpNG/MiRTtpwV81cT7h1cbu9StpONFPbddYWR0KV/fTWA==}
@@ -1704,7 +1704,7 @@ snapshots:
 
   '@kineticcafe/result@0.6.1': {}
 
-  '@material/material-color-utilities@0.2.7': {}
+  '@material/material-color-utilities@0.3.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2560,9 +2560,9 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  typedoc-material-theme@1.1.0(typedoc@0.26.11(typescript@5.6.3)):
+  typedoc-material-theme@1.2.0(typedoc@0.26.11(typescript@5.6.3)):
     dependencies:
-      '@material/material-color-utilities': 0.2.7
+      '@material/material-color-utilities': 0.3.0
       typedoc: 0.26.11(typescript@5.6.3)
 
   typedoc-plugin-missing-exports@3.1.0(typedoc@0.26.11(typescript@5.6.3)):
