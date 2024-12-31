@@ -7,7 +7,7 @@ jobs:
   misspell:
     if: ${{ github.event.action != 'closed' }}
     name: Typos
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
@@ -23,7 +23,7 @@ jobs:
   actionlint:
     if: ${{ github.event.action != 'closed' }}
     name: Actionlint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
@@ -39,7 +39,7 @@ jobs:
   biome:
     if: ${{ github.event.action != 'closed' }}
     name: 'Typescript: Biome'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
@@ -70,7 +70,7 @@ jobs:
   standardrb:
     if: ${{ github.event.action != 'closed' }}
     name: 'Ruby: Standard'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
@@ -96,7 +96,7 @@ jobs:
   credo:
     if: ${{ github.event.action != 'closed' }}
     name: 'Elixir: Credo'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
