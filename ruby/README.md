@@ -1,6 +1,7 @@
 # AppIdentity for Ruby
 
-- code :: https://github.com/KineticCafe/app-identity/tree/main/ruby/
+- home :: https://github.com/KineticCafe/app-identity
+- code :: https://github.com/KineticCafe/app-identity/tree/main/ruby
 - issues :: https://github.com/KineticCafe/app-identity/issues
 
 ## Description
