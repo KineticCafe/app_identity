@@ -30,11 +30,11 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
-      - uses: reviewdog/action-actionlint@v1
+      - uses: reviewdog/action-actionlint@v1.61.0
 
   biome:
     if: ${{ github.event.action != 'closed' }}
@@ -46,15 +46,15 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4.0.0
         with:
           package_json_file: ts/package.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: 20
           cache: pnpm
@@ -63,7 +63,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
 
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: mongolyy/reviewdog-action-biome@v1.6.4
         with:
           workdir: ./ts
 
@@ -77,11 +77,11 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1.207.0
         with:
           ruby-version: '3.2'
           bundler-cache: true
@@ -103,17 +103,17 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
-      - uses: erlef/setup-elixir@v1
+      - uses: erlef/setup-beam@v1.18.2
         id: install
         with:
           otp-version: '26'
           elixir-version: '1.15'
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v4.2.0
         with:
           key: builds@elixir-${{ steps.install.outputs.elixir-version }}-otp-${{ steps.install.outputs.otp-version }}-mix-${{ hashFiles('mix.lock') }}
           path: |
