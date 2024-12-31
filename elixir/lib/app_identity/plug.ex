@@ -44,7 +44,7 @@ if Code.ensure_loaded?(Plug.Conn) do
                            }
     ```
 
-    Later in request processsing, a controller or a route-specific Phoenix
+    Later in request processing, a controller or a route-specific Phoenix
     pipeline could call a `require_application` function which pulls from
     `conn.private[:app_identity]` with the appropriate header group name for
     verification.
@@ -221,7 +221,7 @@ if Code.ensure_loaded?(Plug.Conn) do
 
     - `on_resolution`: An 1-arity callback function (or a `{module, function}`
       tuple) that accepts a `Plug.Conn` after proof validation completes,
-      regardless of sucesss or failure. If present, this will be run as the last
+      regardless of success or failure. If present, this will be run as the last
       step (after `on_failure` and `on_success`). Because `on_failure` may halt
       pipeline processing, it may be necessary to check `conn.halted`. The
       `on_resolution` callback **may** modify the passed `conn` value and must

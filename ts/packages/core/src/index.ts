@@ -69,7 +69,7 @@ const { name: NAME, version: VERSION } = packageJSON
  *
  * @param app - The application for which the proof will be generated.
  * @param options.nonce - An optional nonce value . If provided, it will be
- * validated as conforming ot the shape expected by the proof version to be
+ * validated as conforming to the shape expected by the proof version to be
  * generated. If not provided, it will be generated.
  * @param options.version - An optional algorithm version that allows an app to
  * generate a more secure proof.
@@ -177,7 +177,7 @@ export const verifyProof = (
  *
  * @param app - The application for which the proof will be generated.
  * @param options.nonce - An optional nonce value . If provided, it will be
- * validated as conforming ot the shape expected by the proof version to be
+ * validated as conforming to the shape expected by the proof version to be
  * generated. If not provided, it will be generated.
  * @param options.version - An optional algorithm version that allows an app to
  * generate a more secure proof.

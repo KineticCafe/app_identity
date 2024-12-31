@@ -20,7 +20,7 @@ require "set"
 #
 # ### Configuration
 #
-# The Rack middlware can be configured with the following options:
+# The Rack middleware can be configured with the following options:
 #
 # - `apps`: A list of AppIdentity::App objects or objects that can be converted
 #   into AppIdentity::App objects to be used for proof validation. Duplicate

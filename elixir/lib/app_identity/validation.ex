@@ -11,7 +11,7 @@ defmodule AppIdentity.Validation do
   - `config` may be `nil` or a map optionally containing `fuzz` (either atom or
     string), which must be a positive integer.
 
-  - `id` must not be nil, must be convertable to a string, and must not contain
+  - `id` must not be nil, must be convertible to a string, and must not contain
     a colon (`:`) character. The output value *will always* be a string.
 
   - `nonce` must not be nil, must be a string, must not be empty, and must not
@@ -24,7 +24,7 @@ defmodule AppIdentity.Validation do
   - `secret` must not be nil, must be a valid binary string (a `binary` value,
     which may or may not be UTF-8 safe). It may contain *any* character.
 
-  - `version` must be a convertable positive integer with a permitted value of
+  - `version` must be a convertible positive integer with a permitted value of
     #{inspect(@supported_versions)}. Specific operations may be configured to
     exclude otherwise supported versions.
 

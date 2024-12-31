@@ -40,7 +40,7 @@ class TestAppIdentity < Minitest::Test
     }
   end
 
-  def test_verify_fail_on_insufficent_parts
+  def test_verify_fail_on_insufficient_parts
     assert_exception_message("proof must have 3 parts (version 1) or 4 parts (any version)") {
       subject.verify_proof!(Base64.urlsafe_encode64("a:b"), v1)
     }
