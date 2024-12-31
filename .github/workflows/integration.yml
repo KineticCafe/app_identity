@@ -7,6 +7,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   integration-ci:
     name: Integration Testing
@@ -29,16 +32,16 @@ jobs:
 
     steps:
       # Check out code
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
       # Typescript Setup
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4.0.0
         with:
           package_json_file: ts/package.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -51,14 +54,14 @@ jobs:
         working-directory: ./ts
 
       # Ruby Setup
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1.207.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           working-directory: ./ruby
 
       # Elixir Setup
-      - uses: erlef/setup-elixir@v1
+      - uses: erlef/setup-beam@v1.18.2
         id: install
         with:
           otp-version: ${{ matrix.otp }}
