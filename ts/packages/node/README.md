@@ -23,7 +23,7 @@ AppIdentity.verifyProof(proof, app);
 
 ## Installation
 
-`@kineticcafe/app-identity-node` should be added to your list of depdencies in
+`@kineticcafe/app-identity-node` should be added to your list of dependencies in
 `package.json`.
 
 ```console

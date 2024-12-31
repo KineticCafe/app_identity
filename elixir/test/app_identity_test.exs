@@ -35,7 +35,7 @@ defmodule AppIdentityTest do
     assert_verify_proof_telemetry_span(v1, "not base64", error: "cannot decode proof string")
   end
 
-  test "verify fail on insufficent parts", %{v1: v1} do
+  test "verify fail on insufficient parts", %{v1: v1} do
     proof = Base.url_encode64("a:b")
 
     assert :error == AppIdentity.verify_proof(proof, v1)
