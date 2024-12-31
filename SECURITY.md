@@ -32,16 +32,20 @@ released for 2.3.x and 3.2.x only.
 
 ## Reporting a Vulnerability
 
-Report security vulnerabilities to
-[app\_identity@halostatue.ca][security-email]. Emails sent to this address
-should be encrypted using [age][age]. Include the text `App Identity` in the
-subject.
+## Security contact information
 
-### age Public Key
+Please use the [Tidelift security contact][tidelift] for reporting security
+vulnerabilities. Tidelift will coordinate the fix and disclosure.
+
+Alternatively, security vulnerabilities may be sent to
+[app\_identity@halostatue.ca][email] with the text `App Identity` in the
+subject. They should be encrypted with [age][age] using the following public
+key:
 
 ```
 age1jx0sgpca62669tklat8js4e6xlsxhyy00ccl6y94txy3dtva7ymq44k7p6
 ```
 
-[security-email]: mailto:app_identity@halostatue.ca
+[email]: mailto:app_identity@halostatue.ca
 [age]: https://github.com/FiloSottile/age
+[tidelift]: https://tidelift.com/security
