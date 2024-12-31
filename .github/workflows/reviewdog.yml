@@ -6,7 +6,7 @@ on:
 jobs:
   misspell:
     if: ${{ github.event.action != 'closed' }}
-    name: Misspell
+    name: Typos
     runs-on: ubuntu-latest
 
     permissions:
@@ -14,44 +14,11 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
 
-      - uses: reviewdog/action-misspell@v1
-        with:
-          path: |
-            elixir/*.md
-            elixir/lib
-            elixir/licenses
-            elixir/mix.exs
-            elixir/support
-            elixir/test
-            integration
-            licenses
-            ruby/*.md
-            ruby/bin
-            ruby/lib
-            ruby/licenses
-            ruby/Rakefile
-            ruby/support
-            ruby/test
-            spec
-            ts/*.md
-            ts/packages/core/*.md
-            ts/packages/core/package.json
-            ts/packages/core/src
-            ts/packages/core/test
-            ts/packages/node/*.md
-            ts/packages/node/package.json
-            ts/packages/node/src
-            ts/packages/suite/*.md
-            ts/packages/suite/package.json
-            ts/packages/suite/src
-            ts/package.json
-            *.md
-          exclude: |
-            integration/tapview
+      - uses: reviewdog/action-typos@v1.13.0
 
   actionlint:
     if: ${{ github.event.action != 'closed' }}
