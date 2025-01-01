@@ -56,5 +56,5 @@ jobs:
       - name: self-test
         run: |
           pnpm --silent cli:generate --stdout |
-            pnpm --silent cli:run --strict --stdin
+            pnpm --silent cli:run --diagnostic --strict --stdin
         working-directory: ./ts

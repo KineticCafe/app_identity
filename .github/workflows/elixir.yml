@@ -95,9 +95,16 @@ jobs:
       - run: mix test
         working-directory: ./elixir
 
-      - run: >
-          mix app_identity generate --stdout |
-          mix app_identity run --stdin --strict
+      # Switched to file-basd because the pipe approach has been broken for
+      # Elixir 1.18
+      #
+      # See https://github.com/elixir-lang/elixir/issues/14136
+      - run: |
+          # mix app_identity generate --stdout |
+          #   mix app_identity run --diagnostic --stdin --strict
+          mix app_identity generate
+          mix app_identity run --diagnostic --strict app-identity-suite-elixir.json
+          rm -f app-identity-suite-elixir.json
         working-directory: ./elixir
 
       - run: mix credo --strict
