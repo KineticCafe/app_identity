@@ -113,5 +113,5 @@ jobs:
 
       - run: >
           bundle exec bin/app-identity-suite-ruby generate --stdout |
-            bundle exec bin/app-identity-suite-ruby run --stdin --strict
+            bundle exec bin/app-identity-suite-ruby run --diagnostic --stdin --strict
         working-directory: ./ruby
