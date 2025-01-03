@@ -19,7 +19,7 @@ jobs:
       LC_CTYPE: en_US.UTF-8
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
           - elixir: '1.10'
@@ -95,17 +95,12 @@ jobs:
       - run: mix test
         working-directory: ./elixir
 
-      # Switched to file-basd because the pipe approach has been broken for
-      # Elixir 1.18
-      #
-      # See https://github.com/elixir-lang/elixir/issues/14136
       - run: |
-          # mix app_identity generate --stdout |
-          #   mix app_identity run --diagnostic --stdin --strict
-          mix app_identity generate
-          mix app_identity run --diagnostic --strict app-identity-suite-elixir.json
-          rm -f app-identity-suite-elixir.json
+          mix app_identity generate --stdout |
+            mix app_identity run --diagnostic --stdin --strict
         working-directory: ./elixir
+        env:
+          MIX_QUIET: 1
 
       - run: mix credo --strict
         working-directory: ./elixir
