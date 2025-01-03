@@ -79,9 +79,7 @@ defmodule AppIdentity.Suite.Generator do
     end
 
     if options[:stdout] do
-      suite
-      |> Jason.encode!(pretty: true)
-      |> shell.info()
+      IO.write(:stdio, Jason.encode!(suite, pretty: true))
     else
       File.write!(name, Jason.encode!(suite))
 
