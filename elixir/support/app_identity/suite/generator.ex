@@ -80,6 +80,7 @@ defmodule AppIdentity.Suite.Generator do
 
     if options[:stdout] do
       IO.write(:stdio, Jason.encode!(suite, pretty: true))
+      :timer.sleep(1000)
     else
       File.write!(name, Jason.encode!(suite))
 
