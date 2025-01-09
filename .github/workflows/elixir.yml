@@ -95,12 +95,18 @@ jobs:
       - run: mix test
         working-directory: ./elixir
 
+      # Using MIX_QUIET=1 should work for this, except that with older versions
+      # of Elixir and OTP (OTP 25 or earlier), there's a persistent truncation
+      # of the output as the generator VM shuts down before stdout is complete
+      # which is not exhibited with Mix shell write but is exhibited with IO
+      # write.
       - run: |
-          mix app_identity generate --stdout |
-            mix app_identity run --diagnostic --stdin --strict
+          # mix app_identity generate --stdout |
+          #   mix app_identity run --diagnostic --stdin --strict
+          mix app_identity generate
+          mix app_identity run --diagnostic --strict app-identity-suite-elixir.json
+          rm -f app-identity-suite-elixir.json
         working-directory: ./elixir
-        env:
-          MIX_QUIET: 1
 
       - run: mix credo --strict
         working-directory: ./elixir
