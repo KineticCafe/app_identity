@@ -63,7 +63,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
 
-      - uses: mongolyy/reviewdog-action-biome@v1.6.4
+      - uses: mongolyy/reviewdog-action-biome@v1.9.0
         with:
           workdir: ./ts
 
