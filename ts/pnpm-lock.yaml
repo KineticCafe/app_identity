@@ -74,13 +74,13 @@ importers:
     devDependencies:
       '@commander-js/extra-typings':
         specifier: ^13.0.0
-        version: 13.0.0(commander@13.0.0)
+        version: 13.0.0(commander@13.1.0)
       '@kineticcafe/app-identity-node':
         specifier: workspace:^
         version: link:../node
       commander:
-        specifier: ^13.0.0
-        version: 13.0.0
+        specifier: ^13.1.0
+        version: 13.1.0
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1050,8 +1050,8 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  commander@13.0.0:
-    resolution: {integrity: sha512-oPYleIY8wmTVzkvQq10AEok6YcTC4sRUBl8F9gVuwchGVUCTbl/vhLTaQqutuuySYOsu8YTgV+OxKc/8Yvx+mQ==}
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
   commondir@1.0.1:
@@ -1725,9 +1725,9 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@commander-js/extra-typings@13.0.0(commander@13.0.0)':
+  '@commander-js/extra-typings@13.0.0(commander@13.1.0)':
     dependencies:
-      commander: 13.0.0
+      commander: 13.1.0
 
   '@esbuild/aix-ppc64@0.23.1':
     optional: true
@@ -2320,7 +2320,7 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  commander@13.0.0: {}
+  commander@13.1.0: {}
 
   commondir@1.0.1: {}
 
