@@ -73,8 +73,8 @@ importers:
   packages/suite:
     devDependencies:
       '@commander-js/extra-typings':
-        specifier: ^13.0.0
-        version: 13.0.0(commander@13.1.0)
+        specifier: ^13.1.0
+        version: 13.1.0(commander@13.1.0)
       '@kineticcafe/app-identity-node':
         specifier: workspace:^
         version: link:../node
@@ -167,10 +167,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@commander-js/extra-typings@13.0.0':
-    resolution: {integrity: sha512-4or44L3saI49QRBvdSzfCtzqONlFg0/qy0Cfl+LRynDaxlGs7r2KRTLCELaAoKh4oQguICxRwQfm77/Up+0wTw==}
+  '@commander-js/extra-typings@13.1.0':
+    resolution: {integrity: sha512-q5P52BYb1hwVWE6dtID7VvuJWrlfbCv4klj7BjUUOqMz4jbSZD4C9fJ9lRjL2jnBGTg+gDDlaXN51rkWcLk4fg==}
     peerDependencies:
-      commander: ~13.0.0
+      commander: ~13.1.0
 
   '@esbuild/aix-ppc64@0.23.1':
     resolution: {integrity: sha512-6VhYk1diRqrhBAqpJEdjASR/+WVRtfjpqKuNw11cLiaWpAT/Uu+nokB+UJnevzy/P9C/ty6AOe0dwueMrGh/iQ==}
@@ -1725,7 +1725,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@commander-js/extra-typings@13.0.0(commander@13.1.0)':
+  '@commander-js/extra-typings@13.1.0(commander@13.1.0)':
     dependencies:
       commander: 13.1.0
 
