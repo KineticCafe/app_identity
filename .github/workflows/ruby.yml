@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@v1.207.0
+      - uses: ruby/setup-ruby@v1.215.0
         with:
           ruby-version: '3.3'
           rubygems: latest
@@ -62,7 +62,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@v1.207.0
+      - uses: ruby/setup-ruby@v1.215.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
@@ -102,7 +102,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@v1.207.0
+      - uses: ruby/setup-ruby@v1.215.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
