@@ -54,6 +54,7 @@ Hoe.spec "app_identity" do
 
   extra_deps << ["optimist", "~> 3.0"]
   extra_deps << ["base64", "~> 0.1"]
+  extra_deps << ["ostruct", "~> 0.6"]
 
   extra_dev_deps << ["appraisal", "~> 2.4"]
   extra_dev_deps << ["hoe", "~> 4.0"]
