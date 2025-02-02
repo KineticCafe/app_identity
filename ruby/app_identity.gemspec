@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.metadata = { "bug_tracker_uri" => "https://github.com/KineticCafe/app-identity/issues", "homepage_uri" => "https://github.com/KineticCafe/app-identity", "rubygems_mfa_required" => "true", "source_code_uri" => "https://github.com/KineticCafe/app-identity/tree/main/ruby" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Austin Ziegler".freeze, "Kinetic Commerce".freeze]
-  s.date = "2024-12-31"
+  s.date = "2025-02-02"
   s.description = "AppIdentity is a Ruby implementation of the Kinetic Commerce application\nidentity proof algorithm as described in its [spec][spec].".freeze
   s.email = ["aziegler@kineticcommerce.com".freeze, "dev@kineticcommerce.com".freeze]
   s.executables = ["app-identity-suite-ruby".freeze]
@@ -19,13 +19,14 @@ Gem::Specification.new do |s|
   s.licenses = ["Apache-2.0".freeze]
   s.rdoc_options = ["--main".freeze, "README.md".freeze]
   s.required_ruby_version = Gem::Requirement.new([">= 2.7".freeze, "< 4".freeze])
-  s.rubygems_version = "3.5.23".freeze
+  s.rubygems_version = "3.5.22".freeze
   s.summary = "AppIdentity is a Ruby implementation of the Kinetic Commerce application identity proof algorithm as described in its [spec][spec].".freeze
 
   s.specification_version = 4
 
   s.add_runtime_dependency(%q<optimist>.freeze, ["~> 3.0".freeze])
   s.add_runtime_dependency(%q<base64>.freeze, ["~> 0.1".freeze])
+  s.add_runtime_dependency(%q<ostruct>.freeze, ["~> 0.6".freeze])
   s.add_development_dependency(%q<minitest>.freeze, ["~> 5.25".freeze])
   s.add_development_dependency(%q<appraisal>.freeze, ["~> 2.4".freeze])
   s.add_development_dependency(%q<hoe>.freeze, ["~> 4.0".freeze])
