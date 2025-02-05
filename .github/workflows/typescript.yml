@@ -9,7 +9,7 @@ on:
 
 jobs:
   typescript-ci:
-    name: Typescript (Node ${{ matrix.node }}, pnpm 9) - ${{ matrix.os }}
+    name: Typescript (Node ${{ matrix.node }}, pnpm 10) - ${{ matrix.os }}
 
     strategy:
       fail-fast: true
@@ -37,6 +37,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: ts/pnpm-lock.yaml
 
+      - name: Fix an uneven rollout of corepack 0.31.0 with updated keys
+        run: npm install --global corepack@^0.31.0
+        working-directory: ./ts
+
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
       - run: pnpm test
@@ -47,9 +51,8 @@ jobs:
       - run: pnpm build:all
         working-directory: ./ts
 
-      - name: Check the publications status
+      - name: Check the publint status on publishable packages
         run: |
-          pnpm exec publint run
           pnpm recursive --stream exec publint run
         working-directory: ./ts
 
