@@ -1,5 +1,9 @@
 # App Identity for JavaScript Changelog
 
+## 2.0.1 / 2025-03-01
+
+Dependency updates.
+
 ## 2.0.0 / 2024-03-13
 
 ### Breaking Changes
