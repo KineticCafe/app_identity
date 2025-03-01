@@ -38,6 +38,6 @@
     "@kineticcafe/app-identity-node": "workspace:^",
     "commander": "^13.1.0",
     "date-fns": "^4.1.0",
-    "fast-glob": "^3.3.2"
+    "fast-glob": "^3.3.3"
   }
 }
