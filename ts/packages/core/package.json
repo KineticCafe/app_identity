@@ -48,6 +48,6 @@
     "date-fns": "^4.1.0"
   },
   "dependencies": {
-    "@kineticcafe/result": "^0.6.1"
+    "@kineticcafe/result": "^0.6.2"
   }
 }

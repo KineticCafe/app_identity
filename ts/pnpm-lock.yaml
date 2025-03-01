@@ -54,8 +54,8 @@ importers:
   packages/core:
     dependencies:
       '@kineticcafe/result':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.6.2
+        version: 0.6.2
     devDependencies:
       '@juanelas/base64':
         specifier: ^1.1.5
@@ -358,8 +358,8 @@ packages:
   '@juanelas/base64@1.1.5':
     resolution: {integrity: sha512-mjAF27LzwfYobdwqnxZgeucbKT5wRRNvILg3h5OvCWK+3F7mw/A1tnjHnNiTYtLmTvT/bM1jA5AX7eQawDGs1w==}
 
-  '@kineticcafe/result@0.6.1':
-    resolution: {integrity: sha512-2/mJ/+0cAaVDwZtifIQmdH0bw0xatgFD5U0t8q1jjv0vkfd2P9WeBVuP8byF8bEOTQ182DC/mWvDXNDU5nYlBw==}
+  '@kineticcafe/result@0.6.2':
+    resolution: {integrity: sha512-20VjVnNAyjjvT+QHtKdF8bfTNT2gUfU3sBnPPL4m3aRzESpYdian7T7gTDpk/QJy0IcHd9YESJaMGo3kWusL1w==}
 
   '@material/material-color-utilities@0.3.0':
     resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
@@ -1417,7 +1417,7 @@ snapshots:
 
   '@juanelas/base64@1.1.5': {}
 
-  '@kineticcafe/result@0.6.1': {}
+  '@kineticcafe/result@0.6.2': {}
 
   '@material/material-color-utilities@0.3.0': {}
 
