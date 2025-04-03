@@ -1,4 +1,4 @@
-# @kineticcafe/app-identity 2.0.0: AppIdentity for JavaScript
+# @kineticcafe/app-identity 2.0.1: AppIdentity for JavaScript
 
 - code :: https://github.com/KineticCafe/app-identity/tree/main/ts/
 - issues :: https://github.com/KineticCafe/app-identity/issues
