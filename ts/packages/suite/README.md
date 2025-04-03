@@ -1,4 +1,4 @@
-# @kineticcafe/app-identity-suite-ts 2.0.0: AppIdentity for JavaScript
+# @kineticcafe/app-identity-suite-ts 2.0.1: AppIdentity for JavaScript
 
 - code :: https://github.com/KineticCafe/app-identity/tree/main/ts/
 - issues :: https://github.com/KineticCafe/app-identity/issues
@@ -15,8 +15,8 @@ $ npm install --global @kineticcafe/app-identity-suite-ts
 $ app-identity-suite-ts generate --stdout | app-identity-suite-ts run --stdin
 TAP Version 14
 1..78
-# generator: @kineticcafe/app-identity 2.0.0 (@kineticcafe/app-identity-node, spec 4)
-# runner: @kineticcafe/app-identity 2.0.0 (@kineticcafe/app-identity-node, spec 4)
+# generator: @kineticcafe/app-identity 2.0.1 (@kineticcafe/app-identity-node, spec 4)
+# runner: @kineticcafe/app-identity 2.0.1 (@kineticcafe/app-identity-node, spec 4)
 ok 1 - App V1, Proof V1
 ok 2 - App V1, Proof V2
 ok 3 - App V1, Proof V3
