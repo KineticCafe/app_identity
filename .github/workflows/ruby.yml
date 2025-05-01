@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 #v1.221.0
+      - uses: ruby/setup-ruby@eaecf785f6a34567a6d97f686bbb7bccc1ac1e5c #v1.237.0
         with:
           ruby-version: '3.3'
           rubygems: latest
@@ -65,7 +65,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 #v1.221.0
+      - uses: ruby/setup-ruby@eaecf785f6a34567a6d97f686bbb7bccc1ac1e5c #v1.237.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
@@ -108,7 +108,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 #v1.221.0
+      - uses: ruby/setup-ruby@eaecf785f6a34567a6d97f686bbb7bccc1ac1e5c #v1.237.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
