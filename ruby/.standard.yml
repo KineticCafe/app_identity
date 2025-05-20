@@ -3,7 +3,6 @@ parallel: true
 ruby_version: '2.7'
 plugins:
   - standard-minitest
-  # - standard-thread_safety
 
 ignore:
   - 'app_identity.gemspec'
