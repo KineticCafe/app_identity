@@ -35,7 +35,7 @@
     "pkgroll": "^2.12.2",
     "publint": "^0.3.12",
     "tsx": "^4.19.4",
-    "typedoc": "^0.28.4",
+    "typedoc": "^0.28.5",
     "typedoc-material-theme": "^1.4.0",
     "typedoc-plugin-missing-exports": "^4.0.0",
     "typescript": "5.8.3",
