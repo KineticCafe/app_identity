@@ -1,7 +1,6 @@
+import type { Result as BaseResult } from '@kineticcafe/result'
 import { throwErrs as baseThrowErrors } from '@kineticcafe/result'
 import { AppIdentityError } from './app_identity_error.js'
-
-import type { Result as BaseResult } from '@kineticcafe/result'
 
 /**
  * AppIdentity always uses string `Err` values.

@@ -1,10 +1,9 @@
 import { AppIdentityError } from './app_identity_error.js'
+import type { Proof } from './proof.js'
 import { throwErrs } from './result.js'
+import type { Config, Id, Nonce, Version, WrappedSecret } from './types.js'
 import { checkConfig, checkId, checkSecret, checkVersion } from './validation.js'
 import { isDefinedVersion, proofVersion } from './versions.js'
-
-import type { Proof } from './proof.js'
-import type { Config, Id, Nonce, Version, WrappedSecret } from './types.js'
 
 declare const verified: unique symbol
 

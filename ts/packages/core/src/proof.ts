@@ -1,7 +1,10 @@
 import { getRuntimeAdapter } from './adapter.js'
+import type { AppFinder, AppFinderAsync, AppInput } from './app.js'
 import { App } from './app.js'
 import { AppIdentityError } from './app_identity_error.js'
+import type { Result } from './result.js'
 import { Err, Ok, throwErrs } from './result.js'
+import type { Disallowed, Id, Nonce, Padlock, Version } from './types.js'
 import {
   checkDisallowed,
   checkId,
@@ -10,10 +13,6 @@ import {
   checkVersion,
 } from './validation.js'
 import * as Versions from './versions.js'
-
-import type { AppFinder, AppFinderAsync, AppInput } from './app.js'
-import type { Result } from './result.js'
-import type { Disallowed, Id, Nonce, Padlock, Version } from './types.js'
 
 const ProofFromApp = Symbol('from_app')
 const ProofFromString = Symbol('from_string')

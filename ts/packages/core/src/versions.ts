@@ -1,10 +1,9 @@
 import { getRuntimeAdapter } from './adapter.js'
-import { Err, Ok, throwErrs, unwrapOks } from './result.js'
-import { checkNonce, checkVersion } from './validation.js'
-
 import type { App } from './app.js'
 import type { Result } from './result.js'
+import { Err, Ok, throwErrs, unwrapOks } from './result.js'
 import type { Config, Disallowed, Fuzz, Nonce, Padlock, Version } from './types.js'
+import { checkNonce, checkVersion } from './validation.js'
 
 export abstract class VersionBase {
   constructor() {
@@ -57,7 +56,7 @@ abstract class TimestampNonce extends VersionBase {
       return Err('nonce does not look like a timestamp')
     }
 
-    const diff = (new Date().getTime() - timestamp) / 1e3
+    const diff = (Date.now() - timestamp) / 1e3
     const fuzz = config?.fuzz ?? DEFAULT_CONFIG_FUZZ
 
     return Math.floor(Math.abs(diff)) <= fuzz ? nonce : Err('nonce is invalid')

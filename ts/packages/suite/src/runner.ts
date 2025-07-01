@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import { readFileSync, statSync } from 'node:fs'
 import { join as joinPath } from 'node:path'
 import { Command } from '@commander-js/extra-typings'
@@ -8,8 +9,6 @@ import {
   verifyProofWithDiagnostic,
 } from '@kineticcafe/app-identity-node'
 import fg from 'fast-glob'
-
-import assert from 'node:assert'
 import type * as Runner from './runner/types.js'
 import type * as Schema from './schema.js'
 import { versionString } from './support.js'

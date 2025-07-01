@@ -3,13 +3,12 @@ import * as base64 from '@juanelas/base64'
 import { add as adjustDate } from 'date-fns'
 
 import {
-  RuntimeAdapter,
   getRuntimeAdapter,
+  RuntimeAdapter,
   setRuntimeAdapter,
 } from '../../src/adapter.js'
-import { App } from '../../src/app.js'
-
 import type { AppInput } from '../../src/app.js'
+import { App } from '../../src/app.js'
 
 class Adapter extends RuntimeAdapter {
   decodeBase64Url(value: string): null | string | undefined {

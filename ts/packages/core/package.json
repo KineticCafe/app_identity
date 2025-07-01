@@ -39,7 +39,9 @@
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest watch"
   },
-  "files": ["/dist"],
+  "files": [
+    "/dist"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

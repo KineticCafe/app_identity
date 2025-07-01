@@ -27,7 +27,7 @@
     "test:watch": "pnpm recursive run --stream test:watch"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.6",
     "@tsconfig/node20": "^20.1.6",
     "@types/node": "^20.17.57",
     "@vitest/coverage-v8": "^3.1.4",
