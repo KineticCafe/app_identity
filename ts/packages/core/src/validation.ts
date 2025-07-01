@@ -1,6 +1,5 @@
-import { Err, Ok } from './result.js'
-
 import type { Result } from './result.js'
+import { Err, Ok } from './result.js'
 import type {
   Config,
   Disallowed,

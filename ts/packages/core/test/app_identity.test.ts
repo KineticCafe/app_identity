@@ -2,20 +2,19 @@ import { describe, expect, test } from 'vitest'
 
 import { App, type AppInput } from '../src/app.js'
 import {
-  generateProofWithDiagnostic,
-  generateProofWithDiagnosticAsync,
-  parseProofWithDiagnostic,
-  verifyProofWithDiagnostic,
-} from '../src/internal.js'
-import { Proof } from '../src/proof.js'
-
-import {
   generateProof,
   generateProofAsync,
   parseProof,
   verifyProof,
   verifyProofAsync,
 } from '../src/index.js'
+import {
+  generateProofWithDiagnostic,
+  generateProofWithDiagnosticAsync,
+  parseProofWithDiagnostic,
+  verifyProofWithDiagnostic,
+} from '../src/internal.js'
+import { Proof } from '../src/proof.js'
 
 import * as Support from './support/index.js'
 import './support/matchers.js'

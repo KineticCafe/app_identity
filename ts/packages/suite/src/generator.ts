@@ -4,18 +4,16 @@ import { Command } from '@commander-js/extra-typings'
 import {
   type App,
   AppIdentityError,
-  Info,
-  Validations,
   generateProofWithDiagnostic,
+  Info,
   useNodeRuntimeAdapter,
+  Validations,
 } from '@kineticcafe/app-identity-node'
-
+import type * as Generator from './generator/types.js'
 import optional from './optional.json' with { type: 'json' }
 import required from './required.json' with { type: 'json' }
-import * as Support from './support.js'
-
-import type * as Generator from './generator/types.js'
 import type { Suite, Test } from './schema.js'
+import * as Support from './support.js'
 
 export const generator = new Command('generate')
   .description('Generates an integration test suite')

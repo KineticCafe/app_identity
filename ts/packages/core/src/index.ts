@@ -9,16 +9,6 @@
  */
 
 import packageJSON from '../package.json' with { type: 'json' }
-import {
-  generateProofWithDiagnostic,
-  generateProofWithDiagnosticAsync,
-  parseProofWithDiagnostic,
-  verifyProofWithDiagnostic,
-  verifyProofWithDiagnosticAsync,
-} from './internal.js'
-import * as validations from './validation.js'
-import * as versions from './versions.js'
-
 import type {
   App,
   AppFinder,
@@ -27,8 +17,17 @@ import type {
   AppLoader,
   AppLoaderAsync,
 } from './app.js'
+import {
+  generateProofWithDiagnostic,
+  generateProofWithDiagnosticAsync,
+  parseProofWithDiagnostic,
+  verifyProofWithDiagnostic,
+  verifyProofWithDiagnosticAsync,
+} from './internal.js'
 import type { Proof } from './proof.js'
 import type { Disallowed, Nonce, Version } from './types.js'
+import * as validations from './validation.js'
+import * as versions from './versions.js'
 
 const { name: NAME, version: VERSION } = packageJSON
 
@@ -233,11 +232,17 @@ export {
   RuntimeAdapter,
   setRuntimeAdapter,
 } from './adapter.js'
-
+export type {
+  AppFinder,
+  AppFinderAsync,
+  AppInput,
+  AppLoader,
+  AppLoaderAsync,
+  AppVerified,
+} from './app.js'
 export { App } from './app.js'
 export { AppIdentityError } from './app_identity_error.js'
 export { Proof } from './proof.js'
-export { allowVersion, disallowVersion } from './versions.js'
 
 export type {
   Config,
@@ -250,14 +255,7 @@ export type {
   Version,
   WrappedSecret,
 } from './types.js'
-export type {
-  AppFinder,
-  AppFinderAsync,
-  AppInput,
-  AppLoader,
-  AppLoaderAsync,
-  AppVerified,
-} from './app.js'
+export { allowVersion, disallowVersion } from './versions.js'
 
 /**
  * A summary object describing this version of App Identity core.

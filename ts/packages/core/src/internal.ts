@@ -1,8 +1,3 @@
-import { App } from './app.js'
-import { AppIdentityError } from './app_identity_error.js'
-import { Proof } from './proof.js'
-import { checkDisallowed, checkNonce, checkVersion } from './validation.js'
-
 import type {
   AppFinder,
   AppFinderAsync,
@@ -10,6 +5,10 @@ import type {
   AppLoader,
   AppLoaderAsync,
 } from './app.js'
+import { App } from './app.js'
+import { AppIdentityError } from './app_identity_error.js'
+import { Proof } from './proof.js'
+import { checkDisallowed, checkNonce, checkVersion } from './validation.js'
 
 /** @internal */
 export const generateProofWithDiagnostic = (

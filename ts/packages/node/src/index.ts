@@ -1,8 +1,6 @@
-import { Info as CoreInfo } from '@kineticcafe/app-identity'
-
-import packageJSON from '../package.json' with { type: 'json' }
-
 import type { AppIdentityVersionInfo as CoreAppIdentityVersionInfo } from '@kineticcafe/app-identity'
+import { Info as CoreInfo } from '@kineticcafe/app-identity'
+import packageJSON from '../package.json' with { type: 'json' }
 
 /**
  * A summary object describing this version of App Identity node.
@@ -40,27 +38,6 @@ export const Info: AppIdentityVersionInfo = Object.freeze({
   core: CoreInfo,
 })
 
-export {
-  allowVersion,
-  App,
-  AppIdentityError,
-  disallowVersion,
-  generateProof,
-  generateProofAsync,
-  generateProofWithDiagnostic,
-  generateProofWithDiagnosticAsync,
-  getRuntimeAdapter,
-  parseProof,
-  parseProofWithDiagnostic,
-  Proof,
-  Validations,
-  verifyProof,
-  verifyProofAsync,
-  verifyProofWithDiagnostic,
-  verifyProofWithDiagnosticAsync,
-  Versions,
-} from '@kineticcafe/app-identity'
-
 export type {
   AppFinder,
   AppFinderAsync,
@@ -77,6 +54,26 @@ export type {
   Secret,
   Version,
   WrappedSecret,
+} from '@kineticcafe/app-identity'
+export {
+  App,
+  AppIdentityError,
+  allowVersion,
+  disallowVersion,
+  generateProof,
+  generateProofAsync,
+  generateProofWithDiagnostic,
+  generateProofWithDiagnosticAsync,
+  getRuntimeAdapter,
+  Proof,
+  parseProof,
+  parseProofWithDiagnostic,
+  Validations,
+  Versions,
+  verifyProof,
+  verifyProofAsync,
+  verifyProofWithDiagnostic,
+  verifyProofWithDiagnosticAsync,
 } from '@kineticcafe/app-identity'
 
 export { useNodeRuntimeAdapter } from './adapter.js'

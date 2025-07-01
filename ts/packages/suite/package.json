@@ -29,7 +29,9 @@
     "cli:run": "pnpm run cli run",
     "prepack": "pnpm build"
   },
-  "files": ["/dist"],
+  "files": [
+    "/dist"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },
