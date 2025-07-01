@@ -1,7 +1,7 @@
 defmodule AppIdentityTeslaMiddlewareTest do
   use AppIdentity.Case
 
-  alias AppIdentity.TeslaMiddleware, as: Subject
+  alias AppIdentity.TeslaMiddleware
 
   defmodule OnFailure do
     def fail(_env, _app, _header) do
@@ -18,7 +18,7 @@ defmodule AppIdentityTeslaMiddlewareTest do
   end
 
   def call(options) do
-    Subject.call(%Tesla.Env{}, [], options)
+    TeslaMiddleware.call(%Tesla.Env{}, [], options)
   end
 
   test "middleware errors on configuration without `app` option" do

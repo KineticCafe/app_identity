@@ -2,12 +2,17 @@ defmodule AppIdentity.Support do
   @moduledoc false
 
   def make_app(version, fuzz \\ nil) do
-    case version do
-      1 -> AppIdentity.App.new(v1(fuzz))
-      2 -> AppIdentity.App.new(v2(fuzz))
-      3 -> AppIdentity.App.new(v3(fuzz))
-      4 -> AppIdentity.App.new(v4(fuzz))
-    end
+    version_fn =
+      case version do
+        1 -> :v1
+        2 -> :v2
+        3 -> :v3
+        4 -> :v4
+      end
+
+    input = apply(__MODULE__, version_fn, [fuzz])
+
+    AppIdentity.App.new(input)
   end
 
   def verified(%AppIdentity.App{} = app) do
@@ -47,7 +52,9 @@ defmodule AppIdentity.Support do
   end
 
   def decode_to_parts(header) do
-    String.split(Base.url_decode64!(header, padding: false), ":")
+    header
+    |> Base.url_decode64!(padding: false)
+    |> String.split(":")
   end
 
   def build_padlock(app, options \\ []) do
@@ -123,7 +130,9 @@ defmodule AppIdentity.Support do
   end
 
   defp random_hex(length) do
-    Base.encode16(:crypto.strong_rand_bytes(length), case: :lower)
+    length
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode16(case: :lower)
   end
 
   defp hex_pad(hex, count) do

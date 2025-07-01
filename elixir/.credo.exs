@@ -73,6 +73,7 @@
           #
           {Credo.Check.Consistency.ExceptionNames, []},
           {Credo.Check.Consistency.LineEndings, []},
+          {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
           {Credo.Check.Consistency.ParameterPatternMatching, []},
           {Credo.Check.Consistency.SpaceAroundOperators, []},
           {Credo.Check.Consistency.SpaceInParentheses, []},
@@ -86,23 +87,30 @@
           #
           {Credo.Check.Design.AliasUsage,
            [priority: :low, if_nested_deeper_than: 2, if_called_more_often_than: 0]},
-          {Credo.Check.Design.TagFIXME, []},
+          {Credo.Check.Design.SkipTestWithoutComment, []},
+          {Credo.Check.Design.TagFIXME, [exit_status: 0]},
           # You can also customize the exit_status of each check.
           # If you don't want TODO comments to cause `mix credo` to fail, just
           # set this value to 0 (zero).
           #
-          {Credo.Check.Design.TagTODO, [exit_status: 2]},
+          {Credo.Check.Design.TagTODO, [exit_status: 0]},
 
           #
           ## Readability Checks
           #
           {Credo.Check.Readability.AliasOrder, []},
+          {Credo.Check.Readability.BlockPipe, []},
           {Credo.Check.Readability.FunctionNames, []},
+          {Credo.Check.Readability.ImplTrue, []},
           {Credo.Check.Readability.LargeNumbers, []},
           {Credo.Check.Readability.MaxLineLength, [priority: :low, max_length: 120]},
           {Credo.Check.Readability.ModuleAttributeNames, []},
           {Credo.Check.Readability.ModuleDoc, []},
           {Credo.Check.Readability.ModuleNames, []},
+          {Credo.Check.Readability.MultiAlias, []},
+          {Credo.Check.Readability.NestedFunctionCalls, []},
+          {Credo.Check.Readability.OneArityFunctionInPipe, []},
+          {Credo.Check.Readability.OnePipePerLine, []},
           {Credo.Check.Readability.ParenthesesInCondition, []},
           {Credo.Check.Readability.ParenthesesOnZeroArityDefs, []},
           {Credo.Check.Readability.PipeIntoAnonymousFunctions, []},
@@ -136,6 +144,7 @@
           {Credo.Check.Refactor.RedundantWithClauseResult, []},
           {Credo.Check.Refactor.RejectReject, []},
           {Credo.Check.Refactor.UnlessWithElse, []},
+          {Credo.Check.Refactor.UtcNowTruncate, []},
           {Credo.Check.Refactor.WithClauses, []},
 
           #
@@ -166,23 +175,14 @@
         disabled: [
           #
           # Checks scheduled for next check update (opt-in for now)
-          {Credo.Check.Refactor.UtcNowTruncate, []},
 
           #
           # Controversial and experimental checks (opt-in, just move the check to `:enabled`
           #   and be sure to use `mix credo --strict` to see low priority checks)
           #
-          {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
           {Credo.Check.Consistency.UnusedVariableNames, []},
           {Credo.Check.Design.DuplicatedCode, []},
-          {Credo.Check.Design.SkipTestWithoutComment, []},
           {Credo.Check.Readability.AliasAs, []},
-          {Credo.Check.Readability.BlockPipe, []},
-          {Credo.Check.Readability.ImplTrue, []},
-          {Credo.Check.Readability.MultiAlias, []},
-          {Credo.Check.Readability.NestedFunctionCalls, []},
-          {Credo.Check.Readability.OneArityFunctionInPipe, []},
-          {Credo.Check.Readability.OnePipePerLine, []},
           {Credo.Check.Readability.SeparateAliasRequire, []},
           {Credo.Check.Readability.SingleFunctionToBlockPipe, []},
           {Credo.Check.Readability.SinglePipe, []},

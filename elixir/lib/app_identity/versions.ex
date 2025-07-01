@@ -1,7 +1,8 @@
 defmodule AppIdentity.Versions do
   @moduledoc false
 
-  alias AppIdentity.{App, Validation}
+  alias AppIdentity.App
+  alias AppIdentity.Validation
 
   @proof_string_separator ":"
 
@@ -139,7 +140,10 @@ defmodule AppIdentity.Versions do
     @moduledoc false
 
     def generate_nonce do
-      {:ok, Base.url_encode64(:crypto.strong_rand_bytes(32))}
+      {:ok,
+       32
+       |> :crypto.strong_rand_bytes()
+       |> Base.url_encode64()}
     end
 
     def validate_nonce(nonce, _config) do
@@ -157,7 +161,10 @@ defmodule AppIdentity.Versions do
           {:ok, DateTime.to_iso8601(stamp, :basic)}
 
         {:error, reason} ->
-          {:error, String.replace(Kernel.to_string(reason), "_", " ")}
+          {:error,
+           reason
+           |> Kernel.to_string()
+           |> String.replace("_", " ")}
       end
     end
 
@@ -194,8 +201,14 @@ defmodule AppIdentity.Versions do
              minute::binary-size(2), second::binary-size(2), rest::binary>>
          ) do
       case DateTime.from_iso8601("#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}#{rest}") do
-        {:ok, timestamp, _offset} -> {:ok, timestamp}
-        {:error, reason} -> {:error, String.replace(Kernel.to_string(reason), "_", " ")}
+        {:ok, timestamp, _offset} ->
+          {:ok, timestamp}
+
+        {:error, reason} ->
+          {:error,
+           reason
+           |> Kernel.to_string()
+           |> String.replace("_", " ")}
       end
     end
 

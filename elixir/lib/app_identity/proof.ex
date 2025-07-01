@@ -6,7 +6,9 @@ defmodule AppIdentity.Proof do
   import Bitwise
   import Kernel, except: [to_string: 1]
 
-  alias AppIdentity.{App, Validation, Versions}
+  alias AppIdentity.App
+  alias AppIdentity.Validation
+  alias AppIdentity.Versions
 
   @proof_string_separator ":"
 

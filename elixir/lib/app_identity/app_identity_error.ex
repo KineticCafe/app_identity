@@ -30,7 +30,7 @@ defmodule AppIdentity.AppIdentityError do
   }
   @known_exceptions Map.keys(@exception_messages)
 
-  @impl true
+  @impl Exception
   def exception(message) when is_binary(message) do
     %__MODULE__{message: message}
   end
@@ -39,7 +39,7 @@ defmodule AppIdentity.AppIdentityError do
     exception(@exception_messages[key])
   end
 
-  @impl true
+  @impl Exception
   def message(%__MODULE__{message: message}) do
     message
   end
