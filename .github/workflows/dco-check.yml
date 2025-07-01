@@ -3,6 +3,8 @@ name: Check DCO
 on:
   pull_request:
 
+permissions: {}
+
 jobs:
   check-dco:
     name: Check DCO
@@ -17,7 +19,3 @@ jobs:
           persist-credentials: false
 
       - uses: KineticCafe/actions-dco@416cafbc9c07f26219d09981d9ac49ce29b5bfea #v1.3.4
-        with:
-          exempt-authors: |
-            @kineticcommerce.com
-            @kineticcafe.com
