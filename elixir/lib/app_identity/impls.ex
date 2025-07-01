@@ -1,4 +1,5 @@
-alias AppIdentity.{App, Proof}
+alias AppIdentity.App
+alias AppIdentity.Proof
 
 if Code.ensure_loaded?(Poison) do
   defimpl Poison.Encoder, for: App do

@@ -104,8 +104,14 @@ defmodule AppIdentity.Suite.Generator do
   @optional_file Path.join(@file_path, "optional.json")
 
   @tests %{
-    required: Jason.decode!(File.read!(@required_file)),
-    optional: Jason.decode!(File.read!(@optional_file))
+    required:
+      @required_file
+      |> File.read!()
+      |> Jason.decode!(),
+    optional:
+      @optional_file
+      |> File.read!()
+      |> Jason.decode!()
   }
 
   @external_resource @required_file
@@ -137,10 +143,9 @@ defmodule AppIdentity.Suite.Generator do
 
     {:ok, app} =
       if normalized[:app] do
-        Support.make_app(
-          get_in(normalized, [:app, :version]),
-          get_in(normalized, [:app, :config, :fuzz])
-        )
+        normalized
+        |> get_in([:app, :version])
+        |> Support.make_app(get_in(normalized, [:app, :config, :fuzz]))
       else
         Support.make_app(1)
       end

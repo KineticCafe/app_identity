@@ -41,7 +41,9 @@ defmodule AppIdentity.Suite do
     end
 
     def print_headings(headings, options) do
-      IO.ANSI.Docs.print_heading(Enum.join(headings, "\n"), options)
+      headings
+      |> Enum.join("\n")
+      |> IO.ANSI.Docs.print_heading(options)
     end
   else
     defdelegate print(doc, format, options), to: IO.ANSI.Docs

@@ -4,15 +4,15 @@ defmodule AppIdentityPlugTest do
   import Plug.Conn
   import Plug.Test
 
-  alias AppIdentity.Plug, as: Subject
+  alias AppIdentity.Plug, as: AppIdentityPlug
   alias AppIdentity.PlugCallbacks
 
-  doctest Subject
+  doctest AppIdentityPlug
 
   @default_header "application-identity"
 
   def call(conn, opts) do
-    conn = Subject.call(conn, opts)
+    conn = AppIdentityPlug.call(conn, opts)
 
     if conn.halted || Keyword.get(opts, :skip_send) do
       conn

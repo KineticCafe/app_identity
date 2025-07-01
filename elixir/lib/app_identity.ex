@@ -23,7 +23,9 @@ defmodule AppIdentity do
   Recompile `app_identity` if this setting is changed.
   """
 
-  alias AppIdentity.{App, AppIdentityError, Proof}
+  alias AppIdentity.App
+  alias AppIdentity.AppIdentityError
+  alias AppIdentity.Proof
 
   @typedoc """
   The App Identity app unique identifier. Validation of the `id` value will
