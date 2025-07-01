@@ -7,6 +7,8 @@ on:
       - main
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   typescript-ci:
     name: Typescript (Node ${{ matrix.node }}, pnpm 10) - ${{ matrix.os }}
