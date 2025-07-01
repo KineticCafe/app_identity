@@ -252,13 +252,13 @@ if Code.ensure_loaded?(Plug.Conn) do
     :start]` and `[:app_identity, :plug, :stop]` events.
     """
 
-    alias AppIdentity.App
-    alias AppIdentity.Plug.Config
+    @behaviour Plug
 
     import AppIdentity.Telemetry
     import Plug.Conn
 
-    @behaviour Plug
+    alias AppIdentity.App
+    alias AppIdentity.Plug.Config
 
     defstruct apps: %{},
               disallowed: [],
@@ -338,8 +338,7 @@ if Code.ensure_loaded?(Plug.Conn) do
     defp dispatch_on_failure(conn, {:fn, {module, function}}),
       do: dispatch_on_failure(conn, apply(module, function, [conn]))
 
-    defp dispatch_on_failure(conn, {:fn, function}),
-      do: dispatch_on_failure(conn, function.(conn))
+    defp dispatch_on_failure(conn, {:fn, function}), do: dispatch_on_failure(conn, function.(conn))
 
     defp dispatch_on_success(conn, nil), do: conn
     defp dispatch_on_success(conn, {:fn, {module, function}}), do: apply(module, function, [conn])
@@ -347,8 +346,7 @@ if Code.ensure_loaded?(Plug.Conn) do
 
     defp dispatch_on_resolution(conn, nil), do: conn
 
-    defp dispatch_on_resolution(conn, {:fn, {module, function}}),
-      do: apply(module, function, [conn])
+    defp dispatch_on_resolution(conn, {:fn, {module, function}}), do: apply(module, function, [conn])
 
     defp dispatch_on_resolution(conn, {:fn, function}), do: function.(conn)
 

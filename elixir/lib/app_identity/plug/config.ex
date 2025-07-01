@@ -250,16 +250,14 @@ defmodule AppIdentity.Plug.Config do
     |> resolve_on_failure_option()
   end
 
-  defp resolve_on_failure_option(value) when value in [:forbidden, :continue, nil],
-    do: value || :forbidden
+  defp resolve_on_failure_option(value) when value in [:forbidden, :continue, nil], do: value || :forbidden
 
   defp resolve_on_failure_option(value) when is_function(value, 1), do: {:fn, value}
 
   defp resolve_on_failure_option(value) when is_function(value),
     do: raise(AppIdentityError, :plug_on_failure_callback_invalid)
 
-  defp resolve_on_failure_option({:halt, status} = value)
-       when is_integer(status) or is_atom(status) do
+  defp resolve_on_failure_option({:halt, status} = value) when is_integer(status) or is_atom(status) do
     if status_valid?(status) do
       value
     else
@@ -267,8 +265,7 @@ defmodule AppIdentity.Plug.Config do
     end
   end
 
-  defp resolve_on_failure_option({:halt, status, _body} = value)
-       when is_integer(status) or is_atom(status) do
+  defp resolve_on_failure_option({:halt, status, _body} = value) when is_integer(status) or is_atom(status) do
     if status_valid?(status) do
       value
     else
@@ -357,14 +354,12 @@ defmodule AppIdentity.Plug.Config do
 
   defp parse_option_header(value, exception \\ :plug_header_invalid)
 
-  defp parse_option_header(value, exception) when not is_binary(value),
-    do: raise(AppIdentityError, exception)
+  defp parse_option_header(value, exception) when not is_binary(value), do: raise(AppIdentityError, exception)
 
   defp parse_option_header("", exception), do: raise(AppIdentityError, exception)
   defp parse_option_header(header, _exception), do: String.downcase(header)
 
-  defp callback_telemetry_context({:fn, value}) when is_function(value, 1),
-    do: "function (anonymous)"
+  defp callback_telemetry_context({:fn, value}) when is_function(value, 1), do: "function (anonymous)"
 
   defp callback_telemetry_context({:fn, {module, function}}),
     do: "function (#{String.replace_prefix(to_string(module), "Elixir.", "")}.#{function}/1)"

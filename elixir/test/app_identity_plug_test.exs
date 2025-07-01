@@ -1,6 +1,8 @@
 defmodule AppIdentityPlugTest do
   use AppIdentity.PlugCase, async: true
-  use Plug.Test
+
+  import Plug.Conn
+  import Plug.Test
 
   alias AppIdentity.Plug, as: Subject
   alias AppIdentity.PlugCallbacks
@@ -349,8 +351,7 @@ defmodule AppIdentityPlugTest do
 
     for {desc, value} <- %{
           "{:halt, 418, Teapot}" => quote(do: {:halt, 418, "Teapot"}),
-          "function returns {:halt, 418, Teapot}" =>
-            quote(do: fn _ -> {:halt, 418, "Teapot"} end),
+          "function returns {:halt, 418, Teapot}" => quote(do: fn _ -> {:halt, 418, "Teapot"} end),
           "{module, function} returns {:halt, 418, Teapot}" => {PlugCallbacks, :halt_teapot}
         } do
       test "halts with 418 Teapot with options.on_failure #{desc}", %{v1: v1} do

@@ -1,6 +1,9 @@
 defmodule AppIdentity.Suite.Help do
   @moduledoc false
 
+  alias AppIdentity.Suite.Generator
+  alias AppIdentity.Suite.Runner
+
   @command "help"
   @help_doc """
   Display help for a command
@@ -59,11 +62,11 @@ defmodule AppIdentity.Suite.Help do
   end
 
   defp dispatch(["generate" | _]) do
-    AppIdentity.Suite.print_help(AppIdentity.Suite.Generator)
+    AppIdentity.Suite.print_help(Generator)
   end
 
   defp dispatch(["run" | _]) do
-    AppIdentity.Suite.print_help(AppIdentity.Suite.Runner)
+    AppIdentity.Suite.print_help(Runner)
   end
 
   defp dispatch(["help" | _]) do

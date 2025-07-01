@@ -1,5 +1,6 @@
 defmodule AppIdentityTest do
   use AppIdentity.Case, async: true
+
   doctest AppIdentity
 
   for version <- AppIdentity.Versions.supported() do
@@ -40,9 +41,7 @@ defmodule AppIdentityTest do
 
     assert :error == AppIdentity.verify_proof(proof, v1)
 
-    assert_verify_proof_telemetry_span(v1, proof,
-      error: "proof must have 3 parts (version 1) or 4 parts (any version)"
-    )
+    assert_verify_proof_telemetry_span(v1, proof, error: "proof must have 3 parts (version 1) or 4 parts (any version)")
   end
 
   test "verify fail on bad v1 nonce", %{v1: v1, v1_app: v1_app} do
@@ -51,9 +50,7 @@ defmodule AppIdentityTest do
 
     assert :error == AppIdentity.verify_proof(proof, v1)
 
-    assert_verify_proof_telemetry_span(v1, proof,
-      error: "version cannot be converted to a positive integer"
-    )
+    assert_verify_proof_telemetry_span(v1, proof, error: "version cannot be converted to a positive integer")
   end
 
   test "verify fail on bad v2 nonce format", %{v1: v1, v1_app: v1_app} do

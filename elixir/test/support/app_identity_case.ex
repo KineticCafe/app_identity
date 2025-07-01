@@ -49,13 +49,11 @@ defmodule AppIdentity.Case do
   end
 
   def assert_generate_proof_telemetry_span(%{id: id}, options \\ []) do
-    assert_received {:event, [:app_identity, :generate_proof, :start], %{system_time: _},
-                     %{app: %{id: ^id}}}
+    assert_received {:event, [:app_identity, :generate_proof, :start], %{system_time: _}, %{app: %{id: ^id}}}
 
     case {Keyword.get(options, :proof), Keyword.get(options, :error)} do
       {nil, nil} ->
-        assert_received {:event, [:app_identity, :generate_proof, :stop], %{duration: _},
-                         %{app: %{id: ^id}}}
+        assert_received {:event, [:app_identity, :generate_proof, :stop], %{duration: _}, %{app: %{id: ^id}}}
 
       {proof, nil} ->
         assert_received {:event, [:app_identity, :generate_proof, :stop], %{duration: _},
@@ -81,8 +79,7 @@ defmodule AppIdentity.Case do
       {:none, nil} ->
         {:ok, proof} = AppIdentity.Proof.from_string(candidate)
 
-        assert_received {:event, [:app_identity, :verify_proof, :stop], %{duration: _},
-                         %{app: nil, proof: ^proof}}
+        assert_received {:event, [:app_identity, :verify_proof, :stop], %{duration: _}, %{app: nil, proof: ^proof}}
 
       {nil, error} ->
         assert_received {:event, [:app_identity, :verify_proof, :stop], %{duration: _},

@@ -283,7 +283,10 @@ defmodule AppIdentityPlugConfigTest do
 
     test "succeeds if provided an anonymous `finder`", context do
       assert %{finder: {:fn, finder}, apps: %{}, headers: _} =
-               Subject.new!(finder: make_finder(context), headers: [@default_header])
+               AppIdentityPlugConfig.new!(
+                 finder: make_finder(context),
+                 headers: [@default_header]
+               )
 
       assert is_function(finder, 1)
     end

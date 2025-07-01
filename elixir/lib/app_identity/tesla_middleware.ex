@@ -38,9 +38,9 @@ if Code.ensure_loaded?(Tesla.Middleware) do
     other value will be treated as `:fail`.
     """
 
-    alias AppIdentity.App
-
     @behaviour Tesla.Middleware
+
+    alias AppIdentity.App
 
     @type option ::
             AppIdentity.disallowed()

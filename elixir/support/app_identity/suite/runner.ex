@@ -58,7 +58,7 @@ defmodule AppIdentity.Suite.Runner do
         AppIdentity.Suite.print_help(__MODULE__)
 
       true ->
-        unless run_suites(paths, options) do
+        if !run_suites(paths, options) do
           System.halt(1)
         end
     end
@@ -113,7 +113,7 @@ defmodule AppIdentity.Suite.Runner do
 
   if Version.compare(System.version(), "1.13.0") == :lt do
     defp read_stdin(_acc \\ []) do
-      IO.read(:stdio, :all)
+      IO.read(:stdio, :eof)
     end
   else
     defp read_stdin(acc \\ []) do
