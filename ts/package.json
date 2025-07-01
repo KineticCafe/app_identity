@@ -34,7 +34,7 @@
     "concurrently": "^9.1.2",
     "pkgroll": "^2.12.2",
     "publint": "^0.3.12",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.3",
     "typedoc": "^0.28.5",
     "typedoc-material-theme": "^1.4.0",
     "typedoc-plugin-missing-exports": "^4.0.0",
