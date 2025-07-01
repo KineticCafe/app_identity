@@ -3,12 +3,12 @@ defmodule AppIdentity.Proof do
   A struct describing a computed or parsed App Identity proof.
   """
 
-  @proof_string_separator ":"
+  import Bitwise
+  import Kernel, except: [to_string: 1]
 
   alias AppIdentity.{App, Validation, Versions}
 
-  import Bitwise
-  import Kernel, except: [to_string: 1]
+  @proof_string_separator ":"
 
   @enforce_keys [:version, :id, :nonce, :padlock]
   @derive {Inspect, except: [:padlock]}

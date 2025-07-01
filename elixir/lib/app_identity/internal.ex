@@ -1,11 +1,11 @@
 defmodule AppIdentity.Internal do
   @moduledoc false
 
+  import AppIdentity.Telemetry
+
   alias AppIdentity.App
   alias AppIdentity.Proof
   alias AppIdentity.Versions
-
-  import AppIdentity.Telemetry
 
   @doc """
   Generate an App Identity proof string or return an error with a reason. This

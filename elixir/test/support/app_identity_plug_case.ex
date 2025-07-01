@@ -29,8 +29,7 @@ defmodule AppIdentity.PlugCase do
 
     for app <- clients, do: AppIdentity.Case.assert_generate_proof_telemetry_span(app)
 
-    assert_received {:event, [:app_identity, :plug, :start], %{system_time: _},
-                     %{conn: _, options: _}}
+    assert_received {:event, [:app_identity, :plug, :start], %{system_time: _}, %{conn: _, options: _}}
 
     if apps = Keyword.get(options, :apps) do
       name = Keyword.get(options, :name, :app_identity)
@@ -38,8 +37,7 @@ defmodule AppIdentity.PlugCase do
       assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
                        %{conn: %{status: ^status, private: %{^name => ^apps}}, options: _}}
     else
-      assert_received {:event, [:app_identity, :plug, :stop], %{duration: _},
-                       %{conn: %{status: ^status}, options: _}}
+      assert_received {:event, [:app_identity, :plug, :stop], %{duration: _}, %{conn: %{status: ^status}, options: _}}
     end
 
     assert_received {_ref, {^status, _headers, _body}}

@@ -73,9 +73,7 @@ defmodule AppIdentity.Suite.Generator do
     shell = Mix.shell()
 
     if !options[:stdout] && !options[:quiet] do
-      shell.info(
-        "Generated #{length(suite[:tests])} tests for #{suite[:name]} #{suite[:version]}."
-      )
+      shell.info("Generated #{length(suite[:tests])} tests for #{suite[:name]} #{suite[:version]}.")
     end
 
     if options[:stdout] do
@@ -83,7 +81,7 @@ defmodule AppIdentity.Suite.Generator do
     else
       File.write!(name, Jason.encode!(suite))
 
-      unless options[:quiet] do
+      if !options[:quiet] do
         shell.info("Saved as #{name}")
       end
     end
@@ -163,7 +161,7 @@ defmodule AppIdentity.Suite.Generator do
     must_have!(type, input, index, "proof")
     must_have!(type, input, index, "spec_version")
 
-    unless input["expect"] == "pass" || input["expect"] == "fail" do
+    if !(input["expect"] == "pass" || input["expect"] == "fail") do
       fail!(type, input, index, "Invalid expect value '#{input["expect"]}'")
     end
 
@@ -315,14 +313,7 @@ defmodule AppIdentity.Suite.Generator do
     proof
   end
 
-  defp build_proof(
-         app,
-         nonce,
-         version,
-         %{padlock: %{value: padlock_value}, proof: proof},
-         _type,
-         _index
-       ) do
+  defp build_proof(app, nonce, version, %{padlock: %{value: padlock_value}, proof: proof}, _type, _index) do
     {:ok,
      Support.build_proof(app, padlock_value,
        id: proof[:id],
@@ -332,14 +323,7 @@ defmodule AppIdentity.Suite.Generator do
      )}
   end
 
-  defp build_proof(
-         app,
-         nonce,
-         version,
-         %{padlock: %{nonce: padlock_nonce} = padlock, proof: proof},
-         _type,
-         _index
-       ) do
+  defp build_proof(app, nonce, version, %{padlock: %{nonce: padlock_nonce} = padlock, proof: proof}, _type, _index) do
     padlock =
       Support.build_padlock(app,
         id: proof[:id],
@@ -385,31 +369,26 @@ defmodule AppIdentity.Suite.Generator do
   end
 
   defp must_have!(type, input, index, key, options \\ []) do
-    unless Map.has_key?(input, key) do
+    if !Map.has_key?(input, key) do
       fail!(type, options[:input] || input, index, "missing #{options[:name] || key}")
     end
   end
 
   @spec fail!(term(), term(), term(), term()) :: no_return()
   defp fail!(type, input, index, message) do
-    Mix.raise(
-      "Error in #{type} item #{index}: #{AppIdentity.Suite.extract_message(message)}\n#{inspect(input)}"
-    )
+    Mix.raise("Error in #{type} item #{index}: #{AppIdentity.Suite.extract_message(message)}\n#{inspect(input)}")
   end
 
-  defp resolve_normalized_nonce(%{} = nonce) when map_size(nonce) > 1,
-    do: {:error, "nonce must only have one sub-key"}
+  defp resolve_normalized_nonce(%{} = nonce) when map_size(nonce) > 1, do: {:error, "nonce must only have one sub-key"}
 
-  defp resolve_normalized_nonce(%{"empty" => empty}) when empty in [true, "true"],
-    do: {:ok, %{empty: true}}
+  defp resolve_normalized_nonce(%{"empty" => empty}) when empty in [true, "true"], do: {:ok, %{empty: true}}
 
   defp resolve_normalized_nonce(%{"empty" => _}), do: {:error, "nonce.empty may only be true"}
 
   defp resolve_normalized_nonce(%{"offset_minutes" => value}) when is_integer(value),
     do: {:ok, %{offset_minutes: value}}
 
-  defp resolve_normalized_nonce(%{"offset_minutes" => _}),
-    do: {:error, "nonce.offset_minutes must be an integer"}
+  defp resolve_normalized_nonce(%{"offset_minutes" => _}), do: {:error, "nonce.offset_minutes must be an integer"}
 
   defp resolve_normalized_nonce(%{"value" => value}), do: {:ok, %{value: value}}
 

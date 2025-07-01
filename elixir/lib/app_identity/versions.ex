@@ -1,9 +1,9 @@
 defmodule AppIdentity.Versions do
   @moduledoc false
 
-  @proof_string_separator ":"
-
   alias AppIdentity.{App, Validation}
+
+  @proof_string_separator ":"
 
   @version_map %{
     1 => AppIdentity.Versions.V1,
@@ -189,16 +189,10 @@ defmodule AppIdentity.Versions do
       end
     end
 
-    defp parse_timestamp(<<
-           year::binary-size(4),
-           month::binary-size(2),
-           day::binary-size(2),
-           "T",
-           hour::binary-size(2),
-           minute::binary-size(2),
-           second::binary-size(2),
-           rest::binary
-         >>) do
+    defp parse_timestamp(
+           <<year::binary-size(4), month::binary-size(2), day::binary-size(2), "T", hour::binary-size(2),
+             minute::binary-size(2), second::binary-size(2), rest::binary>>
+         ) do
       case DateTime.from_iso8601("#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}#{rest}") do
         {:ok, timestamp, _offset} -> {:ok, timestamp}
         {:error, reason} -> {:error, String.replace(Kernel.to_string(reason), "_", " ")}

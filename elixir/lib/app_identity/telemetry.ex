@@ -145,6 +145,8 @@ defmodule AppIdentity.Telemetry do
   ```
   """
 
+  alias AppIdentity.App
+
   @enabled Code.ensure_loaded?(:telemetry) &&
              Application.compile_env(:app_identity, [AppIdentity.Telemetry, :enabled], true)
 
@@ -152,8 +154,6 @@ defmodule AppIdentity.Telemetry do
   def enabled? do
     @enabled
   end
-
-  alias AppIdentity.App
 
   @typep telemetry_type :: :generate_proof | :verify_proof | :plug
   @typep input :: nil | App.input() | App.loader() | App.finder() | App.t()
