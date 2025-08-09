@@ -28,10 +28,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Harden the runner (Audit all outbound calls)
+      - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
         with:
@@ -46,10 +49,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
           cache-dependency-path: ts/pnpm-lock.yaml
-
-      - name: Fix an uneven rollout of corepack 0.31.0 with updated keys
-        run: npm install --global corepack@^0.31.0
-        working-directory: ./ts
 
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
