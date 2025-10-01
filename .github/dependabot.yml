@@ -7,6 +7,11 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps'
+    groups:
+      all:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: npm
     directory: /ts
@@ -17,6 +22,11 @@ updates:
         versions: ["22.x.x"]
     commit-message:
       prefix: 'deps(ts)'
+    groups:
+      all:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: mix
     directory: /elixir
@@ -24,6 +34,11 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps(elixir)'
+    groups:
+      all:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: bundler
     directory: /ruby
@@ -31,3 +46,8 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps(ruby)'
+    groups:
+      all:
+        update-types:
+          - minor
+          - patch
