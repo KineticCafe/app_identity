@@ -17,7 +17,7 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Reviewdog adds comments
 
     steps:
       - name: Harden Runner
@@ -45,7 +45,7 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Reviewdog adds comments
 
     steps:
       - name: Harden Runner
@@ -70,7 +70,7 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Reviewdog adds comments
 
     steps:
       - name: Harden Runner
@@ -127,7 +127,7 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Reviewdog adds comments
 
     steps:
       - name: Harden Runner
@@ -170,7 +170,7 @@ jobs:
 
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Reviewdog adds comments
 
     steps:
       - name: Harden Runner
