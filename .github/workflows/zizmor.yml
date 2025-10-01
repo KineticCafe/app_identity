@@ -18,34 +18,23 @@ jobs:
 
     permissions:
       security-events: write
-      contents: read
-      actions: read
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            release-assets.githubusercontent.com:443
-            files.pythonhosted.org:443
+            ghcr.io:443
             github.com:443
-            objects.githubusercontent.com:443
-            pypi.org:443
+            pkg-containers.githubusercontent.com:443
 
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
-      - uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
-
-      - run: uvx zizmor --persona pedantic --format sarif . > results.sarif
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: github/codeql-action/upload-sarif@76621b61decf072c1cee8dd1ce2d2a82d33c17ed # v3.29.5
+      - uses: zizmorcore/zizmor-action@e673c3917a1aef3c65c972347ed84ccd013ecda4 # v0.2.0
         with:
-          sarif_file: results.sarif
-          category: zizmor
+          persona: pedantic
