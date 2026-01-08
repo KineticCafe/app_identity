@@ -6,7 +6,6 @@ import type {
   AppLoaderAsync,
 } from './app.js'
 import { App } from './app.js'
-import { AppIdentityError } from './app_identity_error.js'
 import { Proof } from './proof.js'
 import { checkDisallowed, checkNonce, checkVersion } from './validation.js'
 
@@ -21,10 +20,9 @@ export const generateProofWithDiagnostic = (
 ): string => {
   const app = input instanceof App ? input : new App(input)
   const version = checkVersion(options.version).unwrapOr(app.version)
-  const nonce = checkNonce(options.nonce).unwrapOrElse(() => app.generateNonce(version))
+  const nonce = checkNonce(options.nonce).unwrapOr(() => app.generateNonce(version))
   const disallowed = checkDisallowed(options.disallowed).expect(
     'invalid options.disallowed',
-    AppIdentityError,
   )
 
   return Proof.fromApp(app, nonce, { disallowed, version }).toString()

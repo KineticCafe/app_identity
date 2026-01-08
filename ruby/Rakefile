@@ -22,7 +22,7 @@ spec = Hoe.spec "app_identity" do
 
   self.trusted_release = ENV["rubygems_release_gem"] == "true"
 
-  require_ruby_version ">= 2.7", "< 4"
+  require_ruby_version ">= 2.7"
 
   license "Apache-2.0"
 

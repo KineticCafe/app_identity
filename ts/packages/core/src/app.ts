@@ -165,10 +165,7 @@ export class App {
     }
 
     const ver = checkVersion(version).unwrapOr(this.version)
-    const generator = proofVersion(ver).expect(
-      'cannot generate nonce for app',
-      AppIdentityError,
-    )
+    const generator = proofVersion(ver).expect('cannot generate nonce for app')
 
     return generator.generateNonce()
   }
@@ -177,9 +174,11 @@ export class App {
    * @returns A string representation of the App suitable for debugging output.
    */
   toString(): string {
-    return `[object App (id: ${this.id}, version: ${
-      this.version
-    }, config: ${JSON.stringify(this.config, null, 0)}, verified: ${this.verified})]`
+    return `[object App (id: ${this.id}, version: ${this.version}, config: ${JSON.stringify(
+      this.config,
+      null,
+      0,
+    )}, verified: ${this.verified})]`
   }
 
   /**

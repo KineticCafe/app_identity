@@ -219,7 +219,7 @@ const generatePadlock = (
   return Versions.versionIsAllowed(app.version, version, disallowed)
     .andThen((_) => Versions.validateNonce(app, nonce, version))
     .andThen((_) => Versions.makeDigest(app, nonce, version))
-    .expect('Cannot generate padlock', AppIdentityError)
+    .expect('Cannot generate padlock')
 }
 
 const comparePadlocks = (left: Padlock, right: Padlock): boolean => {

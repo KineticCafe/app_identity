@@ -4,9 +4,9 @@ defmodule AppIdentity.MixProject do
   def project do
     [
       app: :app_identity,
-      version: "1.3.2",
+      version: "1.4.0",
       description: "Fast, lightweight, cryptographically secure app authentication",
-      elixir: "~> 1.10",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       name: "AppIdentity for Elixir",
@@ -36,6 +36,7 @@ defmodule AppIdentity.MixProject do
           "Issues" => "https://github.com/KineticCafe/app-identity/issues"
         }
       ],
+      test_coverage: [tool: ExCoveralls],
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
         plt_add_apps: [:jason, :mix, :plug, :poison, :telemetry, :tesla]
@@ -44,48 +45,34 @@ defmodule AppIdentity.MixProject do
   end
 
   def application do
+    [extra_applications: [:logger, :crypto]]
+  end
+
+  def cli do
     [
-      extra_applications: [:logger, :crypto]
+      preferred_cli_envs: [
+        coveralls: :test,
+        "coveralls.github": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
   defp deps do
-    poison =
-      if Version.compare(System.version(), "1.11.0") == :lt,
-        do: ">= 3.0.0 and < 5.0.0",
-        else: ">= 3.0.0"
-
-    plug_crypto =
-      if Version.compare(System.version(), "1.11.0") == :lt,
-        do: "~> 1.2.5",
-        else: ">= 1.2.0"
-
-    tesla =
-      if Version.compare(System.version(), "1.11.0") == :lt,
-        do: ">= 1.0.0 and < 1.8.1",
-        else: "~> 1.0"
-
     [
       {:jason, "~> 1.0", optional: true},
       {:plug, "~> 1.0", optional: true},
-      {:poison, poison, optional: true},
-      {:plug_crypto, plug_crypto, optional: true},
-      {:telemetry, "~> 0.4 or ~> 1.0", optional: true},
-      {:tesla, tesla, optional: true}
-    ] ++ dev_deps()
-  end
-
-  defp dev_deps do
-    if Version.compare(System.version(), "1.15.0") == :lt do
-      []
-    else
-      [
-        {:credo, "~> 1.0", only: [:dev], runtime: false},
-        {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
-        {:ex_doc, "~> 0.29", only: [:dev], runtime: false},
-        {:quokka, "~> 2.0", only: [:dev], runtime: false}
-      ]
-    end
+      {:poison, "~> 6.0", optional: true},
+      {:plug_crypto, "~> 1.0", optional: true},
+      {:telemetry, "~> 1.0", optional: true},
+      {:tesla, "~> 1.0", optional: true},
+      {:castore, "~> 1.0", only: [:test]},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.29", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.18", only: [:test]},
+      {:quokka, "~> 2.0", only: [:dev, :test], runtime: false}
+    ]
   end
 
   defp elixirc_paths(:test) do

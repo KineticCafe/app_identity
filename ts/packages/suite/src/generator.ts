@@ -125,7 +125,6 @@ const makeProof = (
   try {
     const version = Validations.checkVersion(input.proof.version).expect(
       'Requested version is not supported',
-      AppIdentityError,
     )
 
     const nonce = input.nonce?.empty

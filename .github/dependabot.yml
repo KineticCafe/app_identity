@@ -7,8 +7,11 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps'
+    cooldown:
+      default-days: 7
     groups:
-      all:
+      actions:
+        applies-to: version-updates
         update-types:
           - minor
           - patch
@@ -19,11 +22,14 @@ updates:
       interval: monthly
     ignore:
       - dependency-name: '@types/node'
-        versions: ["22.x.x"]
+        update-types: [version-update:semver-major]
     commit-message:
       prefix: 'deps(ts)'
+    cooldown:
+      default-days: 7
     groups:
-      all:
+      npm:
+        applies-to: version-updates
         update-types:
           - minor
           - patch
@@ -34,8 +40,11 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps(elixir)'
+    cooldown:
+      default-days: 7
     groups:
-      all:
+      mix:
+        applies-to: version-updates
         update-types:
           - minor
           - patch
@@ -46,8 +55,11 @@ updates:
       interval: monthly
     commit-message:
       prefix: 'deps(ruby)'
+    cooldown:
+      default-days: 7
     groups:
-      all:
+      bundler:
+        applies-to: version-updates
         update-types:
           - minor
           - patch

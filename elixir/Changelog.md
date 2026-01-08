@@ -1,9 +1,11 @@
 # App Identity for Elixir Changelog
 
-## 1.4.0 / 2023-MM-DD
+## 1.4.0 / 2026-01-8
 
 - Made `mix app_identity help` more robust so that it works when not provided an
   additional command, printing the same content as `mix help app_identity`.
+
+- Raised minimum supported Elixir version to 1.15.
 
 ## 1.3.2 / 2023-09-05
 

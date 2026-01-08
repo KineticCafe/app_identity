@@ -1,5 +1,5 @@
 [tools]
-elixir = "1.18.4-otp-27"
-erlang = "27.3.4.2"
+elixir = "1.19.4-otp-28"
+erlang = "28.3"
 node = "20"
 ruby = "3.4"
