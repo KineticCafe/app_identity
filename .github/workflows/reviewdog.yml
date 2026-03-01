@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -61,7 +61,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: reviewdog/action-actionlint@f00ad0691526c10be4021a91b2510f0a769b14d0 # v1.68.0
+      - uses: reviewdog/action-actionlint@0d952c597ef8459f634d7145b0b044a9699e5e43 # v1.71.0
 
   credo:
     if: ${{ github.event.action != 'closed' }}
@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -90,7 +90,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: erlef/setup-beam@e6d7c94229049569db56a7ad5a540c051a010af9 # v1.20.4
+      - uses: erlef/setup-beam@3580539ceec3dc05b0ed51e9e10b08eb7a7c2bb4 # v1.21.0
         id: install
         with:
           otp-version: '27'
@@ -106,7 +106,7 @@ jobs:
       - run: mix 'do' deps.get, deps.compile
         working-directory: ./elixir
 
-      - uses: reviewdog/action-setup@d8edfce3dd5e1ec6978745e801f9c50b5ef80252 #v1.4.0
+      - uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f #v1.5.0
 
       - name: 'mix credo --strict | reviewdog'
         run: |
@@ -131,7 +131,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -150,7 +150,7 @@ jobs:
         with:
           package_json_file: ts/package.json
 
-      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 #v6.0.0
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 #v6.2.0
         with:
           node-version: 20
           cache: pnpm
@@ -159,7 +159,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: ./ts
 
-      - uses: mongolyy/reviewdog-action-biome@dbe7192276cbc6cd32369a21f525ed02438c3e26 #v2.5.0
+      - uses: mongolyy/reviewdog-action-biome@eaba62a1e048fb13e4ff5e017ff8c15d00b2c1a2 #v2.9.0
         with:
           workdir: ./ts
 
@@ -174,7 +174,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -190,7 +190,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
+      - uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
         with:
           ruby-version: '3.2'
           bundler-cache: true
