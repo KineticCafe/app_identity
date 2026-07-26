@@ -1,5 +1,33 @@
 # App Identity
 
+> I'm proud of this work, but I currently have no use for this and would likely
+> implement it somewhat differently than the current versions. Kinetic Commerce
+> has been gone for two years now and there's little value in this except as an
+> artifact of something that worked reasonably well.
+>
+> The concepts here are solid but flawed:
+>
+> - The spec is well-defined, but was constrained by having a v1 that never
+>   should have been deployed and a difficult upgrade process.
+> - When both the sides of the communication channel are able to keep the
+>   secrets secret, this works well. This does not work well when one of the
+>   clients needs to be in the browser, except through an API gateway.
+> - The integration tests are _fantastic_. Every system should have similarly
+>   strong integration tests.
+>
+> The only implementation that was _excellent_ was the Elixir one (which is the
+> one that this was extracted from). Except that it should have actually been
+> implemented in Erlang to maximize use across the BEAM ecosystem. These days I
+> might consider implementing it in Gleam, because that would allow one
+> implementation for both JavaScript and BEAM runtimes.
+>
+> On the other hand, the Node and Ruby implementations were mediocre at best.
+> The Ruby code was extracted from sidecar applications that Kinetic developed,
+> but it never felt like it really belonged in the Ruby ecosystem. I'd probably
+> implement a lot of it using Ruby 3.2's `Data` class, but I would take more
+> time to get the API correct. The Node implementation? It passed the
+> integration tests, but that's about all I'd allow for now.
+
 This repository contains the specification for Kinetic Commerce's App Identity
 solution as well as three reference implementations (Elixir, Ruby, and
 Typescript) adapted from our previous implementations.
